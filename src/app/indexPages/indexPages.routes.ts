@@ -17,6 +17,10 @@ export default [
           import('./features/user/features/users.routes')
       },
       {
+        path: 'notifications',
+        loadComponent: () => import('./features/notifications/notifications.component')
+      },
+      {
         path: '',
         redirectTo: 'dashboard', // Redirigir a 'user' por defecto
         pathMatch: 'full',

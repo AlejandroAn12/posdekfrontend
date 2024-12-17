@@ -44,7 +44,7 @@ export class SidebarComponent {
       title: 'Administración',
       iconClass: 'fa-solid fa-box',
       children: [
-        { title: 'Notificaciones', iconClass: 'fa-regular fa-bell', route: '/products/inventory' },
+        { title: 'Notificaciones', iconClass: 'fa-regular fa-bell', route: 'notifications' },
       ],
     },
     {
