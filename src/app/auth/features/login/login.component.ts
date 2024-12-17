@@ -17,11 +17,11 @@ export default class LoginComponent {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
-  constructor(){
-  this.loginForm = this.fb.group({
-    username: ['', [Validators.required]],
-    password: ['', [Validators.required]],
-  })
+  constructor() {
+    this.loginForm = this.fb.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+    })
   }
 
   onLogin() {
@@ -34,25 +34,11 @@ export default class LoginComponent {
           console.log('Login exitoso', response);
         },
         error: (error) => {
-          console.error('Error al iniciar sesión', error);
+          console.error('Error al iniciar sesión', {error});
         },
       });
     }
+    return;
   }
-
-  
-
-  // private authService = inject(AuthService);
-
-  // formBuilder = inject(NonNullableFormBuilder);
-
-  // form = this.formBuilder.group({
-  //   username: this.formBuilder.control({}),
-  //   password: this.formBuilder.control({}),
-  // })
-
-  // login(){
-  //   this.authService.login(this.form.getRawValue)
-  // }
 
 }

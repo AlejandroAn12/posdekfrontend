@@ -6,12 +6,18 @@ export const routes: Routes = [
         loadChildren: () => import('./auth/features/auth.routes')
     },
     {
-        path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.routes')
+        path: 'index',
+        loadChildren: () => import('./indexPages/indexPages.routes')
     },
     {
         path: '**',
         loadComponent: () => import('./shared/features/not-found-page/not-found-page.component')
     },
+    {
+        path: '**',
+        redirectTo: '',
+      },
+    
+   
 
 ];
