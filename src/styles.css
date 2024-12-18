@@ -8,3 +8,10 @@
 body {
   @apply font-sans;
 }
+.card {
+  @apply w-full max-w-4xl h-auto border p-3 shadow-md;
+}
+
+.card-title {
+  @apply font-semibold text-lg;
+}

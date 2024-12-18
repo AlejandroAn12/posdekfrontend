@@ -22,35 +22,46 @@ export class SidebarComponent {
     {
       title: 'Dashboard',
       iconClass: 'fa-solid fa-store',
-      route: '/dashboard',
+      route: '/index/dashboard',
     },
     {
       title: 'Usuarios',
       iconClass: 'fa-solid fa-user',
       children: [
         { title: 'Administradores', iconClass: 'fa-solid fa-user-tie', route: '/user/admins' },
-        { title: 'Clientes', iconClass: 'fa-solid fa-users', route: '/user/clients' },
+        { title: 'Clientes', iconClass: 'fa-solid fa-users', route: '/user/client' },
       ],
     },
     {
       title: 'Productos',
       iconClass: 'fa-solid fa-box',
       children: [
-        { title: 'Inventario', iconClass: 'fa-solid fa-warehouse', route: '/products/inventory' },
+        { title: 'Ver productos', iconClass: 'fa-solid fa-box', route: '/products/all' },
         { title: 'Categorías', iconClass: 'fa-solid fa-tags', route: '/products/categories' },
       ],
     },
     {
       title: 'Administración',
-      iconClass: 'fa-solid fa-box',
+      iconClass: 'fa-solid fa-gear',
       children: [
+        { title: 'Empresa', iconClass: 'fa-solid fa-store', route: 'enterprise' },
         { title: 'Notificaciones', iconClass: 'fa-regular fa-bell', route: 'notifications' },
+
       ],
     },
     {
       title: 'Órdenes',
       iconClass: 'fa-solid fa-receipt',
-      route: '/orders',
+      route: 'notifications',
+    },
+    {
+      title: 'Reportes',
+      iconClass: 'fa-solid fa-folder',
+      children: [
+        { title: 'Inventario', iconClass: 'fa-solid fa-warehouse', route: '/products/inventory' },
+        { title: 'Categorías', iconClass: 'fa-solid fa-tags', route: '/products/categories' },
+        { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/products/all' }
+      ],
     },
   ];
 
@@ -60,5 +71,9 @@ export class SidebarComponent {
   toggleSubmenu(index: number): void {
     this.activeIndex = this.activeIndex === index ? null : index;
   }
+
+  logout() { }
+
+  goWhatsApp() { }
 
 }

@@ -1,6 +1,6 @@
 <!-- Sidebar -->
 <nav
-  class="group w-16 hover:w-64 hover:cursor-pointer bg-white text-white h-full transition-[width] duration-300 ease-in-out shadow-2xl"
+  class="flex flex-col group w-16 hover:w-64  bg-white text-white h-full transition-[width] duration-300 ease-in-out shadow-2xl"
 >
   <!-- Imagen -->
   <div class="p-2 flex items-center justify-center">
@@ -12,17 +12,27 @@
   </div>
   <hr class="bg-primary">
 
-  <!-- Lista de opciones -->
-  <ul class="space-y-2 p-2">
+  <!-- Lista de opciones en el sidebar-->
+  <ul class="space-y-2 p-2 flex-grow">
     <li *ngFor="let option of sidebarOptions; let i = index">
       <!-- Opción Principal -->
-      <div
-        (click)="toggleSubmenu(i)"
-        class="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer"
+      <a
+        *ngIf="!option.children"
+        [routerLink]="option.route"
+        class="flex items-center p-2 hover:bg-gray-200 rounded cursor-pointer"
       >
-        <i [ngClass]="option.iconClass" class="text-sm text-gray-600"></i>
-        <span class="ml-4 hidden group-hover:inline-block text-sm text-gray-600">{{ option.title }}</span>
-        <!-- Indicador de desplegable -->
+        <i [ngClass]="option.iconClass" class="text-sm text-gray-500"></i>
+        <span class="ml-4 hidden group-hover:inline-block text-sm text-gray-500">{{ option.title }}</span>
+      </a>
+
+      <!-- Opción con Submenú -->
+      <div
+        *ngIf="option.children"
+        (click)="toggleSubmenu(i)"
+        class="flex items-center p-2 hover:bg-gray-200 text-sm text-gray-500 rounded cursor-pointer"
+      >
+        <i [ngClass]="option.iconClass" class="text-sm text-gray-500"></i>
+        <span class="ml-4 hidden group-hover:inline-block text-sm text-gray-500">{{ option.title }}</span>
         <i
           *ngIf="option.children"
           class="ml-auto fa-solid text-gray-600"
@@ -33,41 +43,41 @@
         ></i>
       </div>
 
-      <!-- Subopciones -->
+      <!-- Submenú -->
       <ul
         *ngIf="option.children && activeIndex === i"
-        class="space-y-1 ml-6 border-l-2 border-gray-600"
+        class="space-y-1 ml-6 border-l-2 border-gray-600 text-gray-500"
       >
         <li *ngFor="let child of option.children">
           <a
             [routerLink]="child.route"
-            class="flex items-center p-2 hover:bg-gray-200 rounded"
+            class="flex items-center p-2 hover:bg-gray-200 rounded text-gray-500"
           >
-            <i [ngClass]="child.iconClass" class="text-sm text-gray-600"></i>
-            <span class="ml-4 text-gray-600 text-sm">{{ child.title }}</span>
+            <i [ngClass]="child.iconClass" class="text-sm text-gray-500"></i>
+            <span class="ml-4 text-sm text-gray-500">{{ child.title }}</span>
           </a>
         </li>
       </ul>
     </li>
-    <!-- <li *ngFor="let option of sidebarOptions; let i = index">
-      <a
-      [routerLink]="option.route"
-        class="flex items-center cursor-pointer p-2 hover:bg-gray-200 rounded"
-      >
-      <i [ngClass]="option.iconClass" class=" text-gray-600"></i>
-        <span class="ml-4 hidden group-hover:inline-block text-gray-500 font-semibold text-sm">{{ option.title }}</span>
-      </a>
-    </li>
-    <li>
-      <a
-        routerLink="/user"
-        class="flex items-center cursor-pointer p-2 hover:bg-gray-200 rounded"
-      >
-      <i class="fa-solid fa-gear text-gray-600"></i>
-        <span class="ml-4 hidden group-hover:inline-block text-gray-500 font-semibold text-sm">Administración</span>
-      </a>
-    </li> -->
   </ul>
+
+  <!-- Footer -->
+  <div class="mt-auto p-2 m-1">
+    <a
+    (click)="goWhatsApp()"
+    class="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer"
+  >
+    <i class="fa-brands fa-whatsapp  text-gray-600"></i>
+    <span class="ml-4 hidden group-hover:inline-block text-sm text-gray-600">Soporte WhatsApp</span>
+  </a>
+    <a
+      (click)="logout()"
+      class="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer"
+    >
+      <i class="fa-solid fa-right-from-bracket text-sm text-gray-600"></i>
+      <span class="ml-4 hidden group-hover:inline-block text-sm text-gray-600">Cerrar Sesión</span>
+    </a>
+  </div>
 </nav>
 
 

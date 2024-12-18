@@ -17,6 +17,10 @@ export default [
           import('./features/user/features/users.routes')
       },
       {
+        path: 'products',
+        loadComponent: () => import('./features/productsPages/products.routes')
+      },
+      {
         path: 'notifications',
         loadComponent: () => import('./features/notifications/notifications.component')
       },
