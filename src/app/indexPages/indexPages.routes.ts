@@ -18,7 +18,11 @@ export default [
       },
       {
         path: 'products',
-        loadComponent: () => import('./features/productsPages/products.routes')
+        loadChildren: () => import('./features/productsPages/products.routes')
+      },
+      {
+        path: 'categories',
+        loadChildren: () => import('./features/categoriesPages/categories.routes')
       },
       {
         path: 'notifications',

@@ -4,6 +4,6 @@ export default [
     {
         path: 'view',
         loadComponent: () =>
-            import('./features/view-products/view-products.component'),
+            import('./features/view-categories/view-categories.component'),
     },
 ] as Routes;

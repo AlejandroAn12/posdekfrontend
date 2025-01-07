@@ -1,1 +1,401 @@
-<p>view-products works!</p>
+<!-- Contenedor 1 -->
+<div
+  class="bg-colorPrimary bg-cover bg-center bg-no-repeat p-10 mt-2 rounded-t-2xl"
+>
+  <div class="flex justify-center">
+    <!-- titulo -->
+    <div class="p-1">
+      <h1 class="text-white font-semibold text-2xl">Productos</h1>
+    </div>
+  </div>
+</div>
+
+<!-- Tabla 2 -->
+<div class="flex flex-col shadow-2xl p-5 bg-white">
+  <!-- Button new product -->
+  <div class="m-5 flex justify-end">
+    <button
+      (click)="clearCategory()"
+      class="ml-5 bg-transparent border text-colorPrimary hover:bg-colorPrimary hover:text-white font-semibold p-2 rounded-md w-40"
+    >
+      Borrar filtros
+    </button>
+    <button
+      (click)="toggleModal()"
+      class="ml-5 bg-green-400 hover:bg-green-500 font-semibold p-2 text-white rounded-md w-40"
+    >
+      Agregar producto
+    </button>
+  </div>
+  <!-- ---- -->
+
+  <form [formGroup]="ProductForm" class="flex flex-row mb-10">
+    <!-- Fechas -->
+    <!-- <div class="relative mr-5">
+      <input
+        type="date"
+        id="floating_outlined"
+        class="block px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=" "
+      />
+      <label
+        for="floating_outlined"
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+        >Fecha inicial</label
+      >
+    </div>
+    <div class="relative mr-5">
+      <input
+        type="date"
+        id="floating_outlined"
+        class="block px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=" "
+      />
+      <label
+        for="floating_outlined"
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+        >Fecha final</label
+      >
+    </div> -->
+    <!-- Fin Fechas -->
+
+    <div class="relative mr-5">
+      <label
+        for="categoryId"
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+        >Categorias</label
+      >
+      <select
+        id="categoryId"
+        formControlName="categoryId"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        <option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="flex">
+      <input
+        placeholder="Buscar..."
+        type="search"
+        name="search"
+        id="search"
+        class="rounded-lg border-gray-300 p-2.5 italic"
+      />
+      <button
+        class="ml-5 bg-colorSecondary font-semibold text-white rounded-md w-40 hover:bg-orange-400"
+      >
+        BUSCAR
+      </button>
+    </div>
+  </form>
+
+  <div class="h-full w-full bg-white">
+    <div class="relative overflow-x-auto">
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3">Producto</th>
+            <th scope="col" class="px-6 py-3">Código de barra</th>
+            <th scope="col" class="px-6 py-3">Código interno</th>
+            <th scope="col" class="px-6 py-3">Stock disponible</th>
+            <th scope="col" class="px-6 py-3">P.U Compra</th>
+            <th scope="col" class="px-6 py-3">P.U Venta</th>
+            <th scope="col" class="px-6 py-3">F. Registro</th>
+            <th scope="col" class="px-6 py-3">Habilitado</th>
+            <th scope="col" class="px-6 py-3">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let product of productsSignal()"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+          >
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ product.name }}
+            </th>
+            <td class="px-6 py-4">
+              {{ product.barcode }}
+            </td>
+            <td class="px-6 py-4">
+              {{ product.code }}
+            </td>
+            <td class="px-6 py-4">
+              {{ product.stock }}
+            </td>
+            <td class="px-6 py-4">
+              {{ product.purchase_price }}
+            </td>
+            <td class="px-6 py-4">
+              {{ product.sale_price }}
+            </td>
+            <td class="px-6 py-4">
+              {{ product.registration_date }}
+            </td>
+            <td class="px-4 py-2 text-center">
+              <input
+                [checked]="product.status"
+                (change)="toggleStatus(product)"
+                id="default-checkbox"
+                type="checkbox"
+                value=""
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex">
+                <button
+                  (click)="toggleModal(product)"
+                  id="openModal"
+                  class="bg-colorSecondary hover:bg-orange-400 p-2 text-white m-1 rounded-md"
+                >
+                  Actualizar
+                </button>
+                <button
+                  (click)="deleteProduct(product.id)"
+                  class="bg-colorDanger hover:bg-red-700 p-2 text-white m-1 rounded-md"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Mostrar mensaje si no hay productos -->
+          <tr *ngIf="productsSignal().length === 0 && errorMessage">
+            <td colspan="4" class="px-6 py-4 text-center text-red-500">
+              {{ errorMessage }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <nav
+        class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+        aria-label="Table navigation"
+      >
+        <span
+          class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
+        >
+          Mostrando
+          <span class="font-semibold text-gray-900 dark:text-white">{{
+            getProductRange()
+          }}</span>
+          de
+          <span class="font-semibold text-gray-900 dark:text-white">{{
+            totalProducts
+          }}</span>
+        </span>
+        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+          <li>
+            <button
+              (click)="onPageChange(currentPage - 1)"
+              [disabled]="currentPage === 1"
+              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              Anterior
+            </button>
+          </li>
+          <li *ngFor="let page of pages">
+            <button
+              (click)="onPageChange(page)"
+              [class]="
+                page === currentPage
+                  ? 'text-blue-600 bg-blue-50'
+                  : 'text-gray-500 bg-white'
+              "
+              class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              {{ page }}
+            </button>
+          </li>
+          <li>
+            <button
+              (click)="onPageChange(currentPage + 1)"
+              [disabled]="currentPage === pages.length"
+              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              Siguiente
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Modal-->
+<app-modal
+  *ngIf="showModal"
+  [showModal]="showModal"
+  [title]="titleModal"
+  (closeModal)="toggleModal()"
+>
+  <form [formGroup]="ProductForm" (ngSubmit)="saveProduct()">
+    <div class="flex flex-col justify-center">
+      <div class="mb-4">
+        <div class="relative z-0 w-full group">
+          <input
+            formControlName="name"
+            type="text"
+            name="floating_name"
+            id="floating_name"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+            placeholder=" "
+            required
+          />
+          <label
+            for="floating_name"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Producto</label
+          >
+        </div>
+      </div>
+      <div class="flex flex-row">
+        <div class="mb-4 mr-3">
+          <div class="relative z-0 w-full group">
+            <input
+              formControlName="barcode"
+              type="text"
+              name="floating_barcode"
+              id="floating_barcode"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+              placeholder=" "
+              required
+            />
+            <label
+              for="floating_barcode"
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >Codigo de barra</label
+            >
+          </div>
+        </div>
+        <div class="mb-4" *ngIf="isEditing">
+          <div class="relative z-0 w-full group">
+            <input
+              formControlName="code"
+              type="text"
+              name="floating_code"
+              id="floating_code"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+              placeholder=" "
+              required
+            />
+            <label
+              for="floating_code"
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >Código generado interno</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="relative z-0 w-full group">
+          <input
+            formControlName="stock"
+            type="number"
+            name="floating_stock"
+            id="floating_stock"
+            class="block py-2.5 px-0 w-24 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+            placeholder=" "
+            required
+          />
+          <label
+            for="floating_stock"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Stock (Unidades)</label
+          >
+        </div>
+      </div>
+      <div class="flex flex-row">
+        <div class="mb-4 mr-3">
+          <div class="relative z-0 w-full group">
+            <input
+              formControlName="purchase_price"
+              type="text"
+              name="floating_purchase_price"
+              id="floating_purchase_price"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+              placeholder=" "
+              required
+            />
+            <label
+              for="floating_purchase_price"
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >$ Precio unitario compra</label
+            >
+          </div>
+        </div>
+        <div class="mb-4">
+          <div class="relative z-0 w-full group">
+            <input
+              formControlName="sale_price"
+              type="text"
+              name="floating_sale_price"
+              id="floating_sale_price"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+              placeholder=" "
+              required
+            />
+            <label
+              for="floating_code"
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >$ Precio unitario venta</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="mb-4 mt-4">
+        <div class="relative z-0 w-full group">
+          <label
+            for="categoryId"
+            class="block mb-2 text-sm font-medium text-gray-500 dark:text-white"
+            >Categoría</label
+          >
+          <select
+            id="categoryId"
+            formControlName="categoryId"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="relative z-0 w-full group">
+          <textarea
+            formControlName="description"
+            type="text"
+            name="floating_name"
+            id="floating_name"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+            placeholder=" "
+            required
+          ></textarea>
+          <label
+            for="floating_name"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Descripción</label
+          >
+        </div>
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="bg-colorPrimary hover:bg-blue-800 text-white px-4 py-2 rounded"
+    >
+      {{ isEditing ? "Guardar cambios" : "Añadir producto" }}
+    </button>
+  </form>
+</app-modal>

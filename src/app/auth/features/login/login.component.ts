@@ -3,6 +3,7 @@ import { AuthService } from '../../data-access/auth.service.ts.service';
 import { FormBuilder, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ILogin } from '../../interfaces/login.interface';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export default class LoginComponent {
 
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  _router = inject(Router);
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -31,7 +33,7 @@ export default class LoginComponent {
 
       this.authService.login(loginData).subscribe({
         next: (response) => {
-          console.log('Login exitoso', response);
+          this._router.navigateByUrl('index/dashboard');
         },
         error: (error) => {
           console.error('Error al iniciar sesión', {error});

@@ -1,0 +1,138 @@
+<!-- Contenedor 1 -->
+<div
+  class="bg-colorPrimary bg-cover bg-center bg-no-repeat p-10 mt-2 rounded-t-2xl"
+>
+  <div class="flex justify-center">
+    <!-- titulo -->
+    <div class="p-1">
+      <h1 class="text-white font-semibold text-2xl">Categorias</h1>
+    </div>
+  </div>
+</div>
+
+<!-- Tabla 2 -->
+<div class="flex flex-col shadow-2xl p-5 bg-white">
+  <!-- Button new product -->
+  <div class="m-5 flex justify-end">
+    <button
+      (click)="toggleModal()"
+      class="ml-5 bg-green-400 hover:bg-green-500 font-semibold p-2 text-white rounded-md w-40"
+    >
+      Agregar categoria
+    </button>
+  </div>
+  <!-- ---- -->
+  <div class="mb-5">
+    <input
+      type="search"
+      name="search"
+      id="search"
+      placeholder="Buscar.."
+      class="rounded border-colorPrimary italic"
+    />
+    <button
+      class="ml-5 bg-colorSecondary p-2 font-semibold text-white rounded-md w-40 hover:bg-orange-400"
+    >
+      BUSCAR
+    </button>
+  </div>
+
+  <div class="h-full w-full bg-white">
+    <div class="relative overflow-x-auto">
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3">Categoria</th>
+            <th scope="col" class="px-6 py-3">F. Registro</th>
+            <th scope="col" class="px-6 py-3">Habilitado</th>
+            <th scope="col" class="px-6 py-3">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let category of categoriesSignal()"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+          >
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ category.name }}
+            </th>
+            <td class="px-6 py-4">
+              {{ category.registration_date }}
+            </td>
+            <td class="px-4 py-2 text-center">
+              <input
+                [checked]="category.status"
+                (change)="toggleStatus(category)"
+                id="default-checkbox"
+                type="checkbox"
+                value=""
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex">
+                <button
+                  (click)="toggleModal(category)"
+                  id="openModal"
+                  class="bg-colorSecondary hover:bg-orange-400 p-2 text-white m-1 rounded-md"
+                >
+                  Actualizar
+                </button>
+                <button
+                  (click)="deleteCategory(category.id)"
+                  class="bg-colorDanger hover:bg-red-700 p-2 text-white m-1 rounded-md"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal-->
+<app-modal
+*ngIf="showModal"
+[showModal]="showModal"
+[title]="titleModal"
+(closeModal)="toggleModal()"
+>
+<form [formGroup]="CategoryForm" (ngSubmit)="saveCategory()">
+  <div class="flex flex-col justify-center">
+    <div class="mb-4">
+      <div class="relative z-0 w-full group">
+        <input
+          formControlName="name"
+          type="text"
+          name="floating_name"
+          id="floating_name"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+          placeholder=" "
+          required
+        />
+        <label
+          for="floating_name"
+          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          >Nombre</label
+        >
+      </div>
+    </div>
+  </div>
+  <button
+    type="submit"
+    class="bg-colorPrimary hover:bg-blue-800 text-white px-4 py-2 rounded"
+  >
+    {{ isEditing ? 'Guardar cambios' : 'Añadir categoria' }}
+  </button>
+</form>
+</app-modal>
