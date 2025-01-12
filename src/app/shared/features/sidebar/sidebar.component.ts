@@ -39,10 +39,12 @@ export class SidebarComponent {
       title: 'Administración',
       iconClass: 'fa-solid fa-gear',
       children: [
-        { title: 'Empresa', iconClass: 'fa-solid fa-store', route: 'enterprise' },
+        { title: 'Empresa', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
+        { title: 'Proveedores', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/view' },
+        { title: 'Clientes', iconClass: 'fa-solid fa-users', route: '/index/clients/view' },
+        { title: 'Empleados', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
         { title: 'Credenciales de acceso', iconClass: 'fa-solid fa-user-tie', route: '/index/users/credentials' },
-        { title: 'Clientes', iconClass: 'fa-solid fa-users', route: '/user/client' },
-        { title: 'Empleados', iconClass: 'fa-solid fa-users', route: '/user/client' },
+
 
         
       ],

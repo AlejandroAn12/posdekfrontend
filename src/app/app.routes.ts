@@ -14,7 +14,7 @@ export const routes: Routes = [
     },
     {
         path: 'index',
-        canActivate: [privateGuard()],
+        canMatch: [privateGuard()],
         loadChildren: () => import('./indexPages/indexPages.routes')
     },
     {

@@ -53,7 +53,7 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
         // Verificar si el token ha expirado
         const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
         if (decodedToken.exp && decodedToken.exp < currentTime) {
-          console.warn('Token ha expirado');
+          console.warn('La sesion ha expirado');
           authState.logOut(); // Método para eliminar el token
           router.navigateByUrl('/auth/login'); // Redirigir al login
           return next(request); // Finalizar el interceptor aquí
@@ -64,7 +64,8 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
         router.navigateByUrl('/auth/login');
         return next(request);
       }
-  
+
+      
       // Si el token es válido, agregarlo al encabezado
       request = request.clone({
         setHeaders: {

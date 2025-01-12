@@ -3,41 +3,65 @@ import { UserService } from '../../data-access/user.service';
 import { ICredentialsAccess } from '../../interfaces/user.interface';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
+import { RoleService } from '../../../../../shared/services/role.service';
+import { IRole } from '../../../../../shared/interfaces/role.interface';
 
 @Component({
   selector: 'app-view-users',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, ModalComponent],
   templateUrl: './view-users.component.html',
   styleUrl: './view-users.component.css'
 })
 export default class ViewUsersComponent {
 
+  //Injeccion de Servicios
   userService = inject(UserService);
   private fb = inject(FormBuilder);
-  CredentialsForm: FormGroup;
+  roleService = inject(RoleService);
 
-    usersSignal = signal<ICredentialsAccess[]>([]);
-    credentials : string = '';
-    errorMessage: string = '';
-  
-  
-  constructor(){
+  //Formulario
+  CredentialsForm: FormGroup;
+  usersSignal = signal<ICredentialsAccess[]>([]);
+  errorMessage: string = '';
+
+  //Modal
+  showModal = false;
+  titleModal: string = 'Nuevo Producto';
+  isEditing: boolean = false;
+
+  //
+  credential: any = [];
+  roles: IRole[] = [];
+  employees: any[] = [];
+  credentials: ICredentialsAccess[] = [];
+  selectedCredentialId: string | null = null;
+
+  //PAGINACION
+  currentPage: number = 1; // Página actual
+  itemsPerPage: number = 10; // Elementos por página
+  totalCredentials: number = 0; // Total de productos
+  pages: number[] = []; // Lista de páginas
+
+
+  constructor() {
+    this.loadEmployeesWOuthCredentials();
+    this.loadRoles();
     this.viewCredentials();
     this.CredentialsForm = this.fb.group({
-          name: ['', Validators.required],
-          barcode: ['', Validators.required],
-          code: ['', Validators.required],
-          stock: [0, Validators.required],
-          purchase_price: [0, Validators.required],
-          sale_price: [0, Validators.required],
-          categoryId: ['', Validators.required],
-          description: ['', Validators.required],
-        });
-    }
+      employee: ['', Validators.required],
+      username: ['', Validators.required],
+      employeeId: ['', Validators.required],
+      password: ['', Validators.required],
+      roleId: ['', Validators.required],
+    });
+  }
 
-  viewCredentials(){
+  viewCredentials() {
     this.userService.getCredendentials().subscribe({
       next: (data) => {
+        this.totalCredentials = data.total;
         this.credentials = data.credentials || [];
         this.usersSignal.set(data.credentials || []);
         this.errorMessage = '';
@@ -47,8 +71,13 @@ export default class ViewUsersComponent {
           this.usersSignal.set([]); // Limpia la lista de productos
           this.errorMessage = err.error.message || 'No hay credenciales registradas.';
         } else {
-          console.error('Error al cargar credenciales:', err);
+          // console.error('Error al cargar credenciales:', err);
           this.errorMessage = 'Ocurrió un error al cargar las credenciales.';
+          Swal.fire({
+            icon: "error",
+            title: `${err.statusText}`,
+            text: `${err.error.message}`
+          });
         }
       }
     })
@@ -57,30 +86,184 @@ export default class ViewUsersComponent {
   deleteCredentials(id: string) {
     this.userService.deleteCredentials(id).subscribe({
       next: (res: any) => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          text: `${res.message}`,
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.viewCredentials();
       },
-      error: (err) => console.error('Error al eliminar credenciales:', err),
+      error: (err) => {
+        Swal.fire({
+          icon: "error",
+          title: `${err.statusText}`,
+          text: `${err.error.message}`
+        });
+      },
+    });
+  }
+
+  loadEmployeesWOuthCredentials() {
+    this.userService.getEmployeesWithOutCredendentials().subscribe({
+      next: (data) => {
+        this.employees = data.employeesFound;
+      },
+      error: (err) => {
+        return false;
+      }
     });
   }
 
   // Actualiza el estado del producto
-    toggleStatus(credential: ICredentialsAccess): void {
-      // Alternar el estado
-      const updatedStatus = !credential.status;
-  
-      this.userService.updateCredentialsStatus(credential.id, updatedStatus).subscribe({
-        next: () => {
-          this.usersSignal.update((credentials) =>
-            credentials.map((p) =>
-              p.id === credential.id ? { ...p, status: updatedStatus } : p
-            )
-          );
-        },
-        error: (err) => {
-          console.error('Error al actualizar el estado de la credencial:', err);
-        },
-      });
+  toggleStatus(credential: ICredentialsAccess): void {
+    // Alternar el estado
+    const updatedStatus = !credential.status;
+
+    this.userService.updateCredentialsStatus(credential.id, updatedStatus).subscribe({
+      next: () => {
+        this.usersSignal.update((credentials) =>
+          credentials.map((p) =>
+            p.id === credential.id ? { ...p, status: updatedStatus } : p
+          )
+        );
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: "error",
+          title: `${err.statusText}`,
+          text: `${err.error.message}`
+        });
+      },
+    });
+  }
+
+
+  //Guardar
+  saveCredential() {
+    if (this.isEditing && this.selectedCredentialId) {
+      this.updateCredential(this.selectedCredentialId);
+    } else {
+      this.addCredential();
     }
+  }
+
+  //Añadir nueva credencial
+  addCredential() {
+    const newCredentials = this.CredentialsForm.value;
+    this.userService.addCredentials(newCredentials).subscribe({
+      next: (res) => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          text: `${res.message}`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.viewCredentials();
+      },
+      error: (err) => {
+        // console.error({err});
+        Swal.fire({
+          icon: "error",
+          title: `${err.statusText}`,
+          text: `${err.error.message}`
+        });
+      },
+    });
+    this.CredentialsForm.reset();
+    this.showModal = false;
+  }
+
+  //Actualizar categoria
+  updateCredential(id: string) {
+    const updatedCredential = this.CredentialsForm.value;
+    this.userService.updateCredential(id, updatedCredential).subscribe({
+      next: (res: any) => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          text: `${res.message}`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.viewCredentials();
+      },
+      error: (err) => {
+        // console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: `${err.statusText}`,
+          text: `${err.error.message}`
+        });
+      },
+    });
+    this.showModal = false;
+
+  }
+
+  loadRoles() {
+    this.roleService.getRoles().subscribe({
+      next: (data: any) => {
+        this.roles = data.roles;
+      },
+      error: (err) => {
+        // console.error('Error al cargar roles:', err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${err.error.message}`
+        });
+      },
+    });
+  }
+
+
+  //Toggle para abrir el modal
+  toggleModal(credential: any = null) {
+    this.showModal = !this.showModal;
+
+    if (credential) {
+      this.isEditing = true;
+      this.titleModal = 'Actualizar Credenciales';
+      this.selectedCredentialId = credential.id;
+
+      this.CredentialsForm.patchValue({
+        employee: `${credential.employee.name} ${credential.employee.surname}`,
+        username: credential.username,
+        roleId: credential.role.id
+      });
+    } else {
+      this.isEditing = false;
+      this.titleModal = 'Añadir credencial';
+      this.selectedCredentialId = null;
+      this.CredentialsForm.reset();
+    }
+  }
+
+
+
+  //Paginacion
+  calculatePages() {
+    const totalPages = Math.ceil(this.totalCredentials / this.itemsPerPage);
+    this.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  getProductRange() {
+    const start = (this.currentPage - 1) * this.itemsPerPage + 1;
+    const end = Math.min(this.currentPage * this.itemsPerPage, this.totalCredentials);
+    return `${start}-${end}`;
+  }
+
+  onPageChange(newPage: number) {
+    if (newPage < 1 || newPage > this.pages.length) {
+      return; // Evita cambiar a páginas no válidas
+    }
+
+    this.currentPage = newPage;
+    this.viewCredentials();
+  }
 
 
 }

@@ -17,12 +17,28 @@ export default [
           import('./features/user/features/users.routes')
       },
       {
+        path: 'clients',
+        loadChildren: () => import('./features/clientPages/clients.routes')
+      },
+      {
+        path: 'suppliers',
+        loadChildren: () => import('./features/supplierPages/suppliers.routes')
+      },
+      {
+        path: 'employees',
+        loadChildren: () => import('./features/employeePages/employees.routes')
+      },
+      {
         path: 'products',
         loadChildren: () => import('./features/productsPages/products.routes')
       },
       {
         path: 'categories',
         loadChildren: () => import('./features/categoriesPages/categories.routes')
+      },
+      {
+        path: 'enterprise',
+        loadChildren: () => import('./features/enterprisePages/enterprise.routes')
       },
       {
         path: 'notifications',

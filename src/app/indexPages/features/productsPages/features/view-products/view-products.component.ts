@@ -6,6 +6,7 @@ import { ModalComponent } from '../../../../../shared/features/components/modal/
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICategory } from '../../../categoriesPages/interface/icategories.interface';
 import { CategoriesService } from '../../../categoriesPages/data-access/categories.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -68,17 +69,22 @@ export default class ViewProductsComponent {
   }
 
   loadCategories() {
-    this.categoriesService.geCategories().subscribe({
+    this.categoriesService.getCategoriesByStatus().subscribe({
       next: (data: any) => {
         this.categories = data.categories;
       },
       error: (err) => {
         console.error('Error al cargar categorías:', err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${err.error.message}`
+        });
       },
     });
   }
 
-
+//Ver todos los productos
   viewProducts(categoryId?: string, page: number = 1, limit: number = 10) {
     this.productService.getProducts(categoryId, page, limit).subscribe({
       next: (data: any) => {
@@ -88,13 +94,24 @@ export default class ViewProductsComponent {
         this.errorMessage = ''; // Limpia cualquier mensaje de error
       },
       error: (err) => {
+        console.error({err})
         if (err.status === 404) {
           this.productsSignal.set([]); // Limpia la lista de productos
           this.totalProducts = 0; // Asegúrate de que el total sea 0
           this.errorMessage = err.error.message || 'No hay productos disponibles.';
+          // Swal.fire({
+          //   icon: "error",
+          //   title: `${err.statusText}`,
+          //   text: `${err.error.message}`
+          // });
         } else {
-          console.error('Error al cargar productos:', err);
+          // console.error('Error al cargar productos:', err);
           this.errorMessage = 'Ocurrió un error al cargar los productos.';
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: `${err.error.message}`
+          });
         }
       },
     });
@@ -106,9 +123,15 @@ export default class ViewProductsComponent {
     this.productService.deletedProduct(id).subscribe({
       next: (res: any) => {
         this.viewProducts();
-        console.log(res)
       },
-      error: (err) => console.error('Error al eliminar producto:', err),
+      error: (err) => {
+        console.error('Error al eliminar producto:', err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${err.error.message}`
+        });
+      },
     });
   }
 
@@ -127,6 +150,11 @@ export default class ViewProductsComponent {
       },
       error: (err) => {
         console.error('Error al actualizar el estado del producto:', err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${err.error.message}`
+        });
       },
     });
   }
@@ -151,6 +179,11 @@ export default class ViewProductsComponent {
       },
       error: (err) => {
         console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${err.error.message}`
+        });
       },
     });
     this.ProductForm.reset();
@@ -166,6 +199,11 @@ export default class ViewProductsComponent {
       },
       error: (err) => {
         console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${err.error.message}`
+        });
       },
     });
     this.showModal = false;

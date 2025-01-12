@@ -12,25 +12,25 @@ export class ProductsService {
   private http = inject(HttpClient);
 
   addProduct(iProduct: IProduct): Observable<any> {
-      return this.http.post(`${environment.API_URL}/products/add`, iProduct)
-        .pipe(tap((res) => {
-          return;
-        }));
-    }
+    return this.http.post(`${environment.API_URL}/products/add`, iProduct)
+      .pipe(tap((res) => {
+        return;
+      }));
+  }
 
   getProducts(categoryId?: string, page: number = 1, limit: number = 10) {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
-  
+
     if (categoryId) {
       params = params.set('categoryId', categoryId);
     }
-  
+
     return this.http.get(`${environment.API_URL}/products/all?`, { params });
   }
 
-  getProductId(id: string){
+  getProductId(id: string) {
     return this.http.get(`${environment.API_URL}/products/id/${id}`)
   }
 
@@ -38,11 +38,11 @@ export class ProductsService {
     return this.http.patch(`${environment.API_URL}/products/${id}/status`, { status });
   }
 
-  updateProduct(id: string, iProduct: any){
+  updateProduct(id: string, iProduct: any) {
     return this.http.put(`${environment.API_URL}/products/update/${id}`, iProduct)
   }
 
-  deletedProduct(id: string){
+  deletedProduct(id: string) {
     return this.http.delete(`${environment.API_URL}/products/delete/${id}`)
   }
 }

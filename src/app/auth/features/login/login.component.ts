@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFo
 import { ILogin } from '../../interfaces/login.interface';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -35,8 +36,13 @@ export default class LoginComponent {
         next: (response) => {
           this._router.navigateByUrl('index/dashboard');
         },
-        error: (error) => {
-          console.error('Error al iniciar sesión', {error});
+        error: (err) => {
+          // console.error('Error al iniciar sesión', {err});
+          Swal.fire({
+            icon: "error",
+            title: `${err.statusText}`,
+            text: `${err.error.message}`
+          });
         },
       });
     }

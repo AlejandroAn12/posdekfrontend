@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ICategory } from '../interface/icategories.interface';
 import { tap } from 'rxjs';
 
@@ -18,8 +18,15 @@ export class CategoriesService {
       }));
   }
 
-  geCategories() {
-    return this.http.get(`${environment.API_URL}/categories/all`);
+  getAllCategories(page: number = 1, limit: number = 10) {
+    let params = new HttpParams()
+          .set('page', page.toString())
+          .set('limit', limit.toString());
+    return this.http.get(`${environment.API_URL}/categories/all?`, {params});
+  }
+
+  getCategoriesByStatus() {
+    return this.http.get(`${environment.API_URL}/categories/all-status`);
   }
 
   getCategoryId(id: string){
