@@ -16,21 +16,21 @@ export class UserService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
-    return this.http.get(`${environment.API_URL}/employee/credentials`, {params})
+    return this.http.get(`${environment.API_URL}/credentials/all?`, {params})
       .pipe(tap((res) => {}));
   }
 
   getEmployeesWithOutCredendentials(): Observable<any> {
-    return this.http.get(`${environment.API_URL}/employee/all-without-credentials`,)
+    return this.http.get(`${environment.API_URL}/credentials/all-without-credentials`,)
       .pipe(tap((res) => {}));
   }
 
   getCredentialID(id: string){
-    return this.http.get(`${environment.API_URL}/employee/credential/${id}`)
+    return this.http.get(`${environment.API_URL}/credential/${id}`)
   }
 
   addCredentials(iCredentials: ICredentialsAccess): Observable<any> {
-    return this.http.post(`${environment.API_URL}/employee/credentials/add`,iCredentials)
+    return this.http.post(`${environment.API_URL}/credentials/add`,iCredentials)
     .pipe(tap((res) => {
       return;
     }));
@@ -38,16 +38,16 @@ export class UserService {
 
 
   updateCredential(id: string, iCredential: any){
-    return this.http.patch(`${environment.API_URL}/employee/credentials/update/${id}`, iCredential)
+    return this.http.patch(`${environment.API_URL}/credentials/update/${id}`, iCredential)
   }
 
 
   deleteCredentials(id: string) {
-    return this.http.delete(`${environment.API_URL}/employee/delete/credentials/${id}`)
+    return this.http.delete(`${environment.API_URL}/credentials/delete/credentials/${id}`)
   }
 
   updateCredentialsStatus(id: string, status: boolean) {
-    return this.http.patch(`${environment.API_URL}/employee/credentials/${id}/status`, { status });
+    return this.http.patch(`${environment.API_URL}/credentials/${id}/status`, { status });
   }
 
 }

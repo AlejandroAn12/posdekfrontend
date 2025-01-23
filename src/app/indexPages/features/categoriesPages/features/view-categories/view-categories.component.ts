@@ -58,19 +58,18 @@ export default class ViewCategoriesComponent {
 
 
   //Toggle para actualizar el estado de la categoria (ACTIVO : INACTIVO)
-  toggleStatus(category: ICategory): void {
-    const updatedStatus = !category.status;
-    this.categoriesService.updateCategoryStatus(category.id, updatedStatus).subscribe({
-      next: (res: any) => {
-        this.categoriesSignal.update((categories) =>
-          categories.map((p) =>
-            p.id === category.id ? { ...p, status: updatedStatus } : p
-          )
-        );
-      },
-      error: (err) => {
-        console.error('Error al actualizar el estado del producto:', err);
-      },
+  onStatusChange(event: Event, employee: any): void {
+    const checkbox = event.target as HTMLInputElement;
+    employee.status = checkbox.checked;
+  
+    // Aquí puedes enviar la actualización al backend si es necesario
+    this.updateEmployeeStatus(employee);
+  }
+  
+  updateEmployeeStatus(employee: any): void {
+    this.categoriesService.updateCategoryStatus(employee.id, employee.status).subscribe({
+      next: (response) => console.log('Estado actualizado:', response),
+      error: (error) => console.error('Error actualizando estado:', error),
     });
   }
 

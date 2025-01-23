@@ -5,7 +5,7 @@
   <div class="flex justify-center">
     <!-- titulo -->
     <div class="p-1">
-      <h1 class="text-white font-semibold text-2xl">Productos</h1>
+      <h1 class="text-white font-semibold text-2xl uppercase">Productos</h1>
     </div>
   </div>
 </div>
@@ -101,15 +101,15 @@
           class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
         >
           <tr>
-            <th scope="col" class="px-6 py-3">Producto</th>
-            <th scope="col" class="px-6 py-3">Código de barra</th>
-            <th scope="col" class="px-6 py-3">Código interno</th>
-            <th scope="col" class="px-6 py-3">Stock disponible</th>
-            <th scope="col" class="px-6 py-3">P.U Compra</th>
-            <th scope="col" class="px-6 py-3">P.U Venta</th>
-            <th scope="col" class="px-6 py-3">F. Registro</th>
-            <th scope="col" class="px-6 py-3">Habilitado</th>
-            <th scope="col" class="px-6 py-3">Opciones</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Producto</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Código de barra</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Código interno</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Stock disponible</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">P.U Compra</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">P.U Venta</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">F. Registro</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Habilitado</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Opciones</th>
           </tr>
         </thead>
         <tbody>
@@ -123,35 +123,41 @@
             >
               {{ product.name }}
             </th>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">
               {{ product.barcode }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">
               {{ product.code }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">
               {{ product.stock }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">
               {{ product.purchase_price }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">
               {{ product.sale_price }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">
               {{ product.registration_date }}
             </td>
-            <td class="px-4 py-2 text-center">
-              <input
-                [checked]="product.status"
-                (change)="toggleStatus(product)"
-                id="default-checkbox"
-                type="checkbox"
-                value=""
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
+            <td class="px-6 py-4 whitespace-nowrap">
+              <label class="inline-flex items-center cursor-pointer">
+                <input
+                  [checked]="product.status"
+                  (change)="onStatusChange($event, product)"
+                  type="checkbox"
+                  class="sr-only peer"
+                />
+                <div
+                  class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+                ></div>
+                <span
+                  class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >{{ product.status ? 'Activo' : 'Inactivo' }}</span>
+              </label>
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex">
                 <button
                   (click)="toggleModal(product)"
@@ -178,59 +184,61 @@
           </tr>
         </tbody>
       </table>
-      <!-- Paginacion -->
-      <nav
-        class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-        aria-label="Table navigation"
-      >
-        <span
-          class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
-        >
-          Mostrando
-          <span class="font-semibold text-gray-900 dark:text-white">{{
-            getProductRange()
-          }}</span>
-          de
-          <span class="font-semibold text-gray-900 dark:text-white">{{
-            totalProducts
-          }}</span>
-        </span>
-        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-          <li>
-            <button
-              (click)="onPageChange(currentPage - 1)"
-              [disabled]="currentPage === 1"
-              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Anterior
-            </button>
-          </li>
-          <li *ngFor="let page of pages">
-            <button
-              (click)="onPageChange(page)"
-              [class]="
-                page === currentPage
-                  ? 'text-blue-600 bg-blue-50'
-                  : 'text-gray-500 bg-white'
-              "
-              class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              {{ page }}
-            </button>
-          </li>
-          <li>
-            <button
-              (click)="onPageChange(currentPage + 1)"
-              [disabled]="currentPage === pages.length"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Siguiente
-            </button>
-          </li>
-        </ul>
-      </nav>
+      <!-- Final tabla -->
     </div>
   </div>
+  <!-- Paginacion -->
+  <nav
+  class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+  aria-label="Table navigation"
+>
+  <span
+    class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
+  >
+    Mostrando
+    <span class="font-semibold text-gray-900 dark:text-white">{{
+      getProductRange()
+    }}</span>
+    de
+    <span class="font-semibold text-gray-900 dark:text-white">{{
+      totalProducts
+    }}</span>
+  </span>
+  <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+    <li>
+      <button
+        (click)="onPageChange(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+      >
+        Anterior
+      </button>
+    </li>
+    <li *ngFor="let page of pages">
+      <button
+        (click)="onPageChange(page)"
+        [class]="
+          page === currentPage
+            ? 'text-blue-600 bg-blue-50'
+            : 'text-gray-500 bg-white'
+        "
+        class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+      >
+        {{ page }}
+      </button>
+    </li>
+    <li>
+      <button
+        (click)="onPageChange(currentPage + 1)"
+        [disabled]="currentPage === pages.length"
+        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+      >
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>
+<!-- Final paginacion -->
 </div>
 
 <!-- Modal-->

@@ -105,11 +105,10 @@ export default class ViewProductsComponent {
           //   text: `${err.error.message}`
           // });
         } else {
-          // console.error('Error al cargar productos:', err);
           this.errorMessage = 'Ocurrió un error al cargar los productos.';
           Swal.fire({
             icon: "error",
-            title: "Oops...",
+            title: `${err.statusText}`,
             text: `${err.error.message}`
           });
         }
@@ -156,6 +155,22 @@ export default class ViewProductsComponent {
           text: `${err.error.message}`
         });
       },
+    });
+  }
+
+  //Toggle para actualizar el estado del producto (ACTIVO : INACTIVO)
+  onStatusChange(event: Event, product: any): void {
+    const checkbox = event.target as HTMLInputElement;
+    product.status = checkbox.checked;
+  
+    // Aquí puedes enviar la actualización al backend si es necesario
+    this.updateProductStatus(product);
+  }
+  
+  updateProductStatus(product: any): void {
+    this.productService.updateProductStatus(product.id, product.status).subscribe({
+      next: (response) => console.log('Estado actualizado:', response),
+      error: (error) => console.error('Error actualizando estado:', error),
     });
   }
 

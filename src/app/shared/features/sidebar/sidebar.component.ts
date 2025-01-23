@@ -31,7 +31,7 @@ export class SidebarComponent {
       title: 'Productos',
       iconClass: 'fa-solid fa-box',
       children: [
-        { title: 'Ver productos', iconClass: 'fa-solid fa-box', route: '/index/products/view' },
+        { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/index/products/view' },
         { title: 'Categorías', iconClass: 'fa-solid fa-tags', route: '/index/categories/view' },
       ],
     },

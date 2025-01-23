@@ -2,7 +2,7 @@
   *ngIf="showModal"
   class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75"
 >
-  <div class="bg-white rounded-lg shadow-lg w-auto p-6">
+  <div class="bg-white rounded-lg shadow-lg w-2/6 p-6">
     <!-- Header -->
     <div class="flex justify-between items-center border-b pb-3">
       <h2 class="text-xl font-semibold text-gray-500">{{ title }}</h2>
@@ -14,7 +14,7 @@
     </div>
 
     <!-- Dynamic Content -->
-    <div class="mt-4">
+    <div class="mt-4 p-5">
       <ng-content></ng-content>
     </div>
 

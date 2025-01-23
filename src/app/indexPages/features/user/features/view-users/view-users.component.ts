@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { UserService } from '../../data-access/user.service';
 import { ICredentialsAccess } from '../../interfaces/user.interface';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -46,7 +46,7 @@ export default class ViewUsersComponent {
 
 
   constructor() {
-    this.loadEmployeesWOuthCredentials();
+    this.loadEmployeesWOutCredentials();
     this.loadRoles();
     this.viewCredentials();
     this.CredentialsForm = this.fb.group({
@@ -94,6 +94,7 @@ export default class ViewUsersComponent {
           timer: 1500
         });
         this.viewCredentials();
+        this.loadEmployeesWOutCredentials();
       },
       error: (err) => {
         Swal.fire({
@@ -105,7 +106,7 @@ export default class ViewUsersComponent {
     });
   }
 
-  loadEmployeesWOuthCredentials() {
+  loadEmployeesWOutCredentials() {
     this.userService.getEmployeesWithOutCredendentials().subscribe({
       next: (data) => {
         this.employees = data.employeesFound;
@@ -116,26 +117,20 @@ export default class ViewUsersComponent {
     });
   }
 
-  // Actualiza el estado del producto
-  toggleStatus(credential: ICredentialsAccess): void {
-    // Alternar el estado
-    const updatedStatus = !credential.status;
 
-    this.userService.updateCredentialsStatus(credential.id, updatedStatus).subscribe({
-      next: () => {
-        this.usersSignal.update((credentials) =>
-          credentials.map((p) =>
-            p.id === credential.id ? { ...p, status: updatedStatus } : p
-          )
-        );
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: "error",
-          title: `${err.statusText}`,
-          text: `${err.error.message}`
-        });
-      },
+  //Toggle para actualizar el estado de la credencial (ACTIVO : INACTIVO)
+  onStatusChange(event: Event, credentials: any): void {
+    const checkbox = event.target as HTMLInputElement;
+    credentials.status = checkbox.checked;
+  
+    // Aquí puedes enviar la actualización al backend si es necesario
+    this.updateProductStatus(credentials);
+  }
+  
+  updateProductStatus(credentials: any): void {
+    this.userService.updateCredentialsStatus(credentials.id, credentials.status).subscribe({
+      next: (response) => console.log('Estado actualizado:', response),
+      error: (error) => console.error('Error actualizando estado:', error),
     });
   }
 
@@ -162,6 +157,7 @@ export default class ViewUsersComponent {
           timer: 1500
         });
         this.viewCredentials();
+        this.loadEmployeesWOutCredentials();
       },
       error: (err) => {
         // console.error({err});
@@ -189,6 +185,7 @@ export default class ViewUsersComponent {
           timer: 1500
         });
         this.viewCredentials();
+        this.loadEmployeesWOutCredentials();
       },
       error: (err) => {
         // console.error(err);

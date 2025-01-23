@@ -9,176 +9,239 @@
   </div>
 </div>
 
-<div class="flex justify-center mt-10">
-  <form class="w-96">
-    <div class="flex flex-col justify-center">
-      <div class="mb-4">
-        <div class="relative z-0 w-full group">
-          <input
-            type="text"
-            name="floating_name"
-            id="floating_name"
-            class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_name"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Nombre de la empresa</label
-          >
-        </div>
+<div class="flex flex-row justify-center mt-10">
+  <div class="w-96 p-3">
+    <form [formGroup]="EnterpriseForm">
+      <div class="title flex justify-center">
+        <h1 class="uppercase text-gray-500 font-semibold">Datos de Empresa</h1>
       </div>
-      <div class="mb-4">
-        <div class="relative z-0 w-full group">
-          <input
-            type="text"
-            name="floating_name"
-            id="floating_name"
-            class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_name"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Razón social</label
-          >
-        </div>
-      </div>
-      <div class="flex flex-row">
-        <div class="mb-4 mr-3">
+      <div class="flex flex-col mt-5 justify-center">
+        <div class="mb-4">
           <div class="relative z-0 w-full group">
             <input
+              formControlName="name"
               type="text"
-              name="floating_ruc"
-              id="floating_ruc"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+              name="floating_name"
+              id="floating_name"
+              class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
               placeholder=" "
               required
             />
             <label
-              for="floating_ruc"
+              for="floating_name"
               class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >RUC</label
-            >
-          </div>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="relative z-0 w-full group">
-          <input
-            type="text"
-            name="floating_name"
-            id="floating_name"
-            class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_name"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Representante legal</label
-          >
-        </div>
-      </div>
-      <div class="flex flex-row">
-        <div class="mb-4 mr-3">
-          <div class="relative z-0 w-full group">
-            <input
-              type="text"
-              name="floating_country"
-              id="floating_country"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_country"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >País</label
-            >
-          </div>
-        </div>
-        <div class="mb-4 mr-3">
-          <div class="relative z-0 w-full group">
-            <input
-              type="text"
-              name="floating_city"
-              id="floating_city"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_city"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Ciudad matriz</label
-            >
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-row">
-        <div class="mb-4 mr-3">
-          <div class="relative z-0 w-full group">
-            <input
-              type="tel"
-              name="floating_phone"
-              id="floating_phone"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_phone"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Teléfono contacto</label
+              >Nombre de la empresa</label
             >
           </div>
         </div>
         <div class="mb-4">
           <div class="relative z-0 w-full group">
             <input
+              formControlName="company_name"
               type="text"
-              name="floating_email"
-              id="floating_email"
-              class="block py-2.5 px-0 w-56 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+              name="floating_name"
+              id="floating_name"
+              class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
               placeholder=" "
               required
             />
             <label
-              for="floating_email"
+              for="floating_name"
               class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Correo Electrónico</label
+              >Razón social</label
+            >
+          </div>
+        </div>
+        <div class="flex flex-row">
+          <div class="mb-4 mr-3">
+            <div class="relative z-0 w-full group">
+              <input
+              [disabled]="isDisabled"
+                formControlName="ruc"
+                type="text"
+                name="floating_ruc"
+                id="floating_ruc"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+                placeholder=" "
+                required
+              />
+              <label
+                for="floating_ruc"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >RUC</label
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mb-4">
+          <div class="relative z-0 w-full group">
+            <input
+              formControlName="legal_representative"
+              type="text"
+              name="floating_name"
+              id="floating_name"
+              class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+              placeholder=" "
+              required
+            />
+            <label
+              for="floating_name"
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >Representante legal</label
+            >
+          </div>
+        </div>
+        <div class="flex flex-row">
+          <div class="mb-4 mr-3">
+            <div class="relative z-0 w-full group">
+              <input
+                formControlName="country"
+                type="text"
+                name="floating_country"
+                id="floating_country"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+                placeholder=" "
+                required
+              />
+              <label
+                for="floating_country"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >País</label
+              >
+            </div>
+          </div>
+          <div class="mb-4 mr-3">
+            <div class="relative z-0 w-full group">
+              <input
+                formControlName="city"
+                type="text"
+                name="floating_city"
+                id="floating_city"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+                placeholder=" "
+                required
+              />
+              <label
+                for="floating_city"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Ciudad matriz</label
+              >
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-row">
+          <div class="mb-4 mr-3">
+            <div class="relative z-0 w-full group">
+              <input
+                formControlName="phone"
+                type="tel"
+                name="floating_phone"
+                id="floating_phone"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+                placeholder=" "
+                required
+              />
+              <label
+                for="floating_phone"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Teléfono contacto</label
+              >
+            </div>
+          </div>
+          <div class="mb-4">
+            <div class="relative z-0 w-full group">
+              <input
+                formControlName="email"
+                type="text"
+                name="floating_email"
+                id="floating_email"
+                class="block py-2.5 px-0 w-56 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+                placeholder=" "
+                required
+              />
+              <label
+                for="floating_email"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Correo Electrónico</label
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="relative z-0 w-full group">
+            <input
+              formControlName="address"
+              type="text"
+              name="floating_address"
+              id="floating_address"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+              placeholder=" "
+              required
+            />
+            <label
+              for="floating_address"
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              >Dirección matriz</label
             >
           </div>
         </div>
       </div>
+      <button
+        (click)="onSubmit()"
+        type="submit"
+        class="mt-5 px-4 py-2 bg-colorPrimary text-white rounded hover:bg-blue-700"
+        [disabled]="!isFormChanged"
+      >
+        Guardar cambios
+      </button>
+    </form>
+  </div>
 
-      <div class="mb-4">
-        <div class="relative z-0 w-full group">
-          <input
-            type="text"
-            name="floating_address"
-            id="floating_address"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_address"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Dirección matriz</label
-          >
-        </div>
+  <!-- FORMULARIO PARA SUBIR EL LOGO IMG -->
+  <div class="w-96 p-3">
+    <form>
+      <div class="title flex justify-center">
+        <h1 class="uppercase text-gray-500 font-semibold">Logo de Empresa</h1>
       </div>
-    </div>
-    <!-- <button
-      type="submit"
-      class="bg-colorPrimary hover:bg-blue-800 text-white px-4 py-2 rounded"
-    >
-    GUARDAR CAMBIOS
+      <div class="img border mt-5">
+        <img
+          *ngIf="EnterpriseForm.get('logoURL')?.value"
+          [src]="EnterpriseForm.get('logoURL')?.value"
+          alt="Logo de la empresa"
+          class="w-full h-full object-cover"
+        />
+        <input
+          type="file"
+          name="img-logo"
+          id="img-logo"
+          (change)="onFileChange($event)"
+          accept="image/*"
+          class="mt-2"
+        />
+      </div>
   
-    </button> -->
-  </form>
+      <!-- Barra de progreso -->
+      <div *ngIf="isUploading" class="w-full mt-3">
+        <div class="w-full bg-gray-200 rounded h-2.5">
+          <div
+            class="bg-colorSecondary h-2.5 rounded"
+            [style.width.%]="uploadProgress"
+          ></div>
+        </div>
+        <p class="text-gray-500 text-sm mt-1">{{ uploadProgress }}% Subido</p>
+      </div>
+  
+      <button
+        (click)="uploadLogo()"
+        type="button"
+        class="mt-5 px-4 py-2 bg-colorSecondary text-white rounded hover:bg-orange-400"
+        [disabled]="isUploading"
+      >
+        Subir logo
+      </button>
+    </form>
+  </div>
+  
+  
 </div>
