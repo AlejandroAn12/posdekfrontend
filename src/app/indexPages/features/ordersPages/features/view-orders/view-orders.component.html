@@ -1,0 +1,121 @@
+<!-- Contenedor 1 -->
+<div
+  class="bg-colorPrimary bg-cover bg-center bg-no-repeat p-10 mt-2 rounded-t-2xl"
+>
+  <div class="flex justify-center">
+    <!-- titulo -->
+    <div class="p-1">
+      <h1 class="text-white font-semibold text-2xl uppercase">
+        Órdenes de compras
+      </h1>
+    </div>
+  </div>
+</div>
+<div class="flex flex-col shadow-2xl p-5 bg-white">
+  <div class="flex mt-20">
+    <!-- Proveedores -->
+    <div class="relative mr-5">
+      <label
+        for="supplier"
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+        >Proveedores</label
+      >
+      <select
+        id="supplier"
+        class="rounded-lg"
+        (change)="onSupplierChange($event)"
+      >
+        <option value="" disabled selected>Selecciona un proveedor</option>
+        <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+          {{ supplier.company_name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Select de productos -->
+
+    <div class="relative mr-5">
+      <label
+        for="product"
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+        >Productos</label
+      >
+      <select
+        id="product"
+        class="rounded-lg"
+        (change)="addToTable($event.target)"
+      >
+        <option value="" disabled selected>Selecciona un producto</option>
+        <option *ngFor="let product of products" [value]="product.id">
+          {{ product.name }} - <small>[stock: {{ product.stock }}]</small>
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tabla de productos seleccionados -->
+  <div class="h-full w-full bg-white mt-10">
+    <div class="relative overflow-x-auto">
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Producto</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Precio</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Cantidad</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Subtotal</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let product of selectedProducts"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+          >
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ product.name }}
+            </th>
+            <td class="px-6 py-4 whitespace-nowrap">
+              {{ product.purchase_price | currency }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <input
+                class="rounded-lg"
+                type="number"
+                [(ngModel)]="product.quantity"
+                min="1"
+              />
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              {{ product.quantity * product.purchase_price | currency }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <button
+                class="bg-colorDanger hover:bg-red-700 p-2 text-white m-1 rounded-md"
+                (click)="removeFromTable(product.id)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- Final tabla -->
+    </div>
+  </div>
+
+  <p class="font-bold ml-5 mt-5">Total: {{ getTotal() | currency }}</p>
+  <button
+  [disabled]="selectedProducts.length === 0"
+    class="ml-5 mt-3 bg-green-400 hover:bg-green-500 font-semibold p-2 text-white rounded-md w-40"
+    (click)="submitOrder()"
+  >
+    Crear Orden
+  </button>
+</div>

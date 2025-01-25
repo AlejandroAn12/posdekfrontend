@@ -37,4 +37,8 @@ export class SuppliersService {
   deleteSupplier(id: string) {
     return this.http.delete(`${environment.API_URL}/suppliers/delete/${id}`)
   }
+
+  getProductsBySupplier(id: string): Observable<any> {
+    return this.http.get(`${environment.API_URL}/suppliers/${id}/products`);
+  }
 }

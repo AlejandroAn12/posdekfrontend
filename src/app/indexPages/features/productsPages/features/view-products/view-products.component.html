@@ -70,6 +70,7 @@
         formControlName="categoryId"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
+    <option value="" disabled selected>Selecciona la categoria</option>
         <option *ngFor="let category of categories" [value]="category.id">
           {{ category.name }}
         </option>
@@ -92,6 +93,7 @@
     </div>
   </form>
 
+  <!-- TABLA -->
   <div class="h-full w-full bg-white">
     <div class="relative overflow-x-auto">
       <table

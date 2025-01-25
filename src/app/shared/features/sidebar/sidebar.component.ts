@@ -50,9 +50,9 @@ export class SidebarComponent {
       ],
     },
     {
-      title: 'Órdenes',
+      title: 'Órdenes de compra',
       iconClass: 'fa-solid fa-receipt',
-      route: 'notifications',
+      route: '/index/orders/view',
     },
     {
       title: 'Reportes',

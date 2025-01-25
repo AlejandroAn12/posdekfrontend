@@ -41,6 +41,10 @@ export default [
         loadChildren: () => import('./features/enterprisePages/enterprise.routes')
       },
       {
+        path: 'orders',
+        loadChildren: () => import('./features/ordersPages/orders.routes')
+      },
+      {
         path: 'notifications',
         loadComponent: () => import('./features/notifications/notifications.component')
       },
