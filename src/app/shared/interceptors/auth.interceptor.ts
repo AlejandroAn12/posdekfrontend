@@ -3,6 +3,7 @@ import { inject } from "@angular/core";
 import { AuthStateService } from "../services/auth-state.service";
 import { jwtDecode } from "jwt-decode";
 import { Router } from "@angular/router";
+import Swal from "sweetalert2";
 
 // export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, next: HttpHandlerFn) => {
 
@@ -53,7 +54,12 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
         // Verificar si el token ha expirado
         const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
         if (decodedToken.exp && decodedToken.exp < currentTime) {
-          console.warn('La sesion ha expirado');
+          // console.warn('La sesion ha expirado');
+          Swal.fire({
+                    icon: "error",
+                    title: "Sesión expirada",
+                    text: `Tu sesión ha expirado, vuelva a iniciar sesión`
+                  });
           authState.logOut(); // Método para eliminar el token
           router.navigateByUrl('/auth/login'); // Redirigir al login
           return next(request); // Finalizar el interceptor aquí

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SuppliersService } from '../../../supplierPages/data-access/suppliers.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../../../../shared/services/alerts.service';
+import { OrdersService } from '../../data-access/orders.service';
 
 @Component({
   selector: 'app-view-orders',
@@ -12,38 +13,65 @@ import { AlertService } from '../../../../../shared/services/alerts.service';
 })
 export default class ViewOrdersComponent {
 
+  private supplierService = inject(SuppliersService);
+  private ordersService = inject(OrdersService);
+  private alertsService = inject(AlertService);
+
   suppliers: any[] = [];
   products: any[] = [];
   orderItems: any[] = [];
-  selectedProducts: any[] = []; // Productos seleccionados para la tabla
+  selectedProducts: any[] = [];
+  selectedSupplierId: string = '';
 
-  constructor(private supplierService: SuppliersService, private alertsService: AlertService) {
+  constructor() {
     this.loadSuppliers();
   }
 
   loadSuppliers(): void {
     this.supplierService.getSuppliers().subscribe({
       next: (response) => {
-        this.suppliers = response.suppliers; // Verifica si 'response.suppliers' es correcto
+        this.suppliers = response.suppliers;
       },
       error: (err) => {
-        console.error('Error loading suppliers:', err);
+        this.alertsService.showError(err.error.message, err.statusText)
       },
     });
   }
-  
+
+  // onSupplierChange(event: any): void {
+  //   this.selectedSupplierId = event.target.value;
+  //   this.supplierService.getProductsBySupplier(this.selectedSupplierId).subscribe({
+  //     next: (response) => {
+  //       console.log(response);
+  //       this.products = response;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error loading products:', err);
+  //     },
+  //   });
+  // }
+
   onSupplierChange(event: any): void {
-    const supplierId = event.target.value; // Obtén el ID del proveedor
+    const supplierId = event.target.value;
+    this.selectedSupplierId = supplierId;
+  
+    // Limpia la lista de productos seleccionados y la tabla
+    this.selectedProducts = [];
+  
+    // Carga los productos del proveedor seleccionado
     this.supplierService.getProductsBySupplier(supplierId).subscribe({
       next: (response) => {
-        this.products = response; // Asigna los productos a 'this.products'
+        this.products = response; // Asegúrate de que `response` contenga la lista de productos
+        console.log('Productos cargados:', this.products);
       },
       error: (err) => {
-        console.error('Error loading products:', err); // Maneja cualquier error
+        console.error('Error al cargar los productos:', err);
       },
     });
   }
   
+
+
 
   onProductSelect(event: any): void {
     const productId = event.target.value;
@@ -66,51 +94,83 @@ export default class ViewOrdersComponent {
   }
 
   submitOrder(): void {
+    if (this.selectedProducts.length === 0) {
+      this.alertsService.showError('No hay productos seleccionados para crear la orden.', '');
+      return;
+    }
+
+    // Formar el objeto de la orden con los productos seleccionados
     const order = {
-      orderItems: this.orderItems.map((item) => ({
-        productId: item.id,
-        quantity: item.quantity,
+      supplier: this.selectedSupplierId, // Asegúrate de almacenar el ID del proveedor seleccionado
+      orderItems: this.selectedProducts.map((product) => ({
+        productId: product.id,
+        quantity: product.quantity,
       })),
     };
+    
 
-    // Llama al servicio para crear la orden (a implementar)
-    console.log('Orden creada:', order);
-    // this.toastr.info('Orden creada', 'Toastr fun!');
-    this.alertsService.showSuccess('Orden generada', '')
+    // Enviar la orden al backend
+    this.ordersService.generateOrder(order).subscribe({
+      next: (response) => {
+        this.alertsService.showSuccess(`${response.message}`, '');
+        this.resetOrderForm();
+      },
+      error: (err) => {
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
+      },
+    });
   }
 
-  addToTable(target: EventTarget | null): void {
+  resetOrderForm(): void {
+    this.selectedProducts = [];
+    this.products = [];
+    this.selectedSupplierId = ''; // O reinicia según tu lógica
+  }
 
-    if (!target) {
-      this.alertsService.showError('El evento no tiene un target válido', '');
+  addToTable(selectElement: HTMLSelectElement): void {
+    const productId = selectElement.value;
+  
+    if (!productId) {
+      // console.error('El valor del producto es inválido.');
+      this.alertsService.showError('El valor del producto es inválido.', '');
+
       return;
     }
   
-    const selectElement = target as HTMLSelectElement;
-    const productId = selectElement.value;
+    const product = this.products.find((p) => p.id === productId);
   
-    const selectedProduct = this.products.find((product) => product.id === productId);
+    if (!product) {
+      this.alertsService.showError('Producto no encontrado.', '');
+      return;
+    }
   
-    if (selectedProduct) {
-      const exists = this.selectedProducts.find((item) => item.id === selectedProduct.id);
-      if (!exists) {
-        this.selectedProducts.push({ ...selectedProduct, quantity: 1 });
-        console.log('Producto añadido:', this.selectedProducts);
-      } else {
-      this.alertsService.showInfo('El producto ya se encuentra añadido', '');
-        
-      }
-    } else {
-      console.error('Producto no encontrado:', productId);
+    const existingProduct = this.selectedProducts.find((p) => p.id === productId);
+    if (existingProduct) {
+      this.alertsService.showWarning('El producto ya está en la lista.', '');
+      return;
+    }
+  
+    // Agrega el producto a la tabla
+    this.selectedProducts.push({ ...product, quantity: 1 });
+  
+    // Resetea el select
+    selectElement.value = "";
+  }
+  
+  
+  
+
+  removeProduct(productId: string): void {
+    this.selectedProducts = this.selectedProducts.filter((p) => p.id !== productId);
+  
+    // Opcional: resetear el select al eliminar
+    const selectElement = document.querySelector('#productSelect') as HTMLSelectElement;
+    if (selectElement) {
+      selectElement.value = "";
     }
   }
-
   
-  removeFromTable(productId: number): void {
-    this.selectedProducts = this.selectedProducts.filter(
-      (product) => product.id !== productId
-    );
-  }
+  
 
   getTotal(): number {
     return this.selectedProducts.reduce(
@@ -118,4 +178,9 @@ export default class ViewOrdersComponent {
       0
     );
   }
+
+  trackByProductId(index: number, product: any): string {
+    return product.id;
+  }
+  
 }

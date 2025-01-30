@@ -41,7 +41,7 @@ export class SidebarComponent {
       children: [
         { title: 'Empresa', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
         { title: 'Proveedores', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/view' },
-        { title: 'Clientes', iconClass: 'fa-solid fa-users', route: '/index/clients/view' },
+        // { title: 'Clientes', iconClass: 'fa-solid fa-users', route: '/index/clients/view' },
         { title: 'Empleados', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
         { title: 'Credenciales de acceso', iconClass: 'fa-solid fa-user-tie', route: '/index/users/credentials' },
 
@@ -50,7 +50,7 @@ export class SidebarComponent {
       ],
     },
     {
-      title: 'Órdenes de compra',
+      title: 'Órden de compras',
       iconClass: 'fa-solid fa-receipt',
       route: '/index/orders/view',
     },

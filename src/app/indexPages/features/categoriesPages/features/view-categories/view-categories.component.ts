@@ -68,7 +68,7 @@ export default class ViewCategoriesComponent {
   
   updateEmployeeStatus(employee: any): void {
     this.categoriesService.updateCategoryStatus(employee.id, employee.status).subscribe({
-      next: (response) => console.log('Estado actualizado:', response),
+      next: (response) => {return true},
       error: (error) => console.error('Error actualizando estado:', error),
     });
   }

@@ -6,12 +6,15 @@ import { ModalComponent } from '../../../../../shared/features/components/modal/
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICategory } from '../../../categoriesPages/interface/icategories.interface';
 import { CategoriesService } from '../../../categoriesPages/data-access/categories.service';
-import Swal from 'sweetalert2';
+import { AlertService } from '../../../../../shared/services/alerts.service';
+import { SuppliersService } from '../../../supplierPages/data-access/suppliers.service';
+import { ISupplier } from '../../../supplierPages/interface/supplier.interface';
+import { DownloadPdfComponent } from '../../../../../shared/features/components/download-pdf/download-pdf.component';
 
 
 @Component({
   selector: 'app-view-products',
-  imports: [ModalComponent, CommonModule, ReactiveFormsModule],
+  imports: [ModalComponent, CommonModule, ReactiveFormsModule, DownloadPdfComponent],
   templateUrl: './view-products.component.html',
   styleUrl: './view-products.component.css'
 })
@@ -19,6 +22,8 @@ export default class ViewProductsComponent {
 
   private productService = inject(ProductsService);
   private categoriesService = inject(CategoriesService);
+  private alertsService = inject(AlertService);
+  private supplierService = inject(SuppliersService);
 
   private fb = inject(FormBuilder);
   ProductForm: FormGroup;
@@ -30,6 +35,7 @@ export default class ViewProductsComponent {
   productsSignal = signal<IProduct[]>([]);
   categories: ICategory[] = [];
   selectedProductId: string | null = null;
+  suppliers: ISupplier[] = [];
 
   errorMessage: string = '';
 
@@ -49,22 +55,18 @@ export default class ViewProductsComponent {
       stock: [0, Validators.required],
       purchase_price: [0, Validators.required],
       sale_price: [0, Validators.required],
+      supplierId: ['', Validators.required],
       categoryId: ['', Validators.required],
       description: ['', Validators.required],
     });
-    this.loadCategories();
-
-    // runInInjectionContext(this.injector, () => {
-    //   effect(() => {
-    //     // console.log('Datos cargados:', this.productsSignal());
-    //   });
-    // });
   }
 
   ngOnInit() {
+    this.loadCategories();
     this.viewProducts();
     this.calculatePages();
     this.onCategoryChange();
+    this.loadSuppliers();
 
   }
 
@@ -74,14 +76,21 @@ export default class ViewProductsComponent {
         this.categories = data.categories;
       },
       error: (err) => {
-        console.error('Error al cargar categorías:', err);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${err.error.message}`
-        });
+        // console.error('Error al cargar categorías:', err);
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
       },
     });
+  }
+
+  loadSuppliers(){
+    this.supplierService.getSuppliers().subscribe({
+      next : (data) => {
+          this.suppliers = data.suppliers;
+      },
+      error: (err) => {
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+      }
+    })
   }
 
 //Ver todos los productos
@@ -99,23 +108,14 @@ export default class ViewProductsComponent {
           this.productsSignal.set([]); // Limpia la lista de productos
           this.totalProducts = 0; // Asegúrate de que el total sea 0
           this.errorMessage = err.error.message || 'No hay productos disponibles.';
-          // Swal.fire({
-          //   icon: "error",
-          //   title: `${err.statusText}`,
-          //   text: `${err.error.message}`
-          // });
         } else {
           this.errorMessage = 'Ocurrió un error al cargar los productos.';
-          Swal.fire({
-            icon: "error",
-            title: `${err.statusText}`,
-            text: `${err.error.message}`
-          });
+          this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
         }
       },
     });
   }
-  
+
 
 
   deleteProduct(id: string) {
@@ -124,12 +124,7 @@ export default class ViewProductsComponent {
         this.viewProducts();
       },
       error: (err) => {
-        console.error('Error al eliminar producto:', err);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${err.error.message}`
-        });
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
   }
@@ -148,12 +143,7 @@ export default class ViewProductsComponent {
         );
       },
       error: (err) => {
-        console.error('Error al actualizar el estado del producto:', err);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${err.error.message}`
-        });
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
   }
@@ -162,15 +152,15 @@ export default class ViewProductsComponent {
   onStatusChange(event: Event, product: any): void {
     const checkbox = event.target as HTMLInputElement;
     product.status = checkbox.checked;
-  
+
     // Aquí puedes enviar la actualización al backend si es necesario
     this.updateProductStatus(product);
   }
-  
+
   updateProductStatus(product: any): void {
     this.productService.updateProductStatus(product.id, product.status).subscribe({
-      next: (response) => console.log('Estado actualizado:', response),
-      error: (error) => console.error('Error actualizando estado:', error),
+      next: (response: any) => this.alertsService.showSuccess(`${response.message}`, ``),
+      error: (err) => this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
     });
   }
 
@@ -188,17 +178,14 @@ export default class ViewProductsComponent {
     const newProduct = this.ProductForm.value;
 
     this.productService.addProduct(newProduct).subscribe({
-      next: (res: any) => {
-        console.log(res);
+      next: (response) => {
         this.viewProducts();
+        this.alertsService.showSuccess(`${response.message}`, ``)
+
       },
       error: (err) => {
         console.error(err);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${err.error.message}`
-        });
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
       },
     });
     this.ProductForm.reset();
@@ -209,16 +196,13 @@ export default class ViewProductsComponent {
     const updatedProduct = this.ProductForm.value;
 
     this.productService.updateProduct(id, updatedProduct).subscribe({
-      next: (res: any) => {
+      next: (response:  any) => {
         this.viewProducts();
+        this.alertsService.showSuccess(`${response.message}`, ``)
       },
       error: (err) => {
         console.error(err);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${err.error.message}`
-        });
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
       },
     });
     this.showModal = false;
@@ -242,6 +226,7 @@ export default class ViewProductsComponent {
         sale_price: product.sale_price,
         description: product.description,
         categoryId: product.category.id,
+        supplierId: product.supplier.id
       });
     } else {
       this.isEditing = false;
