@@ -1,49 +1,53 @@
-import { Component, effect, EventEmitter, inject, Injector, Input, Output, runInInjectionContext, signal } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { ProductsService } from '../../data-access/products.service';
 import { CommonModule } from '@angular/common';
 import { IProduct } from '../../interface/product.interface';
-import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICategory } from '../../../categoriesPages/interface/icategories.interface';
 import { CategoriesService } from '../../../categoriesPages/data-access/categories.service';
 import { AlertService } from '../../../../../shared/services/alerts.service';
 import { SuppliersService } from '../../../supplierPages/data-access/suppliers.service';
 import { ISupplier } from '../../../supplierPages/interface/supplier.interface';
-import { DownloadPdfComponent } from '../../../../../shared/features/components/download-pdf/download-pdf.component';
-
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
+import { Config } from 'datatables.net';
+import { Subject } from 'rxjs';
+import Swal from 'sweetalert2';
+import { ProductReportService } from '../../data-access/reports.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-products',
-  imports: [ModalComponent, CommonModule, ReactiveFormsModule, DownloadPdfComponent],
+  imports: [CommonModule, ReactiveFormsModule, DataTablesModule],
   templateUrl: './view-products.component.html',
   styleUrl: './view-products.component.css'
 })
-export default class ViewProductsComponent {
 
+export default class ViewProductsComponent implements OnInit {
+
+
+  private router = inject(Router);
+  private renderer = inject(Renderer2);
   private productService = inject(ProductsService);
   private categoriesService = inject(CategoriesService);
-  private alertsService = inject(AlertService);
   private supplierService = inject(SuppliersService);
+  private alertsService = inject(AlertService);
+  private reportProductsPdf = inject(ProductReportService);
 
+  dtOptions: Config = {};
   private fb = inject(FormBuilder);
   ProductForm: FormGroup;
 
   showModal = false;
   titleModal: string = 'Nuevo Producto';
   isEditing = false;
+  isDisabled: boolean = true;
   product: any = [];
   productsSignal = signal<IProduct[]>([]);
   categories: ICategory[] = [];
-  selectedProductId: string | null = null;
   suppliers: ISupplier[] = [];
+  selectedProductId: string | null = null;
 
   errorMessage: string = '';
-
-  //PAGINACION
-  currentPage: number = 1; // Página actual
-  itemsPerPage: number = 10; // Elementos por página
-  totalProducts: number = 0; // Total de productos
-  pages: number[] = []; // Lista de páginas
 
 
 
@@ -51,7 +55,7 @@ export default class ViewProductsComponent {
     this.ProductForm = this.fb.group({
       name: ['', Validators.required],
       barcode: ['', Validators.required],
-      code: ['', Validators.required],
+      code: [{ value: '', disabled: this.isDisabled }],
       stock: [0, Validators.required],
       purchase_price: [0, Validators.required],
       sale_price: [0, Validators.required],
@@ -61,31 +65,170 @@ export default class ViewProductsComponent {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadCategories();
-    this.viewProducts();
-    this.calculatePages();
-    this.onCategoryChange();
     this.loadSuppliers();
-
+    this.loadTable();
   }
 
+  //Cargar DataTable
+  loadTable() {
+    this.dtOptions = {
+
+      ajax: (dataTablesParameters: any, callback) => {
+        this.productService.getProducts().subscribe((resp: any) => {
+          callback({
+            data: resp.products
+          });
+        }, (error) => {
+          return null;
+        });
+      },
+      scrollX: true,
+      language: {
+        search: "Buscar:", // Cambia el texto del buscador
+        lengthMenu: "Mostrar _MENU_ registros por página",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ productos",
+        paginate: {
+          next: "Siguiente",
+          previous: "Anterior"
+        },
+      },
+      lengthMenu: [10, 20, 50], // Cambia la cantidad de registros por página
+      columns: [
+        // { title: 'ID', data: 'id' },
+        { title: 'Código de barra', data: 'barcode' },
+        { title: 'Código Interno', data: 'code' },
+        { title: 'Producto', data: 'name' },
+
+        {
+          title: 'Precio compra', data: 'purchase_price',
+          render: (data: any) => {
+            return new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            }).format(data);
+          }
+        },
+        {
+          title: 'Precio venta', data: 'sale_price',
+          render: (data: any) => {
+            return new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            }).format(data);
+          }
+        },
+        {
+          title: 'Precio venta | Impuesto', data: 'price_sale_tax',
+          render: (data: any) => {
+            return new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            }).format(data);
+          }
+        },
+        { title: 'Unidad de medida', data: 'unitOfMeasurement.name' },
+        { title: 'Stock', data: 'stock' },
+        { title: 'Categoria', data: 'category.name' },
+        { title: 'Proveedor', data: 'supplier.company_name' },
+        {
+          title: 'Servicio', data: 'its_service',
+          render: (data: any, type: any, row: any) => {
+            return `
+                <input type="checkbox" class="service-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
+            `;
+          },
+          className: 'text-center' // Centrar la columna
+
+        },
+        {
+          title: 'Habilitado para venta',
+          data: 'status',
+          render: (data: any, type: any, row: any) => {
+            return `
+                <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
+            `;
+          },
+          className: 'text-center' // Centrar la columna
+        },
+        { title: 'Fecha de registro', data: 'registration_date' },
+        {
+          title: 'Opciones',
+          data: null,
+          render: (data: any, type: any, row: any) => {
+            return `
+            <div>
+
+                  <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
+                          <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+
+                  <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
+                          <i class="fa-solid fa-trash"></i>
+                  </button>
+
+            </div>`;
+          },
+          className: 'action-column'
+        }
+      ],
+      rowCallback: (row: Node, data: any, index: number) => {
+        // Cast row to HTMLElement to access querySelector
+        const rowElement = row as HTMLElement;
+
+        //Metodo para actulizar el estado del producto
+        const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
+        if (checkbox) {
+          this.renderer.listen(checkbox, 'change', (event) => {
+            this.onStatusChange(event, data);
+          });
+        }
+
+        //Metodo para actualizar el estado del producto
+        const checkboxService = rowElement.querySelector('.service-toggle') as HTMLInputElement;
+        if (checkboxService) {
+          this.renderer.listen(checkboxService, 'change', (event) => {
+            this.onItsServiceChange(event, data);
+          });
+        }
+
+        //Eliminar
+        const btnDelete = rowElement.querySelector('.btn-delete') as HTMLInputElement;
+        if (btnDelete) {
+          this.renderer.listen(btnDelete, 'click', () => {
+            this.deleteProduct(data.id);
+          });
+        }
+
+        //Actualizar
+        const btnUpdate = rowElement.querySelector('.btn-update') as HTMLInputElement;
+        if (btnUpdate) {
+          this.renderer.listen(btnUpdate, 'click', () => {
+            this.editProduct(data.id);
+          });
+        }
+        return row;
+      }
+    };
+  }
+  //Cargar categorias
   loadCategories() {
     this.categoriesService.getCategoriesByStatus().subscribe({
       next: (data: any) => {
         this.categories = data.categories;
       },
       error: (err) => {
-        // console.error('Error al cargar categorías:', err);
         this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
       },
     });
   }
 
-  loadSuppliers(){
+  //Cargar proveedores
+  loadSuppliers() {
     this.supplierService.getSuppliers().subscribe({
-      next : (data) => {
-          this.suppliers = data.suppliers;
+      next: (data) => {
+        this.suppliers = data.suppliers;
       },
       error: (err) => {
         this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
@@ -93,59 +236,49 @@ export default class ViewProductsComponent {
     })
   }
 
-//Ver todos los productos
-  viewProducts(categoryId?: string, page: number = 1, limit: number = 10) {
-    this.productService.getProducts(categoryId, page, limit).subscribe({
-      next: (data: any) => {
-        this.totalProducts = data.total || 0;
-        const products = data.products || [];
-        this.productsSignal.set(products); // Actualiza el Signal de productos
-        this.errorMessage = ''; // Limpia cualquier mensaje de error
-      },
-      error: (err) => {
-        console.error({err})
-        if (err.status === 404) {
-          this.productsSignal.set([]); // Limpia la lista de productos
-          this.totalProducts = 0; // Asegúrate de que el total sea 0
-          this.errorMessage = err.error.message || 'No hay productos disponibles.';
-        } else {
-          this.errorMessage = 'Ocurrió un error al cargar los productos.';
-          this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-        }
-      },
-    });
-  }
-
-
-
+  //Eliminar
   deleteProduct(id: string) {
-    this.productService.deletedProduct(id).subscribe({
-      next: (res: any) => {
-        this.viewProducts();
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
       },
-      error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-      },
+      buttonsStyling: false
     });
-  }
+    swalWithBootstrapButtons.fire({
+      title: "Quieres eliminar este registro?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "No, cancelar",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productService.deletedProduct(id).subscribe({
+          next: (res: any) => {
+            swalWithBootstrapButtons.fire({
+              title: "Eliminado",
+              text: "El registro ha sido eliminado",
+              icon: "success"
+            });
+          },
+          error: (err) => {
+            this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
+          },
+        });
 
-  // Actualiza el estado del producto
-  toggleStatus(product: IProduct): void {
-    // Alternar el estado
-    const updatedStatus = !product.status;
-
-    this.productService.updateProductStatus(product.id, updatedStatus).subscribe({
-      next: () => {
-        this.productsSignal.update((products) =>
-          products.map((p) =>
-            p.id === product.id ? { ...p, status: updatedStatus } : p
-          )
-        );
-      },
-      error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-      },
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelado",
+          icon: "error"
+        });
+      }
     });
+
+
   }
 
   //Toggle para actualizar el estado del producto (ACTIVO : INACTIVO)
@@ -153,7 +286,6 @@ export default class ViewProductsComponent {
     const checkbox = event.target as HTMLInputElement;
     product.status = checkbox.checked;
 
-    // Aquí puedes enviar la actualización al backend si es necesario
     this.updateProductStatus(product);
   }
 
@@ -164,6 +296,19 @@ export default class ViewProductsComponent {
     });
   }
 
+  onItsServiceChange(event: Event, product: any): void {
+    const checkboxService = event.target as HTMLInputElement;
+    product.its_service = checkboxService.checked;
+
+    this.updateProductServices(product);
+  }
+
+  updateProductServices(product: any): void {
+    this.productService.updateProductService(product.id, product.its_service).subscribe({
+      next: (response: any) => { this.alertsService.showSuccess(`${response.message}`, ``) },
+      error: (err) => this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+    });
+  }
 
   //Metodo para agregar o actualizar
   saveProduct() {
@@ -174,31 +319,32 @@ export default class ViewProductsComponent {
     }
   }
 
+  editProduct(productId: string) {
+    this.router.navigate(['/index/products/form'], { queryParams: { form: 'update', id: productId } });
+  }
+
   addProduct() {
     const newProduct = this.ProductForm.value;
 
     this.productService.addProduct(newProduct).subscribe({
       next: (response) => {
-        this.viewProducts();
         this.alertsService.showSuccess(`${response.message}`, ``)
-
+        this.refreshTable();
       },
       error: (err) => {
-        console.error(err);
         this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
       },
     });
     this.ProductForm.reset();
-    // this.showModal = false;
   }
 
   updateProduct(id: string) {
     const updatedProduct = this.ProductForm.value;
 
     this.productService.updateProduct(id, updatedProduct).subscribe({
-      next: (response:  any) => {
-        this.viewProducts();
+      next: (response: any) => {
         this.alertsService.showSuccess(`${response.message}`, ``)
+        this.refreshTable();
       },
       error: (err) => {
         console.error(err);
@@ -210,6 +356,7 @@ export default class ViewProductsComponent {
   }
 
   toggleModal(product: any = null) {
+    console.log(product)
     this.showModal = !this.showModal;
 
     if (product) {
@@ -235,38 +382,58 @@ export default class ViewProductsComponent {
       this.ProductForm.reset();
     }
   }
-  //Cambio de la categoria
-  onCategoryChange() {
-    this.ProductForm.get('categoryId')?.valueChanges.subscribe((categoryId) => {
-      this.currentPage = 1; // Reiniciar a la primera página al cambiar categoría
-      this.viewProducts(categoryId);
-    });
+
+
+  downloadAllProductsPdf() {
+    const date = Date.now();
+    this.reportProductsPdf.downloadAllProductReportPdf().subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte_productos_${date}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        this.alertsService.showError(`${err.error.message}`, `Error`)
+      }
+    })
   }
 
-  clearCategory() {
-    this.ProductForm.get('categoryId')?.setValue(''); // Limpia el valor del formulario
-    this.viewProducts(); // Recarga todos los productos
+  downloadExcel() {
+    this.alertsService.showInfo('Metodo aun no implementado', 'Información')
   }
 
-  //Cambio de pagina
-  calculatePages() {
-    const totalPages = Math.ceil(this.totalProducts / this.itemsPerPage);
-    this.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+
+  //Renderizado del datatables
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+  dtTrigger: Subject<any> = new Subject<any>();
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
   }
 
-  getProductRange() {
-    const start = (this.currentPage - 1) * this.itemsPerPage + 1;
-    const end = Math.min(this.currentPage * this.itemsPerPage, this.totalProducts);
-    return `${start}-${end}`;
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
   }
 
-  onPageChange(newPage: number) {
-    if (newPage < 1 || newPage > this.pages.length) {
-      return; // Evita cambiar a páginas no válidas
+  //Metodo para refrescar la tabla
+  refreshTable(): void {
+    if (this.dtElement) {
+      this.dtElement.dtInstance.then((dtInstance: any) => {
+        dtInstance.ajax.reload();
+      });
     }
-
-    this.currentPage = newPage;
-    this.viewProducts();
   }
+
+  routeToNewProduct() {
+    this.router.navigate(['index/products/form']);
+  }
+
 
 }

@@ -1,164 +1,30 @@
 <!-- Contenedor 1 -->
-<div
-  class="bg-colorPrimary bg-cover bg-center bg-no-repeat p-10 mt-2 rounded-t-2xl"
->
-  <div class="flex justify-center">
-    <!-- titulo -->
-    <div class="p-1">
-      <h1 class="text-white font-semibold text-2xl uppercase">Categorias</h1>
-    </div>
+<div class="bg-blue-700 p-5">
+  <div class="text-white font-semibold">
+    <h1 class="text-2xl uppercase">Categorias</h1>
   </div>
 </div>
 
-<!-- Tabla 2 -->
-<div class="flex flex-col shadow-2xl p-5 bg-white">
-  <!-- Button new product -->
-  <div class="m-5 flex justify-end">
+<!-- Body -->
+<div class="flex flex-col p-5 bg-white">
+  <div class="flex justify-end mb-10">
     <button
-      (click)="toggleModal()"
-      class="ml-5 bg-green-400 hover:bg-green-500 font-semibold p-2 text-white rounded-md w-40"
-    >
-      Agregar categoria
-    </button>
+        (click)="toggleModal()"
+        class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-blue-700 mr-2"
+      >
+        <i class="fa-solid fa-square-plus"></i> Agregar categoria
+      </button>
   </div>
-  <!-- ---- -->
-  <div class="mb-5">
-    <input
-      type="search"
-      name="search"
-      id="search"
-      placeholder="Buscar.."
-      class="rounded border-colorPrimary italic"
-    />
-    <button
-      class="ml-5 bg-colorSecondary p-2 font-semibold text-white rounded-md w-40 hover:bg-orange-400"
-    >
-      BUSCAR
-    </button>
-  </div>
+  <hr class="mb-5" />
 
-  <div class="h-full w-full bg-white">
-    <div class="relative overflow-x-auto">
-      <table
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-      >
-        <thead
-          class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
-        >
-          <tr>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Categoria</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">F. Registro</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Habilitado</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let category of categoriesSignal()"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-          >
-            <th
-              scope="row"
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-            >
-              {{ category.name }}
-            </th>
-            <td class="px-6 py-4 whitespace-nowrap">
-              {{ category.registration_date }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <label class="inline-flex items-center cursor-pointer">
-                <input
-                  [checked]="category.status"
-                  (change)="onStatusChange($event, category)"
-                  type="checkbox"
-                  class="sr-only peer"
-                />
-                <div
-                  class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-                ></div>
-                <span
-                  class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >{{ category.status ? 'Activo' : 'Inactivo' }}</span>
-              </label>
-            </td>
-            
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex">
-                <button
-                  (click)="toggleModal(category)"
-                  id="openModal"
-                  class="bg-colorSecondary hover:bg-orange-400 p-2 text-white m-1 rounded-md"
-                >
-                  Actualizar
-                </button>
-                <button
-                  (click)="deleteCategory(category.id)"
-                  class="bg-colorDanger hover:bg-red-700 p-2 text-white m-1 rounded-md"
-                >
-                  Eliminar
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- Final tabla -->
-    </div>
-  </div>
-  <!-- Paginacion -->
-  <nav
-  class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-  aria-label="Table navigation"
->
-  <span
-    class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
-  >
-    Mostrando
-    <span class="font-semibold text-gray-900 dark:text-white">{{
-      getProductRange()
-    }}</span>
-    de
-    <span class="font-semibold text-gray-900 dark:text-white">{{
-      totalCategories
-    }}</span>
-  </span>
-  <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-    <li>
-      <button
-        (click)="onPageChange(currentPage - 1)"
-        [disabled]="currentPage === 1"
-        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-      >
-        Anterior
-      </button>
-    </li>
-    <li *ngFor="let page of pages">
-      <button
-        (click)="onPageChange(page)"
-        [class]="
-          page === currentPage
-            ? 'text-blue-600 bg-blue-50'
-            : 'text-gray-500 bg-white'
-        "
-        class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-      >
-        {{ page }}
-      </button>
-    </li>
-    <li>
-      <button
-        (click)="onPageChange(currentPage + 1)"
-        [disabled]="currentPage === pages.length"
-        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-      >
-        Siguiente
-      </button>
-    </li>
-  </ul>
-</nav>
-<!-- Final Paginacion -->
+  <table
+    datatable
+    [dtOptions]="dtOptions"
+    [dtTrigger]="dtTrigger"
+    class="row-border hover whitespace-nowrap"
+  ></table>
 </div>
+<!-- Final del body -->
 
 <!-- Modal-->
 <app-modal
@@ -190,9 +56,9 @@
   </div>
   <button
     type="submit"
-    class="bg-colorPrimary hover:bg-blue-800 text-white px-4 py-2 rounded"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
   >
-    {{ isEditing ? 'Guardar cambios' : 'Añadir categoria' }}
+    {{ isEditing ? 'Guardar cambios' : 'Añadir' }}
   </button>
 </form>
 </app-modal>

@@ -6,4 +6,8 @@ export default [
         loadComponent: () =>
             import('./features/view-products/view-products.component'),
     },
+    {
+        path: 'form',
+        loadComponent: () => import('./features/form-product/form-product.component'),
+    }
 ] as Routes;

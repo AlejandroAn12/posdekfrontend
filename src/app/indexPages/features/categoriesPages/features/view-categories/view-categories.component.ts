@@ -1,29 +1,40 @@
 import Swal from 'sweetalert2'
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { CategoriesService } from '../../data-access/categories.service';
 import { ICategory } from '../../interface/icategories.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
+import { Config } from 'datatables.net';
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
+import { Subject } from 'rxjs';
+import { AlertService } from '../../../../../shared/services/alerts.service';
 
 @Component({
   selector: 'app-view-categories',
-  imports: [ModalComponent, CommonModule, ReactiveFormsModule],
+  imports: [ModalComponent, CommonModule, ReactiveFormsModule, DataTablesModule],
   templateUrl: './view-categories.component.html',
   styleUrl: './view-categories.component.css'
 })
-export default class ViewCategoriesComponent {
+export default class ViewCategoriesComponent implements OnInit {
 
   private categoriesService = inject(CategoriesService);
   private fb = inject(FormBuilder);
+  private alertsService = inject(AlertService);
+  private renderer = inject(Renderer2);
+
+  dtOptions: Config = {};
   CategoryForm: FormGroup;
 
   constructor() {
     this.CategoryForm = this.fb.group({
-      name: ['', Validators.required],
+      name: ['', { validators: [Validators.required], updateOn: 'change' }],
     });
 
-    this.viewCategories();
+  }
+  ngOnInit(): void {
+    this.loadTable();
+
   }
 
   //Modal
@@ -36,24 +47,92 @@ export default class ViewCategoriesComponent {
   categories: ICategory[] = [];
   selectedCategoryId: string | null = null;
 
-  //PAGINACION
-  currentPage: number = 1; // Página actual
-  itemsPerPage: number = 10; // Elementos por página
-  totalCategories: number = 0; // Total de productos
-  pages: number[] = []; // Lista de páginas
 
-
-
-  //Ver todas las categorias
-  viewCategories(page: number = 1, limit: number = 10) {
-    this.categoriesService.getAllCategories(page, limit).subscribe({
-      next: (data: any) => {
-        this.totalCategories = data.total;
-        const categories = data.categories || [];
-        this.categoriesSignal.set(categories);
+  //Cargar DataTable
+  loadTable() {
+    this.dtOptions = {
+      ajax: (dataTablesParameters: any, callback) => {
+        this.categoriesService.getAllCategories().subscribe((resp: any) => {
+          callback({
+            data: resp.categories
+          });
+        });
       },
-      error: (err) => console.error('Error al cargar categorias:', err),
-    });
+      scrollX: true,
+      language: {
+        search: "Buscar:", // Cambia el texto del buscador
+        lengthMenu: "Mostrar _MENU_ registros por página",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ categorias",
+        paginate: {
+          next: "Siguiente",
+          previous: "Anterior"
+        },
+      },
+      lengthMenu: [5, 10, 20, 50],
+      columns: [
+        // { title: 'ID', data: 'id' },
+        { title: 'Categoria', data: 'name' },
+        { title: 'Fecha de Registro', data: 'registration_date' },
+        {
+          title: 'Habilitado',
+          data: 'status',
+          render: (data: any, type: any, row: any) => {
+            return `
+              <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
+          `;
+          },
+          className: 'text-center' // Centrar la columna
+        },
+        {
+          title: 'Acciones',
+          data: null,
+          render: (data: any, type: any, row: any) => {
+            return `
+          <div>
+
+                <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+
+                <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash"></i>
+                </button>
+
+          </div>`;
+          },
+          className: 'action-column'
+        }
+      ],
+      rowCallback: (row: Node, data: any, index: number) => {
+        // Cast row to HTMLElement to access querySelector
+        const rowElement = row as HTMLElement;
+
+        //Metodo para actulizar el estado del producto
+        const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
+        if (checkbox) {
+          this.renderer.listen(checkbox, 'change', (event) => {
+            this.onStatusChange(event, data);
+          });
+        }
+
+        //Eliminar
+        const btnDelete = rowElement.querySelector('.btn-delete') as HTMLInputElement;
+        if (btnDelete) {
+          this.renderer.listen(btnDelete, 'click', () => {
+            this.deleteCategory(data.id);
+          });
+        }
+
+        //Actualizar
+        const btnUpdate = rowElement.querySelector('.btn-update') as HTMLInputElement;
+        if (btnUpdate) {
+          this.renderer.listen(btnUpdate, 'click', () => {
+            this.toggleModal(data);
+          });
+        }
+        return row;
+      }
+    };
   }
 
 
@@ -61,15 +140,17 @@ export default class ViewCategoriesComponent {
   onStatusChange(event: Event, employee: any): void {
     const checkbox = event.target as HTMLInputElement;
     employee.status = checkbox.checked;
-  
+
     // Aquí puedes enviar la actualización al backend si es necesario
-    this.updateEmployeeStatus(employee);
+    this.updateCategorieStatus(employee);
   }
-  
-  updateEmployeeStatus(employee: any): void {
-    this.categoriesService.updateCategoryStatus(employee.id, employee.status).subscribe({
-      next: (response) => {return true},
-      error: (error) => console.error('Error actualizando estado:', error),
+
+  updateCategorieStatus(categorie: any): void {
+    this.categoriesService.updateCategoryStatus(categorie.id, categorie.status).subscribe({
+      next: (resp: any) => { 
+        this.alertsService.showSuccess(`${resp.message}`, `Información`)
+      },
+      error: (err) => this.alertsService.showError(`${err.error.message}`, `${err.statusText}`),
     });
   }
 
@@ -85,13 +166,18 @@ export default class ViewCategoriesComponent {
 
   //Añadir nueva categoria
   addCategory() {
+    if (this.CategoryForm.invalid) {
+      this.alertsService.showError('El nombre no puede estar vacío', '');
+      return;
+    }
     const newCategory = this.CategoryForm.value;
     this.categoriesService.addCategory(newCategory).subscribe({
-      next: (res) => {
-        this.viewCategories();
+      next: (res: any) => {
+        this.alertsService.showSuccess(``, `${res.message}`)
+        this.refreshTable();
       },
       error: (err) => {
-        console.error(err);
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
     this.CategoryForm.reset();
@@ -103,10 +189,12 @@ export default class ViewCategoriesComponent {
     const updatedCategory = this.CategoryForm.value;
     this.categoriesService.updateCategory(id, updatedCategory).subscribe({
       next: (res: any) => {
-        this.viewCategories();
+        this.alertsService.showSuccess(`${res.message}`, `Información`)
+        this.refreshTable();
       },
       error: (err) => {
-        console.error(err);
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
+
       },
     });
     this.showModal = false;
@@ -117,16 +205,11 @@ export default class ViewCategoriesComponent {
   deleteCategory(id: string) {
     this.categoriesService.deletedCategory(id).subscribe({
       next: (res: any) => {
-        this.viewCategories();
-        console.log(res)
+        this.alertsService.showSuccess(``, `${res.message}`)
+        this.refreshTable();
       },
       error: (err) => {
-        console.error('Error al eliminar categoria:', err)
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${err.error.message}`
-        });
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
   }
@@ -137,7 +220,7 @@ export default class ViewCategoriesComponent {
 
     if (category) {
       this.isEditing = true;
-      this.titleModal = 'Editar categoria';
+      this.titleModal = 'EDITAR CATEGORIA';
       this.selectedCategoryId = category.id;
 
       this.CategoryForm.patchValue({
@@ -145,33 +228,31 @@ export default class ViewCategoriesComponent {
       });
     } else {
       this.isEditing = false;
-      this.titleModal = 'Añadir categoria';
+      this.titleModal = 'NUEVA CATEGORIA';
       this.selectedCategoryId = null;
       this.CategoryForm.reset();
     }
   }
 
+  //Renderizado
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+  dtTrigger: Subject<any> = new Subject<any>();
 
-  //Paginacion
-  calculatePages() {
-    const totalPages = Math.ceil(this.totalCategories / this.itemsPerPage);
-    this.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
+  }
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
   }
 
-  getProductRange() {
-    const start = (this.currentPage - 1) * this.itemsPerPage + 1;
-    const end = Math.min(this.currentPage * this.itemsPerPage, this.totalCategories);
-    return `${start}-${end}`;
-  }
-
-  onPageChange(newPage: number) {
-    if (newPage < 1 || newPage > this.pages.length) {
-      return; // Evita cambiar a páginas no válidas
+  //Metodo para refrescar la tabla
+  refreshTable(): void {
+    if (this.dtElement) {
+      this.dtElement.dtInstance.then((dtInstance: any) => {
+        dtInstance.ajax.reload();
+      });
     }
-
-    this.currentPage = newPage;
-    this.viewCategories();
   }
-
 
 }

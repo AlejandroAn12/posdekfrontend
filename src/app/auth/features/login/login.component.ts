@@ -37,7 +37,7 @@ export default class LoginComponent {
           this._router.navigateByUrl('index/dashboard');
         },
         error: (err) => {
-          // console.error('Error al iniciar sesión', {err});
+          console.error('Error al iniciar sesión', {err});
           Swal.fire({
             icon: "error",
             title: `${err.statusText}`,

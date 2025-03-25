@@ -12,6 +12,10 @@ export class EnterpriseService {
 
    private http = inject(HttpClient);
 
+   addEnterprise(enterpriseForm: any){
+    return this.http.post(`${environment.API_URL}/enterprise/add`, enterpriseForm);
+   }
+
 //Obtener la informacion de la empresa
    getInformationEnterprise(): Observable<any>{
     return this.http.get(`${environment.API_URL}/enterprise/information`,)

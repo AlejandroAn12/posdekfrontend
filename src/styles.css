@@ -12,6 +12,15 @@
   }
 }
 
+.dataTable thead {
+  background-color: #1c64f2 !important; /* Azul */
+  color: white !important; /* Texto blanco */
+}
+
+.dataTable thead th {
+  border-bottom: 2px solid #acacac !important;
+}
+
 .card {
   @apply w-full max-w-4xl h-auto border p-3 shadow-md;
 }
@@ -19,3 +28,22 @@
 .card-title {
   @apply font-semibold text-lg;
 }
+
+
+  .input-field {
+    @apply rounded p-2 block w-full border border-gray-300;
+  }
+  .radio-label {
+    @apply flex items-center space-x-2;
+  }
+  .radio-input {
+    @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500;
+  }
+
+  th {
+    text-align: center !important;
+    white-space: nowrap; /* Evita que los títulos se rompan en varias líneas */
+  }
+  td {
+    text-align: center !important;
+  }

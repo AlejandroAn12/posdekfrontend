@@ -5,6 +5,12 @@ import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { StorageService } from '../../shared/services/storage.service';
 
+interface Session {
+  access_token: string;
+  status: boolean;
+  id: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +23,12 @@ export class AuthService {
     return this.http.post(`${environment.API_URL}/auth/login`, iLogin)
       .pipe(tap((res) => {
         this._storage.set('session', JSON.stringify(res));
+        // console.log(res)
       }));
+  }
+
+  logOut(): Observable<any> {
+    return this.http.post(`${environment.API_URL}/credentials/logout`, {});
   }
 
 }

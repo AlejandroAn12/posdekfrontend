@@ -1,19 +1,13 @@
 <!-- Contenedor 1 -->
-<div
-  class="bg-colorPrimary bg-cover bg-center bg-no-repeat p-10 mt-2 rounded-t-2xl"
->
-  <div class="flex justify-center">
-    <!-- titulo -->
-    <div class="p-1">
-      <h1 class="text-white font-semibold text-2xl uppercase">
-        Órden de compras
-      </h1>
-    </div>
+<div class="bg-blue-700 p-5">
+  <div class="text-white font-semibold">
+    <h1 class="text-2xl uppercase">Generación de pedido</h1>
   </div>
 </div>
+
 <!-- Final contenedor 1 -->
-<!-- Body -->
-<div class="flex flex-col shadow-2xl p-5 bg-white">
+<!-- Body Table-->
+<div class="flex flex-col p-5 bg-white">
   <p class="mt-5 mb-5 text-sm text-blue-500 font-semibold">
     <i class="fa-solid fa-circle-info mr-1"></i>Recuerde que solo se puede
     generar una órden por Proveedor.
@@ -70,7 +64,7 @@
         class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
       >
         <thead
-          class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
+          class="text-xs text-white uppercase bg-blue-600 dark:bg-gray-700 dark:text-gray-400"
         >
           <tr>
             <th scope="col" class="px-6 py-3 whitespace-nowrap">Código de barra</th>
@@ -117,7 +111,8 @@
                 class="bg-colorDanger hover:bg-red-700 p-2 text-white m-1 rounded-md"
                 (click)="removeProduct(product.id)"
               >
-                Eliminar
+              <i class="fa-solid fa-circle-minus"></i>
+                Quitar
               </button>
             </td>
           </tr>
@@ -132,11 +127,14 @@
 
   <!-- Boton para generar la orden de compra -->
   <button
-    [disabled]="selectedProducts.length === 0"
-    class="ml-5 mt-3 bg-green-400 hover:bg-green-500 font-semibold p-2 text-white rounded-md w-40"
+  [ngClass]="{
+    'bg-blue-600 hover:bg-blue-700': selectedProducts.length > 0,
+    'bg-gray-300 cursor-not-allowed': selectedProducts.length === 0
+  }"
+    class="ml-5 mt-3 bg-blue-600 hover:bg-blue-700 rounded-sm p-2  font-semibold  text-white w-64"
     (click)="submitOrder()"
   >
-    Generar orden
+    Generar pedido
   </button>
   <!-- Final de boton -->
 </div>

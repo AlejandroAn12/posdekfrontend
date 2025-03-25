@@ -1,10 +1,11 @@
 <div class="h-screen flex flex-col items-center justify-center">
+  <img src="assets/img/new_logo.png" alt="logo" class="w-64 mb-10 animate-pulse" />
   <h1
-    class="text-2xl font-bold tracking-tight text-primary leading-none mb-4 text-center"
+  class="text-2xl font-bold tracking-tight text-primary leading-none mb-4 text-center"
   >
-    ¡Hola!,
-    <span class="bg-colorPrimary text-white rounded-br-xl p-1">Bienvenido</span>
-  </h1>
+  ¡Hola!,
+  <span class="bg-blue-600 text-white rounded-br-xl p-1">Bienvenido</span>
+</h1>
   <p class="pb-5 text-gray-400 text-sm">
     Ingresa con tus credenciales de acceso
   </p>
@@ -13,32 +14,6 @@
     (ngSubmit)="onLogin()"
     class="max-w-md w-full mx-auto"
   >
-
-  <div class="relative z-0 w-full mb-5 group">
-    <input
-      type="text"
-      name="floating_password"
-      id="floating_password"
-      class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-primary peer flex-shrink-0"
-      placeholder=" "
-      required
-    />
-    <!-- <div
-      *ngIf="
-        loginForm.get('password')?.invalid &&
-        loginForm.get('password')?.touched
-      "
-      class="text-red-500 font-medium text-sm italic"
-    >
-      La contraseña es requerida.
-    </div> -->
-    <label
-      for="floating_password"
-      class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-      >Empresa</label
-    >
-  </div>
-
     <div class="relative z-0 w-full mb-5 group">
       <input
         formControlName="username"
@@ -54,8 +29,9 @@
           loginForm.get('username')?.invalid &&
           loginForm.get('username')?.touched
         "
-        class="text-red-500 font-medium text-sm italic"
+        class="text-red-500 font-semibold text-sm"
       >
+      <i class="fa-solid fa-circle-info"></i>
         El nombre de usuario es requerido.
       </div>
       <label
@@ -79,8 +55,9 @@
           loginForm.get('password')?.invalid &&
           loginForm.get('password')?.touched
         "
-        class="text-red-500 font-medium text-sm italic"
+        class="text-red-500 font-semibold text-sm"
       >
+      <i class="fa-solid fa-circle-info"></i>
         La contraseña es requerida.
       </div>
       <label
@@ -94,10 +71,10 @@
       [disabled]="loginForm.invalid"
       type="submit"
       [ngClass]="{
-        'bg-colorPrimary hover:bg-gray-500 focus:ring-blue-300': !loginForm.invalid,
+        'bg-blue-600 hover:bg-blue-700': !loginForm.invalid,
         'bg-gray-300 cursor-not-allowed': loginForm.invalid
       }"
-      class="text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center flex-shrink-0 focus:outline-none focus:ring-4"
+      class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-full"
     >
       Ingresar
     </button>

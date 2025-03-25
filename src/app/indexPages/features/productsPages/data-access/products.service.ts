@@ -18,16 +18,8 @@ export class ProductsService {
       }));
   }
 
-  getProducts(categoryId?: string, page: number = 1, limit: number = 10) {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
-
-    if (categoryId) {
-      params = params.set('categoryId', categoryId);
-    }
-
-    return this.http.get(`${environment.API_URL}/products/all?`, { params });
+  getProducts() {
+    return this.http.get(`${environment.API_URL}/products/all`);
   }
 
   getProductId(id: string) {
@@ -39,7 +31,11 @@ export class ProductsService {
   }
 
   updateProduct(id: string, iProduct: any) {
-    return this.http.put(`${environment.API_URL}/products/update/${id}`, iProduct)
+    return this.http.patch(`${environment.API_URL}/products/update/${id}`, iProduct)
+  }
+
+  updateProductService(id: string, its_service: boolean) {
+    return this.http.patch(`${environment.API_URL}/products/${id}/its-service`, { its_service });
   }
 
   deletedProduct(id: string) {

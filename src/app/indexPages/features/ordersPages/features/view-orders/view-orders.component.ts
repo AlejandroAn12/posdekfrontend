@@ -38,19 +38,6 @@ export default class ViewOrdersComponent {
     });
   }
 
-  // onSupplierChange(event: any): void {
-  //   this.selectedSupplierId = event.target.value;
-  //   this.supplierService.getProductsBySupplier(this.selectedSupplierId).subscribe({
-  //     next: (response) => {
-  //       console.log(response);
-  //       this.products = response;
-  //     },
-  //     error: (err) => {
-  //       console.error('Error loading products:', err);
-  //     },
-  //   });
-  // }
-
   onSupplierChange(event: any): void {
     const supplierId = event.target.value;
     this.selectedSupplierId = supplierId;
@@ -61,11 +48,10 @@ export default class ViewOrdersComponent {
     // Carga los productos del proveedor seleccionado
     this.supplierService.getProductsBySupplier(supplierId).subscribe({
       next: (response) => {
-        this.products = response; // Asegúrate de que `response` contenga la lista de productos
-        console.log('Productos cargados:', this.products);
+        this.products = response;
       },
       error: (err) => {
-        console.error('Error al cargar los productos:', err);
+        this.alertsService.showError(`${err.statusText}`, 'Error')
       },
     });
   }
@@ -101,7 +87,7 @@ export default class ViewOrdersComponent {
 
     // Formar el objeto de la orden con los productos seleccionados
     const order = {
-      supplier: this.selectedSupplierId, // Asegúrate de almacenar el ID del proveedor seleccionado
+      supplier: this.selectedSupplierId, // ID del proveedor seleccionado
       orderItems: this.selectedProducts.map((product) => ({
         productId: product.id,
         quantity: product.quantity,
@@ -111,8 +97,9 @@ export default class ViewOrdersComponent {
 
     // Enviar la orden al backend
     this.ordersService.generateOrder(order).subscribe({
-      next: (response) => {
-        this.alertsService.showSuccess(`${response.message}`, '');
+      next: (response: any) => {
+        console.log(response)
+        this.alertsService.showSuccess(`${response.message}`, `${response.title}`);
         this.resetOrderForm();
       },
       error: (err) => {
@@ -124,15 +111,14 @@ export default class ViewOrdersComponent {
   resetOrderForm(): void {
     this.selectedProducts = [];
     this.products = [];
-    this.selectedSupplierId = ''; // O reinicia según tu lógica
+    this.selectedSupplierId = '';
   }
 
   addToTable(selectElement: HTMLSelectElement): void {
     const productId = selectElement.value;
   
     if (!productId) {
-      // console.error('El valor del producto es inválido.');
-      this.alertsService.showError('El valor del producto es inválido.', '');
+      this.alertsService.showError('El valor del producto es inválido.', 'Error');
 
       return;
     }
@@ -140,13 +126,13 @@ export default class ViewOrdersComponent {
     const product = this.products.find((p) => p.id === productId);
   
     if (!product) {
-      this.alertsService.showError('Producto no encontrado.', '');
+      this.alertsService.showError('Producto no encontrado.', 'Error');
       return;
     }
   
     const existingProduct = this.selectedProducts.find((p) => p.id === productId);
     if (existingProduct) {
-      this.alertsService.showWarning('El producto ya está en la lista.', '');
+      this.alertsService.showWarning('El producto ya está en la lista.', 'Aviso');
       return;
     }
   

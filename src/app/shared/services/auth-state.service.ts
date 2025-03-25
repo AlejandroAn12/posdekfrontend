@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../environments/environment";
+import { AuthService } from "../../auth/data-access/auth.service.ts.service";
 
 interface Session {
     access_token: string;
@@ -16,11 +17,14 @@ export class AuthStateService {
 
     private _storageService = inject(StorageService);
       private http = inject(HttpClient);
+      private authenticationService = inject(AuthService);
     
     _router = inject(Router);
 
     logOut() {
+        this.authenticationService.logOut().subscribe();
         this._storageService.remove('session');
+        this._storageService.remove('id');
         this._router.navigateByUrl('auth/login');
     }
 

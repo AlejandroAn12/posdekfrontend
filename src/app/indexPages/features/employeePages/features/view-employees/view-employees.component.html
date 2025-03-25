@@ -10,191 +10,38 @@
   </div>
 </div>
 
+<!-- Body -->
 <div class="flex flex-col shadow-2xl p-5 bg-white">
-  <!-- Button new employee -->
-  <div class="m-5 flex justify-end">
-    <button
-      (click)="toggleModal()"
-      class="ml-5 bg-green-400 hover:bg-green-500 font-semibold p-2 text-white rounded-md w-44"
-    >
-      Nuevo empleado
-    </button>
-  </div>
-  <!-- ---- -->
-
-  <form [formGroup]="EmployeesForm" class="flex flex-row mb-10">
-    <div class="flex">
-      <input
-        placeholder="Buscar..."
-        type="search"
-        name="search"
-        id="search"
-        class="rounded-lg border-gray-300 p-2.5 italic"
-      />
+  <div class="flex flex-col">
+    <div class="flex justify-end mb-10">
       <button
-        class="ml-5 bg-colorSecondary font-semibold text-white rounded-md w-40 hover:bg-orange-400"
+        (click)="toggleModal()"
+        class="bg-indigo-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-indigo-700 mr-2"
       >
-        BUSCAR
+        <i class="fa-solid fa-square-plus"></i> Agregar Empleado
+      </button>
+      <button
+        (click)="downloadExcel()"
+        class="bg-green-500 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-green-600 mr-2"
+      >
+        <i class="fa-solid fa-file-excel"></i> Descargar Nómina Excel
+      </button>
+      <button
+        class="bg-red-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-red-700"
+      >
+        <i class="fa-solid fa-file-pdf"></i> Descargar Nómina PDF
       </button>
     </div>
-  </form>
-
-  <!-- TABLA -->
-  <div class="h-full w-full bg-white">
-    <div class="relative overflow-x-auto">
-      <table
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-      >
-        <thead
-          class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
-        >
-          <tr>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">
-              Código de empleado
-            </th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">
-              N° Identificación
-            </th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Nombres</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Apellidos</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Teléfono</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">
-              Correo electrónico
-            </th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">F. Registro</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Estado</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let employee of employeesSignal()"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-          >
-            <td
-              scope="row"
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-            >
-              {{ employee.codeEmployee }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              {{ employee.dni }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              {{ employee.name }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              {{ employee.surname }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              {{ employee.tlf }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              {{ employee.email }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              {{ employee.registration_date }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <label class="inline-flex items-center cursor-pointer">
-                <input
-                  [checked]="employee.status"
-                  (change)="onStatusChange($event, employee)"
-                  type="checkbox"
-                  class="sr-only peer"
-                />
-                <div
-                  class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-                ></div>
-                <span
-                  class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >{{ employee.status ? "Activo" : "Inactivo" }}</span
-                >
-              </label>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex">
-                <button
-                  (click)="toggleModal(employee)"
-                  id="openModal"
-                  class="bg-colorSecondary hover:bg-orange-400 p-2 text-white m-1 rounded-md"
-                >
-                  Actualizar
-                </button>
-                <button
-                  (click)="deleteEmployee(employee.id)"
-                  class="bg-colorDanger hover:bg-red-700 p-2 text-white m-1 rounded-md"
-                >
-                  Eliminar
-                </button>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Mostrar mensaje si no hay productos -->
-          <tr *ngIf="employeesSignal().length === 0 && errorMessage">
-            <td colspan="4" class="px-6 py-4 text-center text-red-500">
-              {{ errorMessage }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- Final Tabla -->
-    </div>
+    <hr class="mb-5" />
+    <table
+      datatable
+      [dtOptions]="dtOptions"
+      [dtTrigger]="dtTrigger"
+      class="row-border hover whitespace-nowrap"
+    ></table>
   </div>
-  <!-- Paginacion -->
-  <nav
-    class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-    aria-label="Table navigation"
-  >
-    <span
-      class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto"
-    >
-      Mostrando
-      <span class="font-semibold text-gray-900 dark:text-white">{{
-        getEmployeesRange()
-      }}</span>
-      de
-      <span class="font-semibold text-gray-900 dark:text-white">{{
-        totalEmployees
-      }}</span>
-    </span>
-    <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-      <li>
-        <button
-          (click)="onPageChange(currentPage - 1)"
-          [disabled]="currentPage === 1"
-          class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          Anterior
-        </button>
-      </li>
-      <li *ngFor="let page of pages">
-        <button
-          (click)="onPageChange(page)"
-          [class]="
-            page === currentPage
-              ? 'text-blue-600 bg-blue-50'
-              : 'text-gray-500 bg-white'
-          "
-          class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          {{ page }}
-        </button>
-      </li>
-      <li>
-        <button
-          (click)="onPageChange(currentPage + 1)"
-          [disabled]="currentPage === pages.length"
-          class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          Siguiente
-        </button>
-      </li>
-    </ul>
-  </nav>
-  <!-- Final Paginacion -->
 </div>
+<!-- Final del body -->
 
 <!-- Modal-->
 <app-modal

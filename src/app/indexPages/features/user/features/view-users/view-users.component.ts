@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { UserService } from '../../data-access/user.service';
 import { ICredentialsAccess } from '../../interfaces/user.interface';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,19 +7,26 @@ import Swal from 'sweetalert2';
 import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
 import { RoleService } from '../../../../../shared/services/role.service';
 import { IRole } from '../../../../../shared/interfaces/role.interface';
+import { AlertService } from '../../../../../shared/services/alerts.service';
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
+import { Subject } from 'rxjs';
+import { Config } from 'datatables.net';
 
 @Component({
   selector: 'app-view-users',
-  imports: [ReactiveFormsModule, CommonModule, ModalComponent],
+  imports: [ReactiveFormsModule, CommonModule, ModalComponent, DataTablesModule],
   templateUrl: './view-users.component.html',
   styleUrl: './view-users.component.css'
 })
-export default class ViewUsersComponent {
+export default class ViewUsersComponent implements OnInit {
 
   //Injeccion de Servicios
-  userService = inject(UserService);
+  authService = inject(UserService);
   private fb = inject(FormBuilder);
   roleService = inject(RoleService);
+  private alertsService = inject(AlertService);
+  private renderer = inject(Renderer2);
+  dtOptions: Config = {};
 
   //Formulario
   CredentialsForm: FormGroup;
@@ -38,17 +45,10 @@ export default class ViewUsersComponent {
   credentials: ICredentialsAccess[] = [];
   selectedCredentialId: string | null = null;
 
-  //PAGINACION
-  currentPage: number = 1; // Página actual
-  itemsPerPage: number = 10; // Elementos por página
-  totalCredentials: number = 0; // Total de productos
-  pages: number[] = []; // Lista de páginas
-
 
   constructor() {
     this.loadEmployeesWOutCredentials();
     this.loadRoles();
-    this.viewCredentials();
     this.CredentialsForm = this.fb.group({
       employee: ['', Validators.required],
       username: ['', Validators.required],
@@ -57,34 +57,110 @@ export default class ViewUsersComponent {
       roleId: ['', Validators.required],
     });
   }
+  ngOnInit(): void {
+    this.loadTable();
+  }
 
-  viewCredentials() {
-    this.userService.getCredendentials().subscribe({
-      next: (data) => {
-        this.totalCredentials = data.total;
-        this.credentials = data.credentials || [];
-        this.usersSignal.set(data.credentials || []);
-        this.errorMessage = '';
+  //Cargar DataTable
+  loadTable() {
+    this.dtOptions = {
+
+      ajax: (dataTablesParameters: any, callback) => {
+        this.authService.getCredendentials().subscribe((resp: any) => {
+          callback({
+            data: resp.credentials
+          });
+        });
       },
-      error: (err) => {
-        if (err.status === 404) {
-          this.usersSignal.set([]); // Limpia la lista de productos
-          this.errorMessage = err.error.message || 'No hay credenciales registradas.';
-        } else {
-          // console.error('Error al cargar credenciales:', err);
-          this.errorMessage = 'Ocurrió un error al cargar las credenciales.';
-          Swal.fire({
-            icon: "error",
-            title: `${err.statusText}`,
-            text: `${err.error.message}`
+      columnDefs: [
+        { width: '150px', targets: 0 }, // Código de empleado
+        { width: '120px', targets: 1 }, // Usuario
+        { width: '100px', targets: 2 }, // Rol
+        { width: '180px', targets: 3 }, // Fecha de Registro
+        { width: '200px', targets: 4 }, // Última Actualización
+        { width: '100px', targets: 5 }, // Habilitado
+        { width: '150px', targets: 6 }  // Acciones
+      ],
+      scrollX: true,
+      language: {
+        search: "Buscar:", // Cambia el texto del buscador
+        lengthMenu: "Mostrar _MENU_ registros por página",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ credenciales",
+        paginate: {
+          next: "Siguiente",
+          previous: "Anterior"
+        },
+      },
+      lengthMenu: [5, 10, 20, 50],
+      columns: [
+        { title: 'Código de empleado', data: 'employee.codeEmployee', className: 'text-center' },
+        { title: 'Usuario', data: 'username', className: 'text-center' },
+        { title: 'Rol', data: 'role.name', className: 'text-center' },
+        { title: 'Fecha de Registro', data: 'registration_date', className: 'text-center' },
+        { title: 'Fecha de Última Actualización', data: 'lastUpdated_date', className: 'text-center' },
+        {
+          title: 'Habilitado', data: 'status',
+          render: (data: any, type: any, row: any) => {
+            return `
+              <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
+          `;
+          },
+          className: 'text-center' // Centrar la columna
+        },
+        {
+          title: 'Acciones',
+          data: null,
+          render: (data: any, type: any, row: any) => {
+            return `
+          <div>
+
+                <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+
+                <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash"></i>
+                </button>
+
+          </div>`;
+          },
+           className: 'text-center'
+        }
+      ],
+      rowCallback: (row: Node, data: any, index: number) => {
+        // Cast row to HTMLElement to access querySelector
+        const rowElement = row as HTMLElement;
+
+        //Metodo para actulizar el estado del producto
+        const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
+        if (checkbox) {
+          this.renderer.listen(checkbox, 'change', (event) => {
+            this.onStatusChange(event, data);
           });
         }
+
+        //Eliminar
+        const btnDelete = rowElement.querySelector('.btn-delete') as HTMLInputElement;
+        if (btnDelete) {
+          this.renderer.listen(btnDelete, 'click', () => {
+            this.deleteCredentials(data.id);
+          });
+        }
+
+        //Actualizar
+        const btnUpdate = rowElement.querySelector('.btn-update') as HTMLInputElement;
+        if (btnUpdate) {
+          this.renderer.listen(btnUpdate, 'click', () => {
+            this.toggleModal(data);
+          });
+        }
+        return row;
       }
-    })
+    };
   }
 
   deleteCredentials(id: string) {
-    this.userService.deleteCredentials(id).subscribe({
+    this.authService.deleteCredentials(id).subscribe({
       next: (res: any) => {
         Swal.fire({
           position: "top-end",
@@ -93,7 +169,7 @@ export default class ViewUsersComponent {
           showConfirmButton: false,
           timer: 1500
         });
-        this.viewCredentials();
+        this.refreshTable();
         this.loadEmployeesWOutCredentials();
       },
       error: (err) => {
@@ -107,7 +183,7 @@ export default class ViewUsersComponent {
   }
 
   loadEmployeesWOutCredentials() {
-    this.userService.getEmployeesWithOutCredendentials().subscribe({
+    this.authService.getEmployeesWithOutCredendentials().subscribe({
       next: (data) => {
         this.employees = data.employeesFound;
       },
@@ -122,15 +198,15 @@ export default class ViewUsersComponent {
   onStatusChange(event: Event, credentials: any): void {
     const checkbox = event.target as HTMLInputElement;
     credentials.status = checkbox.checked;
-  
+
     // Aquí puedes enviar la actualización al backend si es necesario
     this.updateProductStatus(credentials);
   }
-  
+
   updateProductStatus(credentials: any): void {
-    this.userService.updateCredentialsStatus(credentials.id, credentials.status).subscribe({
-      next: (response) => console.log('Estado actualizado:', response),
-      error: (error) => console.error('Error actualizando estado:', error),
+    this.authService.updateCredentialsStatus(credentials.id, credentials.status).subscribe({
+      next: (res: any) => this.alertsService.showSuccess(`${res.message}`, `Información`),
+      error: (error) => this.alertsService.showError(`${error.error.message}`, `${error.statusText}`),
     });
   }
 
@@ -147,25 +223,15 @@ export default class ViewUsersComponent {
   //Añadir nueva credencial
   addCredential() {
     const newCredentials = this.CredentialsForm.value;
-    this.userService.addCredentials(newCredentials).subscribe({
+    this.authService.addCredentials(newCredentials).subscribe({
       next: (res) => {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          text: `${res.message}`,
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.viewCredentials();
+        this.alertsService.showSuccess(`${res.message}`, `Información`);
+        this.refreshTable();
         this.loadEmployeesWOutCredentials();
       },
       error: (err) => {
         // console.error({err});
-        Swal.fire({
-          icon: "error",
-          title: `${err.statusText}`,
-          text: `${err.error.message}`
-        });
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
     this.CredentialsForm.reset();
@@ -175,25 +241,14 @@ export default class ViewUsersComponent {
   //Actualizar categoria
   updateCredential(id: string) {
     const updatedCredential = this.CredentialsForm.value;
-    this.userService.updateCredential(id, updatedCredential).subscribe({
+    this.authService.updateCredential(id, updatedCredential).subscribe({
       next: (res: any) => {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          text: `${res.message}`,
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.viewCredentials();
+        this.alertsService.showSuccess(`${res.message}`, `Información`);
+        this.refreshTable();
         this.loadEmployeesWOutCredentials();
       },
       error: (err) => {
-        // console.error(err);
-        Swal.fire({
-          icon: "error",
-          title: `${err.statusText}`,
-          text: `${err.error.message}`
-        });
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
     this.showModal = false;
@@ -207,11 +262,7 @@ export default class ViewUsersComponent {
       },
       error: (err) => {
         // console.error('Error al cargar roles:', err);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${err.error.message}`
-        });
+        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
   }
@@ -240,27 +291,31 @@ export default class ViewUsersComponent {
   }
 
 
-
-  //Paginacion
-  calculatePages() {
-    const totalPages = Math.ceil(this.totalCredentials / this.itemsPerPage);
-    this.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  downloadExcel() {
+    this.alertsService.showInfo('Metodo aun no implementado', 'Información')
   }
 
-  getProductRange() {
-    const start = (this.currentPage - 1) * this.itemsPerPage + 1;
-    const end = Math.min(this.currentPage * this.itemsPerPage, this.totalCredentials);
-    return `${start}-${end}`;
+  //Renderizado del datatables
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+  dtTrigger: Subject<any> = new Subject<any>();
+
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
   }
 
-  onPageChange(newPage: number) {
-    if (newPage < 1 || newPage > this.pages.length) {
-      return; // Evita cambiar a páginas no válidas
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  //Metodo para refrescar la tabla
+  refreshTable(): void {
+    if (this.dtElement) {
+      this.dtElement.dtInstance.then((dtInstance: any) => {
+        dtInstance.ajax.reload();
+      });
     }
-
-    this.currentPage = newPage;
-    this.viewCredentials();
   }
-
 
 }

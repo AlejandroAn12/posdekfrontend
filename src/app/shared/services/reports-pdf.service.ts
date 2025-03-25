@@ -9,17 +9,5 @@ import { Observable } from 'rxjs';
 })
 export class ReportsPdfService {
 
-  private http = inject(HttpClient);
-
-  downloadProductReportPdf(): Observable<Blob> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/pdf'
-    });
-
-    return this.http.get(`${environment.API_URL}/products/download-pdf/report-product`, {
-      headers: headers,
-      responseType: 'blob'
-    });
-  }
+  constructor (){}
 }

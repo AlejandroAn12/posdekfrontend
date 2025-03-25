@@ -28,16 +28,16 @@ export default class EnterpriseInformationComponent {
 
   constructor() {
     this.EnterpriseForm = this.fb.group({
-      name: ['', Validators.required],
-      company_name: ['', Validators.required],
+      name: [{ value: '', disabled: this.isDisabled }],
+      company_name: [{ value: '', disabled: this.isDisabled }],
       logoURL: [''],
       ruc: [{ value: '', disabled: this.isDisabled }],
-      legal_representative: ['', Validators.required],
-      address: ['', Validators.required],
-      phone: ['', Validators.required],
-      email: ['', Validators.required],
-      country: ['', Validators.required],
-      city: ['', Validators.required],
+      legal_representative: [{ value: '', disabled: this.isDisabled }],
+      address: [{ value: '', disabled: this.isDisabled }],
+      phone: [{ value: '', disabled: this.isDisabled }],
+      email: [{ value: '', disabled: this.isDisabled }],
+      country: [{ value: '', disabled: this.isDisabled }],
+      city: [{ value: '', disabled: this.isDisabled }],
     });
 
     //Cargas

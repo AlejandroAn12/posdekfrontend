@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { EmployeeService } from '../../data-access/employee.service';
 import { IEmployee } from '../../interface/employee.interface';
 import Swal from 'sweetalert2';
@@ -7,19 +7,27 @@ import { ModalComponent } from '../../../../../shared/features/components/modal/
 import { CommonModule } from '@angular/common';
 import { RoleService } from '../../../../../shared/services/role.service';
 import { IRole } from '../../../../../shared/interfaces/role.interface';
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
+import { Subject } from 'rxjs';
+import { Config } from 'datatables.net';
+import { AlertService } from '../../../../../shared/services/alerts.service';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-view-employees',
-  imports: [ModalComponent, ReactiveFormsModule, CommonModule,],
+  imports: [ModalComponent, ReactiveFormsModule, CommonModule, DataTablesModule],
   templateUrl: './view-employees.component.html',
   styleUrl: './view-employees.component.css'
 })
-export default class ViewEmployeesComponent {
+export default class ViewEmployeesComponent implements OnInit {
 
   //Injections
   private employeeService = inject(EmployeeService);
   private fb = inject(FormBuilder);
   private roleService = inject(RoleService);
+  private renderer = inject(Renderer2);
+  private alertsService = inject(AlertService);
+  dtOptions: Config = {};
 
   totalEmployees: number = 0;
   employees: IEmployee[] = [];
@@ -40,51 +48,114 @@ export default class ViewEmployeesComponent {
   titleModal: string = 'Nuevo Producto';
   isEditing: boolean = false;
 
-  //PAGINACION
-  currentPage: number = 1; // Página actual
-  itemsPerPage: number = 10; // Elementos por página
-  totalCredentials: number = 0; // Total de productos
-  pages: number[] = []; // Lista de páginas
-
 
   constructor() {
-    this.viewEmployees();
-    this.loadRoles();
     this.EmployeesForm = this.fb.group({
       codeEmployee: [{ value: '', disabled: this.isDisabled }],
       name: ['', Validators.required],
-      role: [{value: ''}],
+      role: [{ value: '' }],
       surname: ['', Validators.required],
-      dni: [{ value: '', required: true}],
-      address: [{value: ''}],
+      dni: [{ value: '', required: true }],
+      address: [{ value: '' }],
       email: ['', Validators.required],
       tlf: ['', Validators.required],
     });
   }
+  ngOnInit(): void {
+    this.loadTable();
+    this.loadRoles();
+  }
 
-  viewEmployees(page: number = 1, limit: number = 10) {
-    this.employeeService.getEmployees(page, limit).subscribe({
-      next: (data) => {
-        this.totalEmployees = data.total;
-        this.employees = data.employees || [];
-        this.employeesSignal.set(data.employees || []);
-        this.errorMessage = '';
+  //Cargar DataTable
+  loadTable() {
+    this.dtOptions = {
+
+      ajax: (dataTablesParameters: any, callback) => {
+        this.employeeService.getEmployees().subscribe((resp: any) => {
+          callback({
+            data: resp.employees
+          });
+        });
       },
-      error: (err) => {
-        if (err.status === 404) {
-          this.employeesSignal.set([]); // Limpia la lista de productos
-          this.errorMessage = err.error.message || 'No hay empleados registrados.';
-        } else {
-          // console.error('Error al cargar credenciales:', err);
-          this.errorMessage = 'Ocurrió un error al cargar información de empleados.';
-          Swal.fire({
-            icon: "error",
-            title: `${err.statusText}`,
-            text: `${err.error.message}`
+      scrollX: true,
+      language: {
+        search: "Buscar:", // Cambia el texto del buscador
+        lengthMenu: "Mostrar _MENU_ registros por página",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ empleados",
+        paginate: {
+          next: "Siguiente",
+          previous: "Anterior"
+        },
+      },
+      lengthMenu: [5, 10, 20, 50],
+      columns: [
+        { title: 'Identificación', data: 'dni' },
+        { title: 'Código de empleado', data: 'codeEmployee' },
+        { title: 'Nombres  Completos', data: 'name' },
+        { title: 'Apellidos Completos', data: 'surname' },
+        { title: 'Correo Electrónico', data: 'email' },
+        { title: 'Teléfono de Contacto', data: 'tlf' },
+        {
+          title: 'Habilitado', data: 'status',
+          render: (data: any, type: any, row: any) => {
+            return `
+                <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
+            `;
+          },
+          className: 'text-center' // Centrar la columna
+        },
+
+        { title: 'Fecha de registro', data: 'registration_date' },
+        {
+          title: 'Acciones',
+          data: null,
+          render: (data: any, type: any, row: any) => {
+            return `
+            <div>
+
+                  <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
+                          <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+
+                  <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
+                          <i class="fa-solid fa-trash"></i>
+                  </button>
+
+            </div>`;
+          },
+          className: 'action-column'
+        }
+      ],
+      rowCallback: (row: Node, data: any, index: number) => {
+        // Cast row to HTMLElement to access querySelector
+        const rowElement = row as HTMLElement;
+
+        //Metodo para actulizar el estado del producto
+        const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
+        if (checkbox) {
+          this.renderer.listen(checkbox, 'change', (event) => {
+            this.onStatusChange(event, data);
           });
         }
+
+        //Eliminar
+        const btnDelete = rowElement.querySelector('.btn-delete') as HTMLInputElement;
+        if (btnDelete) {
+          this.renderer.listen(btnDelete, 'click', () => {
+            this.deleteEmployee(data.id);
+          });
+        }
+
+        //Actualizar
+        const btnUpdate = rowElement.querySelector('.btn-update') as HTMLInputElement;
+        if (btnUpdate) {
+          this.renderer.listen(btnUpdate, 'click', () => {
+            this.toggleModal(data);
+          });
+        }
+        return row;
       }
-    })
+    };
   }
 
 
@@ -125,7 +196,7 @@ export default class ViewEmployeesComponent {
           showConfirmButton: false,
           timer: 1500
         });
-        this.viewEmployees();
+        this.refreshTable();
       },
       error: (err) => {
         // console.error({err});
@@ -152,7 +223,7 @@ export default class ViewEmployeesComponent {
           showConfirmButton: false,
           timer: 1500
         });
-        this.viewEmployees();
+        this.refreshTable();
       },
       error: (err) => {
         // console.error(err);
@@ -169,6 +240,7 @@ export default class ViewEmployeesComponent {
   deleteEmployee(id: string) {
     this.employeeService.deleteEmployee(id).subscribe({
       next: (res: any) => {
+        console.log(res);
         Swal.fire({
           position: "top-end",
           icon: "success",
@@ -176,7 +248,7 @@ export default class ViewEmployeesComponent {
           showConfirmButton: false,
           timer: 1500
         });
-        this.viewEmployees();
+        this.refreshTable();
       },
       error: (err) => {
         Swal.fire({
@@ -218,38 +290,52 @@ export default class ViewEmployeesComponent {
   onStatusChange(event: Event, employee: any): void {
     const checkbox = event.target as HTMLInputElement;
     employee.status = checkbox.checked;
-  
-    // Aquí puedes enviar la actualización al backend si es necesario
+
     this.updateEmployeeStatus(employee);
   }
-  
+
   updateEmployeeStatus(employee: any): void {
     this.employeeService.updateEmployeeStatus(employee.id, employee.status).subscribe({
-      next: (response) => console.log('Estado actualizado:', response),
-      error: (error) => console.error('Error actualizando estado:', error),
+      next: (resp: any) => {
+        if (resp.status) {
+          this.alertsService.showSuccess(`Empleado Habilitado`, '')
+        } else if (!resp.status) {
+          this.alertsService.showSuccess(`Empleado Deshabilitado`, '')
+        }
+        else {
+          this.alertsService.showError(`Error al habilitar empleado`, 'Error')
+        }
+      },
+      error: (error) => this.alertsService.showError(`${error.error.message}`, 'Error')
     });
   }
 
-
-  //Paginacion
-  calculatePages() {
-    const totalPages = Math.ceil(this.totalEmployees / this.itemsPerPage);
-    this.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  downloadExcel() {
+    this.alertsService.showInfo('Metodo aun no implementado', 'Información')
   }
 
-  getEmployeesRange() {
-    const start = (this.currentPage - 1) * this.itemsPerPage + 1;
-    const end = Math.min(this.currentPage * this.itemsPerPage, this.totalEmployees);
-    return `${start}-${end}`;
+  //Renderizado del datatables
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+  dtTrigger: Subject<any> = new Subject<any>();
+
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
   }
 
-  onPageChange(newPage: number) {
-    if (newPage < 1 || newPage > this.pages.length) {
-      return; // Evita cambiar a páginas no válidas
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  //Metodo para refrescar la tabla
+  refreshTable(): void {
+    if (this.dtElement) {
+      this.dtElement.dtInstance.then((dtInstance: any) => {
+        dtInstance.ajax.reload();
+      });
     }
-
-    this.currentPage = newPage;
-    this.viewEmployees();
   }
+
 
 }

@@ -14,13 +14,7 @@
     <div class="p-1">
       <p class="text-white font-medium text-sm">Bienvenido</p>
       <h2 class="text-white font-semibold mt-1.5 text-2xl">{{ userLogged }}</h2>
-      <p class="text-white font-medium text-sm lowercase">{{ role }}</p>
-      <!-- <div class="mt-8">
-        <button type="submit" class="bg-colorSecondary p-2 rounded text-white">
-          <i class="fa-solid fa-square-plus text-white mr-1 text-md"></i>
-          Agregar producto
-        </button>
-      </div> -->
+      <p class="text-white font-medium text-sm">{{ role }}</p>
     </div>
   </div>
 </div>
@@ -28,86 +22,48 @@
 
 <div class="flex flex-col lg:flex-row shadow-2xl p-10 justify-center gap-5">
   <!-- Tarjeta Reutilizable -->
-  <div class="card">
+  <div class="card p-4">
     <div class="flex justify-between items-center mb-2">
-      <h2 class="card-title text-gray-600">Últimas órdenes generadas</h2>
+      <h2 class="card-title text-gray-600 text-lg">Últimas órdenes generadas</h2>
       <button
-        type="submit"
-        class="border border-colorPrimary p-2 rounded text-colorPrimary hover:bg-colorPrimary hover:text-white"
+        (click)="navigateToOrders()"
+        class="border border-colorPrimary px-3 py-1 rounded text-colorPrimary hover:bg-colorPrimary hover:text-white text-sm"
       >
         Ver historial completo
       </button>
     </div>
-    <hr />
-    <div class="flex flex-row w-full mt-12 text-xl text-gray-400 ">
-      <!-- <p class="font-semibold">No se han realizado órdenes</p> -->
-      <div class="relative overflow-x-auto">
-        <table
-          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-        >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
-          >
-            <tr>
-              <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                Número de orden
-              </th>
-              <th scope="col" class="px-6 py-3 whitespace-nowrap">Cantidad</th>
-              <th scope="col" class="px-6 py-3 whitespace-nowrap">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <a href="" class="text-colorPrimary">1402556</a>
-              </th>
-              <td class="px-6 py-4 whitespace-nowrap">520</td>
-              <td class="px-6 py-4 whitespace-nowrap">$150</td>
-            </tr>
-            <!-- ss -->
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <a href="" class="text-colorPrimary">1402556</a>
-              </th>
-              <td class="px-6 py-4 whitespace-nowrap">520</td>
-              <td class="px-6 py-4 whitespace-nowrap">$150</td>
-            </tr>
-            <!-- 85525 -->
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <a href="" class="text-colorPrimary">1402556</a>
-              </th>
-              <td class="px-6 py-4 whitespace-nowrap">520</td>
-              <td class="px-6 py-4 whitespace-nowrap">$150</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <hr class="mb-4" />
+    
+    <div class="overflow-x-auto">
+      <table
+        datatable
+        [dtOptions]="dtOptions"
+        [dtTrigger]="dtTrigger"
+        class="row-border hover table-auto w-full text-sm"
+      ></table>
     </div>
   </div>
+  
 
-  <div class="card">
+  <div class="card p-4">
     <div class="flex justify-between items-center mb-2">
-      <h2 class="card-title text-gray-600">Historial de movimientos</h2>
+      <h2 class="card-title text-gray-600 text-lg">Últimas órdenes generadas</h2>
       <button
-        type="submit"
-        class="border border-colorPrimary p-2 rounded text-colorPrimary hover:bg-colorPrimary hover:text-white"
+        (click)="navigateToOrders()"
+        class="border border-colorPrimary px-3 py-1 rounded text-colorPrimary hover:bg-colorPrimary hover:text-white text-sm"
       >
         Ver historial completo
       </button>
     </div>
-    <hr />
-    <div class="flex flex-row justify-center mt-12 text-xl text-gray-400">
-      <p class="font-semibold">No se han realizado movimientos</p>
+    <hr class="mb-4" />
+    
+    <div class="overflow-x-auto">
+      <table
+        datatable
+        [dtOptions]="dtOptions"
+        [dtTrigger]="dtTrigger"
+        class="row-border hover table-auto w-full text-sm"
+      ></table>
     </div>
   </div>
 </div>

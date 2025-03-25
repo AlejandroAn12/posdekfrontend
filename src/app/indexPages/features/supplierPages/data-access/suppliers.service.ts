@@ -26,6 +26,10 @@ export class SuppliersService {
       .pipe(tap((res) => { return true }));
   }
 
+  getSupplierId(id: string): Observable<any> {
+    return this.http.get(`${environment.API_URL}/suppliers/${id}/detail`)
+  }
+
   updateSupplier(id: string, iSupplier: any){
     return this.http.patch(`${environment.API_URL}/suppliers/update/${id}`, iSupplier)
   }

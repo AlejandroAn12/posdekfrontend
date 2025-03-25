@@ -1,0 +1,207 @@
+<div class="bg-blue-700 p-5">
+  <div class="text-white font-semibold">
+    <h1 class="text-2xl uppercase">Productos</h1>
+  </div>
+</div>
+
+<div id="card-body" class="flex flex-col border border-gray-100 rounded mt-5">
+  <!-- Título -->
+  <div class="p-2 bg-gray-300">
+    <h1 class="text-sm font-semibold text-gray-600 uppercase">
+      Detalles del producto
+    </h1>
+  </div>
+
+  <!-- Formulario -->
+  <div class="bg-white p-4 space-y-4">
+    <form [formGroup]="ProductForm">
+      <!-- Primera fila -->
+      <div class="flex mt-5 mb-5">
+        <div class="w-42 mr-4">
+          <label for="supplierId" class="text-sm font-semibold text-gray-600"
+            >Proveedor</label
+          >
+          <select
+            formControlName="supplierId"
+            id="supplierId"
+            class="rounded p-2 block w-full border border-gray-300"
+          >
+            <option value="" disabled selected>Selecciona el proveedor</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+              {{ supplier.company_name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="w-42 mr-4">
+          <label for="stock" class="text-sm font-semibold text-gray-600"
+            >Categoria</label
+          >
+          <select
+            id="categoryId"
+            formControlName="categoryId"
+            class="rounded p-2 block w-full border border-gray-300"
+          >
+            <option value="" disabled selected>Selecciona la categoria</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Segunda fila -->
+      <div class="flex mt-5 mb-5" *ngIf="isUpdate">
+        <div class="w-24 mr-4">
+          <label for="barcode" class="text-sm font-semibold text-gray-600"
+            >Código Interno</label
+          >
+          <input
+            formControlName="code"
+            [disabled]="isEditing"
+            type="text"
+            id="barcode"
+            class="rounded p-2 block w-full border border-gray-300"
+          />
+        </div>
+      </div>
+
+      <div class="flex mt-5 mb-5">
+        <div class="w-1/3 mr-4">
+          <label for="barcode" class="text-sm font-semibold text-gray-600"
+            >Código de barra</label
+          >
+          <input
+            formControlName="barcode"
+            type="text"
+            id="barcode"
+            class="rounded p-2 block w-full border border-gray-300"
+          />
+        </div>
+        <div class="w-2/3">
+          <label for="name" class="text-sm font-semibold text-gray-600"
+            >Nombre del producto</label
+          >
+          <input
+            formControlName="name"
+            type="text"
+            id="name"
+            class="rounded p-2 block w-full border border-gray-300"
+          />
+        </div>
+      </div>
+
+      <!-- Tercera fila - Stock -->
+      <div class="flex mt-5 mb-5">
+        <div class="w-42 mr-4">
+          <label
+            for="unitOfmeasurementId"
+            class="text-sm font-semibold text-gray-600"
+            >Unidad de medida</label
+          >
+          <select
+            formControlName="unitOfmeasurementId"
+            id="unitOfmeasurementId"
+            class="rounded p-2 block w-full border border-gray-300"
+          >
+            <option value="" disabled selected>
+              Selecciona la unidad de medida
+            </option>
+            <option *ngFor="let unit of unitsOfMeasurement" [value]="unit.id">
+              {{ unit.name }}
+            </option>
+          </select>
+        </div>
+        <div class="w-24 mr-4">
+          <label for="stock" class="text-sm font-semibold text-gray-600"
+            >Stock</label
+          >
+          <input
+            formControlName="stock"
+            type="number"
+            id="stock"
+            class="rounded p-2 block w-full border border-gray-300"
+          />
+        </div>
+      </div>
+
+      <!-- Cuarta fila - Precios -->
+      <div class="flex mt-5 mb-5">
+        <div class="w-42 mr-4">
+          <label
+            for="purchase_price"
+            class="text-sm font-semibold text-gray-600"
+          >
+            $ Precio de compra <small>(Proveedor)</small>
+          </label>
+          <input
+            formControlName="purchase_price"
+            type="text"
+            id="purchase_price"
+            class="rounded p-2 block w-full border border-gray-300"
+            placeholder="$ 0.00"
+          />
+        </div>
+        <div class="w-42">
+          <label for="sale_price" class="text-sm font-semibold text-gray-600">
+            $ Precio de venta <small>(Público)</small>
+          </label>
+          <!-- ToolTip -->
+          <div class="relative group inline-block">
+            <i class="fa-solid fa-circle-info text-indigo-500 ml-2"></i>
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-40 bg-gray-900 text-white text-sm px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <small
+                >Recuerde tener en cuenta que si el precio de venta del producto
+                ya incluye el I.V.A. debe ingresar el valor total de venta
+                calculado con el I.V.A (P.V.P * 15/100).</small
+              >
+            </div>
+          </div>
+          <!-- Final Tooltip -->
+          <input
+            formControlName="sale_price"
+            type="text"
+            id="sale_price"
+            class="rounded p-2 block w-full border border-gray-300"
+            placeholder="$ 0.00"
+          />
+        </div>
+      </div>
+
+      <!-- Quinta fila -->
+      <div class="flex mt-5 mb-5">
+        <div class="w-1/3 mr-4">
+          <label for="barcode" class="text-sm font-semibold text-gray-600"
+            >Descripcion</label
+          >
+          <textarea
+            formControlName="description"
+            class="rounded p-2 block w-full border border-gray-300"
+            id="barcode"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Quinta fila -->
+      <div class="flex mt-5 mb-5">
+        <div class="w-1/3 mr-4">
+          <button
+            (click)="saveProduct()"
+            class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-blue-700 mr-2"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ isUpdate ? "Guardar cambios" : "Añadir producto" }}
+          </button>
+          <button
+            (click)="btnBack()"
+            class="text-gray-500 border text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
+          >
+            Regresar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

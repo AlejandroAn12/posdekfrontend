@@ -1,0 +1,245 @@
+<div class="bg-blue-700 p-5">
+  <div class="text-white font-semibold">
+    <h1 class="text-2xl uppercase">Configuración del negocio</h1>
+  </div>
+</div>
+
+
+<!-- Información de la empresa -->
+<div class="flex flex-col  rounded mt-5">
+  <div class="p-2 bg-gray-300">
+    <h1 class="text-sm font-semibold text-gray-600 uppercase">
+      Detalles del negocio
+    </h1>
+  </div>
+  <div class="bg-white p-4">
+    <form [formGroup]="EnterpriseForm" class="space-y-5">
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label for="ruc" class="text-sm font-semibold text-gray-600"
+            >R.U.C.</label
+          >
+          <input
+            formControlName="ruc"
+            type="text"
+            id="ruc"
+            class="input-field"
+          />
+        </div>
+        <div>
+          <label for="company_name" class="text-sm font-semibold text-gray-600"
+            >Razón Social</label
+          >
+          <input
+            formControlName="company_name"
+            type="text"
+            id="company_name"
+            class="input-field"
+          />
+        </div>
+        <div>
+          <label for="name" class="text-sm font-semibold text-gray-600"
+            >Nombre de la empresa</label
+          >
+          <input
+            formControlName="name"
+            type="text"
+            id="name"
+            class="input-field"
+          />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-6 gap-4">
+        <div>
+          <label
+            for="legal_representative"
+            class="text-sm font-semibold text-gray-600"
+            >Representante Legal</label
+          >
+          <input
+            formControlName="legal_representative"
+            type="text"
+            id="legal_representative"
+            class="input-field"
+          />
+        </div>
+        <div>
+          <label for="phone" class="text-sm font-semibold text-gray-600"
+            >Teléfono</label
+          >
+          <input
+            formControlName="phone"
+            type="tel"
+            id="phone"
+            class="input-field"
+          />
+        </div>
+        <div>
+          <label for="email" class="text-sm font-semibold text-gray-600"
+            >Correo Electrónico</label
+          >
+          <input
+            formControlName="email"
+            type="email"
+            id="email"
+            class="input-field"
+          />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-6 gap-4">
+        <div>
+          <label for="country" class="text-sm font-semibold text-gray-600"
+            >País</label
+          >
+          <input
+            formControlName="country"
+            type="text"
+            id="country"
+            class="input-field"
+          />
+        </div>
+        <div>
+          <label for="city" class="text-sm font-semibold text-gray-600"
+            >Ciudad</label
+          >
+          <input
+            formControlName="city"
+            type="text"
+            id="city"
+            class="input-field"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label for="address" class="text-sm font-semibold text-gray-600"
+          >Dirección matriz</label
+        >
+        <input
+          formControlName="address"
+          type="text"
+          id="address"
+          class="input-field"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Impuestos -->
+<div class="flex flex-col rounded mt-5">
+  <div class="p-2 bg-gray-300">
+    <h1 class="text-sm font-semibold text-gray-600 uppercase">Impuestos</h1>
+  </div>
+  <div class="bg-white p-4">
+    <form [formGroup]="EnterpriseForm" class="space-y-5">
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-gray-600"
+            >¿Trabajas con Impuestos?</label
+          >
+          <!-- ToolTip -->
+          <div class="relative group inline-block">
+            <i class="fa-solid fa-circle-info text-indigo-500 ml-2"></i>
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-40 bg-gray-900 text-white text-sm px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <small
+                >Si su opción es "NO" el impuesto por defecto que se calculará
+                el precio total de venta es sobre el 15% según lo estipulado en el Reglamento
+                Tributario.</small
+              >
+            </div>
+          </div>
+          <!-- Final Tooltip -->
+          <div class="flex space-x-4 mt-2">
+            <label class="inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                class="sr-only peer"
+                formControlName="work_taxes"
+              />
+              <div
+                class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+              ></div>
+              <span
+                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                {{ EnterpriseForm.get("work_taxes")?.value ? "Sí" : "No" }}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold text-gray-600"
+            >¿El precio de venta de productos incluye impuestos?</label
+          >
+          <!-- ToolTip -->
+          <div class="relative group inline-block">
+            <i class="fa-solid fa-circle-info text-indigo-500 ml-2"></i>
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-40 bg-gray-900 text-white text-sm px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <small>Si su opción es "NO" el impuesto por defecto es sobre el 15% según lo estipulado en el Reglamento Tributario.</small>
+            </div>
+          </div>
+          <!-- Final Tooltip -->
+          <div class="flex space-x-4 mt-2">
+            <label class="inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                class="sr-only peer"
+                formControlName="price_taxes"
+              />
+              <div
+                class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+              ></div>
+              <span
+                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                {{ EnterpriseForm.get("price_taxes")?.value ? "Sí" : "No" }}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div *ngIf="showSelectTypeTaxes">
+          <label for="tipoImpuesto" class="text-sm font-semibold text-gray-600"
+            >Tipo de impuesto</label
+          >
+          <select formControlName="taxId" id="tipoImpuesto" class="input-field">
+            <option value="" disabled selected>Selecciona el impuesto</option>
+            <option *ngFor="let tax of iTaxes" [value]="tax.id">
+              {{ tax.name }} - {{ tax.rate }}{{ tax.symbol }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Impuestos -->
+<!-- <div class="flex flex-col border border-gray-400 rounded mt-5">
+  <div class="p-2 bg-gray-300">
+    <h1 class="text-sm font-semibold text-gray-600 uppercase">
+      Configuraciones extras
+    </h1>
+  </div>
+  <div class="bg-white p-4"> -->
+  <!-- BODY -->
+  <!-- </div>
+</div> -->
+
+<!-- Botón de guardar -->
+<div class="flex justify-start mt-5">
+  <button
+    (click)="save()"
+    class="bg-indigo-600 text-white text-sm font-semibold rounded p-2 hover:bg-indigo-700 flex items-center"
+  >
+    <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar
+  </button>
+</div>

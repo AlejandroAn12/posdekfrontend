@@ -24,59 +24,53 @@ export class SidebarComponent {
   sidebarOptions: SidebarOption[] = [
     {
       title: 'Dashboard',
-      iconClass: 'fa-solid fa-store',
+      iconClass: 'fa-brands fa-usps',
       route: '/index/dashboard',
-    },
-    {
-      title: 'Productos',
-      iconClass: 'fa-solid fa-box',
-      children: [
-        { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/index/products/view' },
-        { title: 'Categorías', iconClass: 'fa-solid fa-tags', route: '/index/categories/view' },
-      ],
     },
     {
       title: 'Administración',
       iconClass: 'fa-solid fa-gear',
       children: [
-        { title: 'Empresa', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
-        { title: 'Proveedores', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/view' },
-        // { title: 'Clientes', iconClass: 'fa-solid fa-users', route: '/index/clients/view' },
-        { title: 'Empleados', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
+        { title: 'Colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
         { title: 'Credenciales de acceso', iconClass: 'fa-solid fa-user-tie', route: '/index/users/credentials' },
-
-
+        
+        
         
       ],
     },
     {
-      title: 'Órden de compras',
-      iconClass: 'fa-solid fa-receipt',
-      route: '/index/orders/view',
+      title: 'Gestionar negocio',
+      iconClass: 'fa-solid fa-store',
+      children: [
+        { title: 'Información del negocio', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
+        { title: 'Configuración', iconClass: 'fa-solid fa-gear', route: '/index/enterprise/settings' },
+        
+        
+        
+      ],
+    },
+    {
+      title: 'Gestionar inventario',
+      iconClass: 'fa-solid fa-boxes-stacked',
+      children: [
+        { title: 'Proveedores', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/view' },
+        { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/index/products/view' },
+        { title: 'Categorias', iconClass: 'fa-solid fa-tags', route: '/index/categories/view' },
+        { title: 'Compras', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/view' },
+        
+        
+        
+      ],
     },
     {
       title: 'Reportes',
       iconClass: 'fa-solid fa-folder',
       children: [
-        { title: 'Inventario', iconClass: 'fa-solid fa-warehouse', route: '/products/inventory' },
-        { title: 'Historial movimientos', iconClass: 'fa-solid fa-tags', route: '/products/categories' },
-        { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/products/all' }
+        { title: 'Reporte de compras', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/history' }
       ],
-    },
-    {
-      title: 'Centro de notificaciones',
-      iconClass: 'fa-regular fa-bell',
-      route: 'notifications',
-    },
-    // {
-    //   title: 'Usuarios',
-    //   iconClass: 'fa-solid fa-user',
-    //   children: [
-        
-    //   ],
-    // },
+    }
   ];
-
+  
   // Estado para controlar el despliegue del submenú
   activeIndex: number | null = null;
   
@@ -86,7 +80,7 @@ export class SidebarComponent {
   
   logout() {
     this.authState.logOut();
-   }
+  }
    
    whatsApp() { }
    
