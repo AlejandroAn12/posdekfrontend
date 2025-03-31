@@ -11,7 +11,7 @@ import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { AlertService } from '../../../../../shared/services/alerts.service';
-import { data } from 'jquery';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-employees',
@@ -24,6 +24,7 @@ export default class ViewEmployeesComponent implements OnInit {
   //Injections
   private employeeService = inject(EmployeeService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
   private roleService = inject(RoleService);
   private renderer = inject(Renderer2);
   private alertsService = inject(AlertService);
@@ -87,7 +88,7 @@ export default class ViewEmployeesComponent implements OnInit {
           previous: "Anterior"
         },
       },
-      lengthMenu: [5, 10, 20, 50],
+      lengthMenu: [10],
       columns: [
         { title: 'Identificación', data: 'dni' },
         { title: 'Código de empleado', data: 'codeEmployee' },
@@ -107,7 +108,7 @@ export default class ViewEmployeesComponent implements OnInit {
 
         { title: 'Fecha de registro', data: 'registration_date' },
         {
-          title: 'Acciones',
+          title: 'Opciones',
           data: null,
           render: (data: any, type: any, row: any) => {
             return `
@@ -150,7 +151,7 @@ export default class ViewEmployeesComponent implements OnInit {
         const btnUpdate = rowElement.querySelector('.btn-update') as HTMLInputElement;
         if (btnUpdate) {
           this.renderer.listen(btnUpdate, 'click', () => {
-            this.toggleModal(data);
+            this.editSupplier(data.id);
           });
         }
         return row;
@@ -209,6 +210,10 @@ export default class ViewEmployeesComponent implements OnInit {
     });
     this.EmployeesForm.reset();
     this.showModal = false;
+  }
+
+  editSupplier(supplierId: string) {
+    this.router.navigate(['/index/employees/form'], { queryParams: { form: 'update', id: supplierId } });
   }
 
   //Actualizar categoria
@@ -337,5 +342,8 @@ export default class ViewEmployeesComponent implements OnInit {
     }
   }
 
+  btnNewEmployee() {
+    this.router.navigate(['index/employees/form']);
+  }
 
 }

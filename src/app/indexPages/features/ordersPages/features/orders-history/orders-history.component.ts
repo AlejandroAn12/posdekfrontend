@@ -25,37 +25,44 @@ export default class OrdersHistoryComponent implements OnInit {
   dtOptions: Config = {};
 
   ngOnInit(): void {
-    // this.viewOrders();
+    this.loadDataTable();
+  }
+  
+  loadDataTable() {
     this.dtOptions = {
 
       ajax: (dataTablesParameters: any, callback) => {
         this.ordersService.getOrders().subscribe({
           next: (resp) => {
             callback({
-              data: resp.data
+              data: resp.data ?? []
             });
           },
           error: (err) => {
             this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+            callback({ data: [] });
           }
         });
       },
       scrollX: true,
       language: {
-        search: "Buscar orden:", // Cambia el texto del buscador
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ órdenes",
+        emptyTable: "No hay información disponible",
+        loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
+        zeroRecords: "No se encontraron resultados",
+        search: "Buscar pedido:", // Cambia el texto del buscador
+        lengthMenu: "",
+        info: "Total de órdenes finalizadas: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
         },
       },
-      lengthMenu: [5, 10, 20, 50],
+      lengthMenu: [10],
       columns: [
         { title: 'N°', data: 'numberOrder' },
         { title: 'Proveedor', data: 'supplier.company_name' },
         {
-          title: 'Valor Total', data: 'totalAmount',
+          title: 'Total', data: 'totalAmount',
           render: (data: any) => {
             return new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -64,13 +71,13 @@ export default class OrdersHistoryComponent implements OnInit {
           }
         },
         { title: 'Fecha de generación', data: 'orderDate' },
-        {title: 'Estado del pedido', data: 'typeofstatus.name'},
+        {title: 'Estado', data: 'typeofstatus.name'},
         { title: 'Responsable', data: 'user' },
 
 
 
         {
-          title: 'Acciones',
+          title: 'Opciones',
           data: null,
           render: (data: any, type: any, row: any) => {
             return `

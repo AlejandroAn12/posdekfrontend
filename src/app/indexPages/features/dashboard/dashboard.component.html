@@ -1,8 +1,6 @@
 <!--Inicio del Header -->
 <!-- class="bg-[url('https://cdn.pixabay.com/photo/2017/09/03/06/12/abstract-2709402_1280.png')] bg-cover bg-center bg-no-repeat p-10 mt-2 rounded-t-2xl" -->
-<div
-class="bg-blue-600 rounded-t-2xl p-5 mt-2"
->
+<div class="bg-blue-600 rounded-t-2xl p-5 mt-2">
   <div class="flex flex-row">
     <div class="p-2">
       <img
@@ -21,11 +19,13 @@ class="bg-blue-600 rounded-t-2xl p-5 mt-2"
 </div>
 <!--Final del Header -->
 
-<div class="flex flex-col lg:flex-row shadow-2xl p-10 justify-center gap-5">
+<div class="flex flex-col lg:flex-row bg-white p-10 justify-center gap-5">
   <!-- Tarjeta Reutilizable -->
   <div class="card p-4">
     <div class="flex justify-between items-center mb-2">
-      <h2 class="card-title text-gray-600 text-lg">Últimas órdenes generadas</h2>
+      <h2 class="card-title text-gray-600 text-lg">
+        Últimas órdenes generadas
+      </h2>
       <button
         (click)="navigateToOrders()"
         class="border border-colorPrimary px-3 py-1 rounded text-colorPrimary hover:bg-colorPrimary hover:text-white text-sm"
@@ -34,7 +34,7 @@ class="bg-blue-600 rounded-t-2xl p-5 mt-2"
       </button>
     </div>
     <hr class="mb-4" />
-    
+
     <div class="overflow-x-auto">
       <table
         datatable
@@ -44,11 +44,12 @@ class="bg-blue-600 rounded-t-2xl p-5 mt-2"
       ></table>
     </div>
   </div>
-  
 
   <div class="card p-4">
     <div class="flex justify-between items-center mb-2">
-      <h2 class="card-title text-gray-600 text-lg">Últimas órdenes generadas</h2>
+      <h2 class="card-title text-gray-600 text-lg">
+        Últimas órdenes generadas
+      </h2>
       <button
         (click)="navigateToOrders()"
         class="border border-colorPrimary px-3 py-1 rounded text-colorPrimary hover:bg-colorPrimary hover:text-white text-sm"
@@ -57,7 +58,7 @@ class="bg-blue-600 rounded-t-2xl p-5 mt-2"
       </button>
     </div>
     <hr class="mb-4" />
-    
+
     <div class="overflow-x-auto">
       <table
         datatable

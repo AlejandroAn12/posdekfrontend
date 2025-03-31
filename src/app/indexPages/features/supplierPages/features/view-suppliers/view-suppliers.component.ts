@@ -89,7 +89,7 @@ export default class ViewSuppliersComponent implements OnInit {
       scrollX: true,
       language: {
         search: "Buscar:", // Cambia el texto del buscador
-        lengthMenu: "Mostrar _MENU_ registros por página",
+        lengthMenu: "",
         info: "Mostrando _START_ a _END_ de _TOTAL_ proveedores",
         paginate: {
           next: "Siguiente",
@@ -207,7 +207,7 @@ export default class ViewSuppliersComponent implements OnInit {
 
   updateSupplierStatus(supplier: any): void {
     this.suppliersService.updateSupplierStatus(supplier.id, supplier.status).subscribe({
-      next: (response: any) => this.alertsService.showSuccess('Estado actualizado', response.message),
+      next: (response: any) => this.alertsService.showSuccess(response.message, ''),
       error: (error) => this.alertsService.showError(error.error.message, error.statusText)
     });
   }

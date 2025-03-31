@@ -65,10 +65,10 @@ export const serverInterceptor: HttpInterceptorFn = (req, next) => {
         400: error?.error?.message || 'Acceso denegado',
       };
 
-      const message = errorMessages[error.status] || 'Error desconocido';
+      // const message = errorMessages[error.status] || 'Error desconocido';
       // console.log({error});
 
-      Swal.fire('Error', message, 'error');
+      // Swal.fire('Error', message, 'error');
 
       if (error.status === 401) {
         authState.logOut();

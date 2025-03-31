@@ -5,10 +5,11 @@ import { ILogin } from '../../interfaces/login.interface';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { FooterComponent } from "../../../shared/features/footer/footer.component";
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, FooterComponent, FooterComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

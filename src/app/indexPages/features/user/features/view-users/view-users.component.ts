@@ -85,13 +85,13 @@ export default class ViewUsersComponent implements OnInit {
       language: {
         search: "Buscar:", // Cambia el texto del buscador
         lengthMenu: "Mostrar _MENU_ registros por página",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ credenciales",
+        info: "Hay _TOTAL_ credenciales registradas",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
         },
       },
-      lengthMenu: [5, 10, 20, 50],
+      lengthMenu: [10],
       columns: [
         { title: 'Código de empleado', data: 'employee.codeEmployee', className: 'text-center' },
         { title: 'Usuario', data: 'username', className: 'text-center' },

@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../../../../shared/services/alerts.service';
 import { OrdersService } from '../../data-access/orders.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-orders',
@@ -28,12 +29,12 @@ export default class ViewOrdersComponent {
   }
 
   loadSuppliers(): void {
-    this.supplierService.getSuppliers().subscribe({
+    this.supplierService.getAllSuppliersActive().subscribe({
       next: (response) => {
         this.suppliers = response.suppliers;
       },
       error: (err) => {
-        this.alertsService.showError(err.error.message, err.statusText)
+        this.alertsService.showError(err.error.message,'')
       },
     });
   }
@@ -93,19 +94,41 @@ export default class ViewOrdersComponent {
         quantity: product.quantity,
       })),
     };
+
+
+    Swal.fire({
+          title: "Generar pedido",
+          text: "Desea generar el nuevo pedido?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si, generar!",
+          cancelButtonText: "No, cancelar!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.ordersService.generateOrder(order).subscribe({
+              next: (response: any) => {
+                // Manejar la respuesta del backend
+                // this.alertsService.showSuccess(`${response.message}`, `${response.title}`);
+                Swal.fire({
+                  title: `${response.title}`,
+                  text: `${response.message}`,
+                  icon: "success"
+                });
+                this.resetOrderForm();
+              },
+              error: (err) => {
+                this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
+              },
+            });
+            
+          }
+        });
     
 
     // Enviar la orden al backend
-    this.ordersService.generateOrder(order).subscribe({
-      next: (response: any) => {
-        console.log(response)
-        this.alertsService.showSuccess(`${response.message}`, `${response.title}`);
-        this.resetOrderForm();
-      },
-      error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-      },
-    });
+    
   }
 
   resetOrderForm(): void {
@@ -167,6 +190,10 @@ export default class ViewOrdersComponent {
 
   trackByProductId(index: number, product: any): string {
     return product.id;
+  }
+
+  cleanFilters(){
+    // this.suppliers = [];
   }
   
 }

@@ -11,4 +11,9 @@ export default [
         loadComponent: () =>
             import('./features/orders-history/orders-history.component'),
     },
+    {
+        path: 'pending',
+        loadComponent: () =>
+            import('./features/pending-orders/pending-orders.component'),
+    },
 ] as Routes;

@@ -18,12 +18,13 @@ export class SuppliersService {
       }));
     }
 
-  getSuppliers(page: number = 1, limit: number = 10): Observable<any> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
-    return this.http.get(`${environment.API_URL}/suppliers/all?`, { params })
+  getSuppliers(): Observable<any> {
+    return this.http.get(`${environment.API_URL}/suppliers/all`)
       .pipe(tap((res) => { return true }));
+  }
+
+  getAllSuppliersActive(): Observable<any> {
+    return this.http.get(`${environment.API_URL}/suppliers/active`)
   }
 
   getSupplierId(id: string): Observable<any> {

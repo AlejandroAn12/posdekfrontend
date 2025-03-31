@@ -87,14 +87,14 @@ export default class ViewProductsComponent implements OnInit {
       scrollX: true,
       language: {
         search: "Buscar:", // Cambia el texto del buscador
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ productos",
+        lengthMenu: "",
+        info: "Hay _TOTAL_ productos registrados",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
         },
       },
-      lengthMenu: [10, 20, 50], // Cambia la cantidad de registros por página
+      lengthMenu: [10], // Cambia la cantidad de registros por página
       columns: [
         // { title: 'ID', data: 'id' },
         { title: 'Código de barra', data: 'barcode' },
@@ -130,6 +130,7 @@ export default class ViewProductsComponent implements OnInit {
         },
         { title: 'Unidad de medida', data: 'unitOfMeasurement.name' },
         { title: 'Stock', data: 'stock' },
+        { title: 'Stock Mínino', data: 'stockMin' },
         { title: 'Categoria', data: 'category.name' },
         { title: 'Proveedor', data: 'supplier.company_name' },
         {

@@ -18,6 +18,14 @@ export class OrdersService {
         return this.http.get(`${environment.API_URL}/orders/all`);
     }
 
+    getPendingOrders(): Observable<any>{
+        return this.http.get(`${environment.API_URL}/orders/pending`);
+    }
+
+    getOrderByNumber(orderNumber: string): Observable<any>{
+        return this.http.get(`${environment.API_URL}/orders/${orderNumber}/details`);
+    }
+
     getUltimateOrders(): Observable<any>{
         return this.http.get(`${environment.API_URL}/orders/ultimate`);
     }

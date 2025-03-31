@@ -23,7 +23,7 @@ export class SidebarComponent {
 
   sidebarOptions: SidebarOption[] = [
     {
-      title: 'Dashboard',
+      title: 'Inicio',
       iconClass: 'fa-brands fa-usps',
       route: '/index/dashboard',
     },
@@ -33,9 +33,9 @@ export class SidebarComponent {
       children: [
         { title: 'Colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
         { title: 'Credenciales de acceso', iconClass: 'fa-solid fa-user-tie', route: '/index/users/credentials' },
-        
-        
-        
+
+
+
       ],
     },
     {
@@ -44,9 +44,9 @@ export class SidebarComponent {
       children: [
         { title: 'Información del negocio', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
         { title: 'Configuración', iconClass: 'fa-solid fa-gear', route: '/index/enterprise/settings' },
-        
-        
-        
+
+
+
       ],
     },
     {
@@ -56,11 +56,19 @@ export class SidebarComponent {
         { title: 'Proveedores', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/view' },
         { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/index/products/view' },
         { title: 'Categorias', iconClass: 'fa-solid fa-tags', route: '/index/categories/view' },
-        { title: 'Compras', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/view' },
-        
-        
-        
+        { title: 'Ingresar mercadería', iconClass: 'fa-solid fa-dolly', route: '/index/merchandise/entry' },
+
       ],
+    },
+    {
+      title: 'Pedidos',
+      iconClass: 'fa-solid fa-cart-shopping',
+      children: [
+        { title: 'Generar pedido', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/view' },
+        { title: 'Pedidos pendientes', iconClass: 'fa-solid fa-clock', route: '/index/orders/pending' },
+        { title: 'Historial', iconClass: 'fa-solid fa-clipboard', route: '/index/orders/history' }
+
+      ]
     },
     {
       title: 'Reportes',
@@ -70,19 +78,18 @@ export class SidebarComponent {
       ],
     }
   ];
-  
+
   // Estado para controlar el despliegue del submenú
   activeIndex: number | null = null;
-  
+
   toggleSubmenu(index: number): void {
     this.activeIndex = this.activeIndex === index ? null : index;
   }
-  
+
   logout() {
     this.authState.logOut();
   }
-   
-   whatsApp() { }
-   
-  }
-  
+
+  whatsApp() { }
+
+}

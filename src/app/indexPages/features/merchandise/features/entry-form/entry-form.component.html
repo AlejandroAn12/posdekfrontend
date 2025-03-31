@@ -1,0 +1,153 @@
+<div class="bg-blue-700 p-5">
+  <div class="text-white font-semibold">
+    <h1 class="text-2xl uppercase">Ingreso de mercadería</h1>
+  </div>
+</div>
+<div id="card-body" class="flex flex-col border border-gray-100 rounded mt-5">
+  <!-- Formulario -->
+  <div class="bg-white p-4 space-y-4">
+    <form [formGroup]="form">
+      <!-- Primera fila -->
+
+      <div class="flex mt-5 mb-5">
+        <div class="w-32 mr-4">
+          <label for="orderNumber" class="text-sm font-semibold text-gray-600"
+            >N° Pedido</label
+          >
+          <input
+            formControlName="orderNumber"
+            placeholder="000-0000"
+            type="text"
+            id="orderNumber"
+            class="rounded p-2 block w-full border border-gray-300"
+          />
+        </div>
+        <div class="w-1/3 mr-4">
+          <button
+            (click)="searchOrder()"
+            class="bg-blue-600 text-white text-sm mt-7 font-semibold rounded-sm p-2 w-auto hover:bg-blue-700 mr-2"
+          >
+            <i class="fa-solid fa-upload"></i> Cargar
+          </button>
+          <!-- Boton para limpiar campos -->
+          <button
+            (click)="btnResetForm()"
+            class="bg-white text-sm text-gray-500 mt-7 font-semibold border rounded-sm p-2 w-auto hover:bg-gray-100 mr-2"
+          >
+            <i class="fa-solid fa-eraser"></i> Limpiar campo
+          </button>
+        </div>
+      </div>
+
+      <div class="flex mt-5 mb-5" *ngIf="order?.orderItems.length > 0" disabled>
+        <div class="w-42 mr-4">
+          <label for="supplier" class="text-sm font-semibold text-gray-600"
+            >Proveedor</label
+          >
+          <input
+            formControlName="supplier"
+            type="text"
+            id="supplier"
+            class="rounded p-2 block w-full border border-gray-300"
+          />
+        </div>
+        <div class="w-42 mr-4">
+          <label for="orderDate" class="text-sm font-semibold text-gray-600"
+            >Fecha de pedido</label
+          >
+          <input
+            formControlName="orderDate"
+            type="text"
+            id="orderDate"
+            class="rounded p-2 block w-full border border-gray-300"
+          />
+        </div>
+      </div>
+
+      <!-- TABLA -->
+
+      <div class="h-full w-full bg-white mt-10">
+        <div class="relative overflow-x-auto">
+          <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          >
+            <thead
+              class="text-xs text-white uppercase bg-blue-600 dark:bg-gray-700 dark:text-gray-400"
+            >
+              <tr>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                  Código de barra
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                  Producto
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                  Cantidad solicitada
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                  Cantidad recibida
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of order?.orderItems; let i = index">
+                <td class="px-6 py-4">{{ item.product?.barcode }}</td>
+                <td class="px-6 py-4">{{ item.product?.name }}</td>
+                <td class="px-6 py-4">{{ item.quantity }}</td>
+                <td class="px-6 py-4">
+                  <input type="number" min="0" class="rounded-lg"
+                  [formControl]="getQuantityControl(i)"/>
+                </td>
+              </tr>
+              <!-- <tr
+                *ngFor="let item of order?.orderItems"
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+              >
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {{ item.product?.barcode }}
+                </th>
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {{ item.product?.name }}
+                </th>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  {{ item.quantity }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <input class="rounded-lg" type="number" min="0" />
+                </td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Final tabla -->
+<hr class="my-4" />
+      <!-- BOTONES -->
+      <div class="flex mt-5 mb-5">
+        <div class="w-1/3 mr-4">
+          <button
+            *ngIf="order?.orderItems.length > 0"
+            (click)="saveEntry()"
+            class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-blue-700 mr-2"
+          >
+            <i class="fa-solid fa-floppy-disk"></i> Guardar
+          </button>
+
+          <button
+            (click)="btnBackDashboard()"
+            class="text-gray-500 border text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
+          >
+            Regresar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+

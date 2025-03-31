@@ -94,6 +94,7 @@ export default class FormProductComponent implements OnInit {
   loadProductData(id: string) {
     this.productService.getProductId(id).subscribe({
       next: (product: any) => {
+        console.log(product);
         this.ProductForm.patchValue({
           ...product,
           supplierId: product.supplier.id ? product.supplier.id.toString() : '', 

@@ -45,6 +45,10 @@ export default [
         loadChildren: () => import('./features/ordersPages/orders.routes')
       },
       {
+        path: 'merchandise',
+        loadChildren: () => import('./features/merchandise/merchandise.routes')
+      },
+      {
         path: 'notifications',
         loadComponent: () => import('./features/notifications/notifications.component')
       },

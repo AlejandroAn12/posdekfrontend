@@ -5,16 +5,15 @@
   </div>
 </div>
 
-
 <!-- Body -->
-<div class="flex flex-col shadow-2xl p-5 bg-white">
+<div class="flex flex-col p-5 bg-white">
   <div class="flex flex-col">
     <div class="flex justify-end mb-10">
       <button
-        (click)="toggleModal()"
+        (click)="btnNewEmployee()"
         class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-blue-700 mr-2"
       >
-        <i class="fa-solid fa-square-plus"></i> Agregar Empleado
+        <i class="fa-solid fa-square-plus"></i> Agregar Colaborador
       </button>
       <button
         (click)="downloadExcel()"
