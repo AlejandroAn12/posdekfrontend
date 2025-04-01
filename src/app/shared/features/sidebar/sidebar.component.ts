@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthStateService } from '../../services/auth-state.service';
+import { ThemeService } from '../../services/theme.service';
 
 interface SidebarOption {
   title: string;
@@ -20,6 +21,17 @@ interface SidebarOption {
 export class SidebarComponent {
 
   authState = inject(AuthStateService);
+
+  isDarkMode = false;
+
+  constructor(private themeService: ThemeService) {
+    this.isDarkMode = document.documentElement.classList.contains('dark');
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleDarkMode();
+    this.isDarkMode = !this.isDarkMode;
+  }
 
   sidebarOptions: SidebarOption[] = [
     {

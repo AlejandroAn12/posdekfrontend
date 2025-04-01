@@ -6,7 +6,7 @@
 </div>
 
 <!-- Body -->
-<div class="flex flex-col  p-5 bg-white">
+<div class="flex flex-col  p-5 bg-white  dark:bg-gray-800">
   <div class="flex flex-col">
     <div class="flex justify-end mb-10">
       <button
@@ -86,19 +86,19 @@
       </div>
 
       <div class="mb-4 mt-4">
-        <div class="relative z-0 w-full group">
+        <div class="relative z-0 w-full group dark:text-white">
           <input
             formControlName="username"
             type="text"
             name="floating_username"
             id="floating_username"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white  dark:bg-gray-800 dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-blue peer flex-shrink-0"
             placeholder=" "
             required
           />
           <label
             for="floating_username"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto dark:peer-focus:text-white peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >Usuario de acceso</label
           >
         </div>
@@ -111,13 +111,13 @@
             type="password"
             name="floating_password"
             id="floating_password"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-blue-600 peer flex-shrink-0"
             placeholder=" "
             required
           />
           <label
             for="floating_password"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto dark:peer-focus:text-white peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >Contraseña</label
           >
         </div>
@@ -144,9 +144,9 @@
     </div>
     <button
       type="submit"
-      class="bg-colorPrimary hover:bg-blue-800 text-white px-4 py-2 rounded"
+      class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded"
     >
-      {{ isEditing ? "Guardar cambios" : "Añadir credencial" }}
+      {{ isEditing ? "Guardar cambios" : "Añadir" }}
     </button>
   </form>
 </app-modal>

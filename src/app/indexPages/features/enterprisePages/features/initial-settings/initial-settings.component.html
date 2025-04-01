@@ -12,40 +12,40 @@
       Detalles del negocio
     </h1>
   </div>
-  <div class="bg-white p-4">
+  <div class="bg-white dark:bg-gray-800 p-4">
     <form [formGroup]="EnterpriseForm" class="space-y-5">
       <div class="grid grid-cols-3 gap-4">
         <div>
-          <label for="ruc" class="text-sm font-semibold text-gray-600"
+          <label for="ruc" class="text-sm font-semibold text-gray-600 dark:text-white"
             >R.U.C.</label
           >
           <input
             formControlName="ruc"
             type="text"
             id="ruc"
-            class="input-field"
+            class="input-field dark:bg-gray-800"
           />
         </div>
         <div>
-          <label for="company_name" class="text-sm font-semibold text-gray-600"
+          <label for="company_name" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Razón Social</label
           >
           <input
             formControlName="company_name"
             type="text"
             id="company_name"
-            class="input-field"
+            class="input-field dark:bg-gray-800"
           />
         </div>
         <div>
-          <label for="name" class="text-sm font-semibold text-gray-600"
+          <label for="name" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Nombre de la empresa</label
           >
           <input
             formControlName="name"
             type="text"
             id="name"
-            class="input-field"
+            class="input-field dark:bg-gray-800"
           />
         </div>
       </div>
@@ -54,74 +54,74 @@
         <div>
           <label
             for="legal_representative"
-            class="text-sm font-semibold text-gray-600"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
             >Representante Legal</label
           >
           <input
             formControlName="legal_representative"
             type="text"
             id="legal_representative"
-            class="input-field"
+            class="input-field dark:bg-gray-800"
           />
         </div>
         <div>
-          <label for="phone" class="text-sm font-semibold text-gray-600"
+          <label for="phone" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Teléfono</label
           >
           <input
             formControlName="phone"
             type="tel"
             id="phone"
-            class="input-field"
+            class="input-field dark:bg-gray-800"
           />
         </div>
         <div>
-          <label for="email" class="text-sm font-semibold text-gray-600"
+          <label for="email" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Correo Electrónico</label
           >
           <input
             formControlName="email"
             type="email"
             id="email"
-            class="input-field"
+            class="input-field dark:bg-gray-800"
           />
         </div>
       </div>
 
       <div class="grid grid-cols-6 gap-4">
         <div>
-          <label for="country" class="text-sm font-semibold text-gray-600"
+          <label for="country" class="text-sm font-semibold text-gray-600 dark:text-white"
             >País</label
           >
           <input
             formControlName="country"
             type="text"
             id="country"
-            class="input-field"
+            class="input-field dark:bg-gray-800"
           />
         </div>
         <div>
-          <label for="city" class="text-sm font-semibold text-gray-600"
+          <label for="city" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Ciudad</label
           >
           <input
             formControlName="city"
             type="text"
             id="city"
-            class="input-field"
+            class="input-field dark:bg-gray-800"
           />
         </div>
       </div>
 
       <div>
-        <label for="address" class="text-sm font-semibold text-gray-600"
+        <label for="address" class="text-sm font-semibold text-gray-600 dark:text-white"
           >Dirección matriz</label
         >
         <input
           formControlName="address"
           type="text"
           id="address"
-          class="input-field"
+          class="input-field dark:bg-gray-800"
         />
       </div>
     </form>
@@ -133,11 +133,11 @@
   <div class="p-2 bg-gray-300">
     <h1 class="text-sm font-semibold text-gray-600 uppercase">Impuestos</h1>
   </div>
-  <div class="bg-white p-4">
+  <div class="bg-white dark:bg-gray-800 border p-4">
     <form [formGroup]="EnterpriseForm" class="space-y-5">
       <div class="grid grid-cols-3 gap-4">
         <div>
-          <label class="text-sm font-semibold text-gray-600"
+          <label class="text-sm font-semibold text-gray-600 dark:text-white"
             >¿Trabajas con Impuestos?</label
           >
           <!-- ToolTip -->
@@ -174,7 +174,7 @@
         </div>
 
         <div>
-          <label class="text-sm font-semibold text-gray-600"
+          <label class="text-sm font-semibold text-gray-600 dark:text-white"
             >¿El precio de venta de productos incluye impuestos?</label
           >
           <!-- ToolTip -->
@@ -238,7 +238,7 @@
 <div class="flex justify-start mt-5">
   <button
     (click)="save()"
-    class="bg-indigo-600 text-white text-sm font-semibold rounded p-2 hover:bg-indigo-700 flex items-center"
+    class="bg-blue-600 text-white text-sm font-semibold rounded p-2 hover:bg-blue-700 flex items-center"
   >
     <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar
   </button>

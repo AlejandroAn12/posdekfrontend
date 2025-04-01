@@ -7,7 +7,7 @@
 
 <!-- Final contenedor 1 -->
 <!-- Body Table-->
-<div class="flex flex-col p-5 bg-white">
+<div class="flex flex-col p-5 bg-white dark:bg-gray-800">
   <p class="mt-5 mb-5 text-sm text-blue-500 font-semibold">
     <i class="fa-solid fa-circle-info mr-1"></i>Recuerde que solo se puede
     generar una órden por Proveedor.
@@ -23,7 +23,7 @@
       >
       <select
         id="supplier"
-        class="rounded-lg"
+        class="rounded-lg dark:bg-gray-800"
         (change)="onSupplierChange($event)"
       >
         <option value="" disabled selected>Selecciona un proveedor</option>
@@ -44,7 +44,7 @@
       <select
         #productSelect
         id="product"
-        class="rounded-lg"
+        class="rounded-lg dark:bg-gray-800"
         (change)="addToTable(productSelect)"
       >
         <option value="" disabled selected>Selecciona un producto</option>
@@ -55,7 +55,7 @@
     </div>
 
     <div class="relative mr-5">
-      <button (click)="cleanFilters()" class="bg-white p-2 border text-gray-600 font-semibold">Limpiar filtros</button>
+      <button (click)="cleanFilters()" class="bg-white p-2 border text-gray-600 font-semibold rounded">Limpiar filtros</button>
     </div>
     <!--Final Select Productos -->
   </div>

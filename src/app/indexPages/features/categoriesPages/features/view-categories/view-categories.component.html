@@ -6,7 +6,7 @@
 </div>
 
 <!-- Body -->
-<div class="flex flex-col p-5 bg-white">
+<div class="flex flex-col p-5 bg-white dark:bg-gray-800">
   <div class="flex justify-end mb-10">
     <button
         (click)="toggleModal()"
@@ -34,8 +34,8 @@
 (closeModal)="toggleModal()"
 >
 <form [formGroup]="CategoryForm" (ngSubmit)="saveCategory()">
-  <div class="flex flex-col justify-center">
-    <div class="mb-4">
+  <div class="flex flex-col justify-center dark:bg-gray-800">
+    <div class="mb-4 dark:text-white">
       <div class="relative z-0 w-full group">
         <input
           formControlName="name"
@@ -48,7 +48,7 @@
         />
         <label
           for="floating_name"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto dark:peer-focus:text-white peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >Nombre</label
         >
       </div>

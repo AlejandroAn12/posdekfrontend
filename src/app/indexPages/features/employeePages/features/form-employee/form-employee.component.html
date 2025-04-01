@@ -13,7 +13,7 @@
   </div>
 
   <!-- Formulario -->
-  <div class="bg-white p-4 space-y-4">
+  <div class="bg-white dark:bg-gray-800 p-4 space-y-4">
     <form [formGroup]="EmployeesForm">
       <!-- Primera fila -->
       <!-- <div class="flex mt-5 mb-5" *ngIf="!hidden">
@@ -44,7 +44,7 @@
             [disabled]="isEditing"
             type="text"
             id="codeEmployee"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
       </div>
@@ -58,7 +58,7 @@
             formControlName="dni"
             type="text"
             id="dni"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
         <div class="w-1/3 mr-4">
@@ -69,7 +69,7 @@
             formControlName="name"
             type="text"
             id="name"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
         <div class="w-1/3">
@@ -80,7 +80,7 @@
             formControlName="surname"
             type="text"
             id="surname"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
       </div>
@@ -95,7 +95,7 @@
             formControlName="tlf"
             type="tel"
             id="tlf"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
             placeholder="+593 999 999 999"
           />
         </div>
@@ -108,7 +108,7 @@
             formControlName="email"
             type="email"
             id="email"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
             placeholder="supplier@posdek.com"
           />
         </div>
@@ -122,7 +122,7 @@
           >
           <textarea
             formControlName="address"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
             id="address"
           ></textarea>
         </div>
@@ -140,7 +140,7 @@
           </button>
           <button
             (click)="btnViewEmployees()"
-            class="text-gray-500 border text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
+            class="text-gray-500 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 border text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
           >
             Regresar
           </button>

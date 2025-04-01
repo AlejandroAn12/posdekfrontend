@@ -1,6 +1,6 @@
 <!-- Sidebar -->
 <nav
-  class="flex flex-col group w-16 hover:w-64  bg-white text-white h-full transition-[width] duration-300 ease-in-out shadow-2xl"
+  class="flex flex-col group w-16 hover:w-64  bg-white dark:bg-gray-800 text-white h-full transition-[width] duration-300 ease-in-out shadow-2xl"
 >
   <!-- Imagen -->
   <div class="p-2 flex items-center justify-center">
@@ -20,23 +20,23 @@
       <a
         *ngIf="!option.children"
         [routerLink]="option.route"
-        class="flex items-center p-2 hover:bg-gray-200 rounded cursor-pointer"
+        class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded cursor-pointer"
       >
-        <i [ngClass]="option.iconClass" class="text-sm text-indigo-600"></i>
-        <span class="ml-4 hidden group-hover:inline-block text-sm font-semibold text-gray-500">{{ option.title }}</span>
+        <i [ngClass]="option.iconClass" class="dark:text-white text-sm text-indigo-600"></i>
+        <span class="dark:text-white ml-4 hidden group-hover:inline-block text-sm font-semibold text-gray-500">{{ option.title }}</span>
       </a>
 
       <!-- Opción con Submenú -->
       <div
         *ngIf="option.children"
         (click)="toggleSubmenu(i)"
-        class="flex items-center p-2 hover:bg-gray-200 text-sm text-indigo-600 rounded cursor-pointer"
+        class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm text-indigo-600 rounded cursor-pointer"
       >
-        <i [ngClass]="option.iconClass" class="text-sm text-indigo-600"></i>
-        <span class="ml-4 hidden group-hover:inline-block text-sm font-semibold text-gray-500">{{ option.title }}</span>
+        <i [ngClass]="option.iconClass" class="dark:text-white text-sm text-indigo-600"></i>
+        <span class="dark:text-white ml-4 hidden group-hover:inline-block text-sm font-semibold text-gray-500">{{ option.title }}</span>
         <i
           *ngIf="option.children"
-          class="ml-auto fa-solid text-indigo-600"
+          class="dark:text-white ml-auto fa-solid text-indigo-600"
           [ngClass]="{
             'fa-chevron-down': activeIndex === i,
             'fa-chevron-right': activeIndex !== i
@@ -52,10 +52,10 @@
         <li *ngFor="let child of option.children">
           <a
             [routerLink]="child.route"
-            class="flex items-center p-2 hover:bg-gray-200 rounded text-gray-500"
+            class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700  rounded text-gray-500"
           >
-            <i [ngClass]="child.iconClass" class="text-sm text-gray-500"></i>
-            <span class="ml-4 text-sm text-gray-500">{{ child.title }}</span>
+            <i [ngClass]="child.iconClass" class="dark:text-white text-sm text-gray-500"></i>
+            <span class="dark:text-white  ml-4 text-sm text-gray-500">{{ child.title }}</span>
           </a>
         </li>
       </ul>
@@ -64,6 +64,11 @@
 
   <!-- Footer -->
   <div class="mt-auto p-2 m-1">
+    <button (click)="toggleTheme()" class="p-2 mb-2 rounded-full bg-white dark:bg-gray-700 border text-black dark:text-white flex items-center">
+      <i *ngIf="isDarkMode" class="fa-solid fa-moon w-6 h-6 pt-1"></i>
+      <i *ngIf="!isDarkMode" class="fa-solid fa-sun w-6 h-6 text-yellow-300 pt-1"></i>
+
+    </button>
     <a
     (click)="whatsApp()"
     class="flex items-center bg-green-400 text-white p-2 rounded cursor-pointer mb-1"

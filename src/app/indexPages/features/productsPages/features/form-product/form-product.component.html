@@ -13,7 +13,7 @@
   </div>
 
   <!-- Formulario -->
-  <div class="bg-white p-4 space-y-4">
+  <div class="bg-white dark:bg-gray-800 p-4 space-y-4">
     <form [formGroup]="ProductForm">
       <!-- Primera fila -->
       <div class="flex mt-5 mb-5">
@@ -24,7 +24,7 @@
           <select
             formControlName="supplierId"
             id="supplierId"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           >
             <option value="" disabled selected>Selecciona el proveedor</option>
             <option *ngFor="let supplier of suppliers" [value]="supplier.id">
@@ -40,7 +40,7 @@
           <select
             id="categoryId"
             formControlName="categoryId"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           >
             <option value="" disabled selected>Selecciona la categoria</option>
             <option *ngFor="let category of categories" [value]="category.id">
@@ -61,7 +61,7 @@
             [disabled]="isEditing"
             type="text"
             id="barcode"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
       </div>
@@ -75,7 +75,7 @@
             formControlName="barcode"
             type="text"
             id="barcode"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
         <div class="w-2/3">
@@ -86,7 +86,7 @@
             formControlName="name"
             type="text"
             id="name"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
       </div>
@@ -102,7 +102,7 @@
           <select
             formControlName="unitOfmeasurementId"
             id="unitOfmeasurementId"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           >
             <option value="" disabled selected>
               Selecciona la unidad de medida
@@ -120,7 +120,7 @@
             formControlName="stock"
             type="number"
             id="stock"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
       </div>
@@ -138,7 +138,7 @@
             formControlName="purchase_price"
             type="text"
             id="purchase_price"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
             placeholder="$ 0.00"
           />
         </div>
@@ -164,7 +164,7 @@
             formControlName="sale_price"
             type="text"
             id="sale_price"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
             placeholder="$ 0.00"
           />
         </div>
@@ -178,7 +178,7 @@
           >
           <textarea
             formControlName="description"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
             id="barcode"
           ></textarea>
         </div>
@@ -196,7 +196,7 @@
           </button>
           <button
             (click)="btnBack()"
-            class="text-gray-500 border text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
+            class="text-gray-500 dark:text-white dark:bg-gray-600 border dark:hover:bg-gray-400 text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
           >
             Regresar
           </button>
