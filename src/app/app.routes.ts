@@ -13,6 +13,16 @@ export const routes: Routes = [
         loadChildren: () => import('./auth/features/auth.routes')
     },
     {
+        path: 'privacy-policy',
+        canActivate: [publicGuard()],
+        loadComponent: () => import('./shared/features/components/privacy-policy/privacy-policy.component')
+    },
+    {
+        path: 'terms',
+        canActivate: [publicGuard()],
+        loadComponent: () => import('./shared/features/components/terms/terms.component')
+    },
+    {
         path: 'index',
         canMatch: [privateGuard()],
         loadChildren: () => import('./indexPages/indexPages.routes')
