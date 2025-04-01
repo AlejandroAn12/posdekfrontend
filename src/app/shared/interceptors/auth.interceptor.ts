@@ -8,7 +8,6 @@ import { catchError, EMPTY, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 
 
-
 let isHandlingSessionExpired = false; // Evita múltiples redirecciones
 
 export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, next: HttpHandlerFn) => {
@@ -17,7 +16,6 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
   const token = authState.getSession()?.access_token;
 
   if (token) {
-    // Si el token es válido, agregarlo a los headers
     request = request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
@@ -28,26 +26,19 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
       if ((error.status === 401 || error.status === 403) && !isHandlingSessionExpired) {
-        isHandlingSessionExpired = true; // Marcar que estamos manejando la sesión expirada
-        handleSessionExpired(authState, router);
+        isHandlingSessionExpired = true;
+        authState.logOut();
+        router.navigate(['/login']).finally(() => {
+          setTimeout(() => {
+            isHandlingSessionExpired = false; // Restablecer después de un tiempo seguro
+          }, 1000);
+        });
       }
+
       return throwError(() => error);
     })
   );
 };
-
-// Manejo de sesión expirada
-function handleSessionExpired(authState: AuthStateService, router: Router) {
-  authState.logOut(); // Limpia la sesión
-
-  if (!isHandlingSessionExpired) {
-    isHandlingSessionExpired = true;
-    router.navigate(['/login']).then(() => {
-      isHandlingSessionExpired = false; // Restablecer bandera después de la redirección
-    });
-  }
-}
-
 
 
 //VERIFCAR CONEXION CON EL SERVIDOR
@@ -57,25 +48,25 @@ export const serverInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error) => {
-      // console.error('Error HTTP:', error);
-
       const errorMessages: Record<number, string> = {
         0: 'No hay conexión con el servidor',
         500: 'Error interno del servidor',
         400: error?.error?.message || 'Acceso denegado',
       };
 
-      // const message = errorMessages[error.status] || 'Error desconocido';
-      // console.log({error});
-
-      // Swal.fire('Error', message, 'error');
-
       if (error.status === 401) {
-        authState.logOut();
-        router.navigateByUrl('/auth/login');
+        if (!isHandlingSessionExpired) {
+          isHandlingSessionExpired = true;
+          authState.logOut();
+          router.navigateByUrl('/auth/login').finally(() => {
+            setTimeout(() => {
+              isHandlingSessionExpired = false;
+            }, 1000);
+          });
+        }
       }
 
-      return throwError(() => error);
+      return throwError(() => new HttpErrorResponse({ ...error, status: error.status || 500 }));
     })
   );
 };

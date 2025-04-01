@@ -22,9 +22,11 @@ export class AuthStateService {
     _router = inject(Router);
 
     logOut() {
-        this.authenticationService.logOut().subscribe();
+        this.authenticationService.logOut().subscribe({
+            next: (resp) => {return true},
+            error: (err) => {return false}
+        });
         this._storageService.remove('session');
-        this._storageService.remove('id');
         this._router.navigateByUrl('auth/login');
     }
 
