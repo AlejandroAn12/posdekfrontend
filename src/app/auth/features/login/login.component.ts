@@ -17,15 +17,19 @@ export default class LoginComponent {
 
   loginForm: FormGroup;
 
+  isDarkMode: boolean = false;
+
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   _router = inject(Router);
 
   constructor() {
+    this.isDarkMode = document.documentElement.classList.contains('dark');
+
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
-    })
+    });
   }
 
   onLogin() {

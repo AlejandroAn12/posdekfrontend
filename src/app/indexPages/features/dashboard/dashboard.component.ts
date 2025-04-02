@@ -25,8 +25,8 @@ export default class DashboardComponent implements OnInit {
   private renderer = inject(Renderer2);
   dtOptions: Config = {};
 
-  userLogged: string = 'Usuario no disponible';
-  role: string = 'Rol no disponible';
+  userLogged: string = '';
+  role: string = '';
 
   //Cargar DataTable
   loadTable() {
