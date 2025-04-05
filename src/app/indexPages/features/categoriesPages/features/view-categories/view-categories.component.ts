@@ -61,18 +61,17 @@ export default class ViewCategoriesComponent implements OnInit {
       scrollX: true,
       language: {
         search: "Buscar:", // Cambia el texto del buscador
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ categorias",
+        lengthMenu: "",
+        info: "Total de categorias: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
         },
       },
-      lengthMenu: [5, 10, 20, 50],
+      lengthMenu: [10],
       columns: [
         // { title: 'ID', data: 'id' },
         { title: 'Categoria', data: 'name' },
-        { title: 'Fecha de Registro', data: 'registration_date' },
         {
           title: 'Habilitado',
           data: 'status',
@@ -83,8 +82,9 @@ export default class ViewCategoriesComponent implements OnInit {
           },
           className: 'text-center' // Centrar la columna
         },
+        { title: 'Fecha de Registro', data: 'registration_date' },
         {
-          title: 'Acciones',
+          title: 'Opciones',
           data: null,
           render: (data: any, type: any, row: any) => {
             return `

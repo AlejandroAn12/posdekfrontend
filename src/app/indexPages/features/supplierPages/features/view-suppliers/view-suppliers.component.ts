@@ -90,7 +90,7 @@ export default class ViewSuppliersComponent implements OnInit {
       language: {
         search: "Buscar:", // Cambia el texto del buscador
         lengthMenu: "",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ proveedores",
+        info: "Total de proveedores: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

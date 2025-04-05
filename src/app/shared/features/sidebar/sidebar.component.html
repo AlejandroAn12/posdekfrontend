@@ -91,12 +91,15 @@
     <!-- botón dark-mode -->
     <button
       (click)="toggleTheme()"
-      class="p-2 mb-2 rounded-full bg-white dark:bg-gray-700 border text-black dark:text-white flex items-center"
+      class="mb-2 bg-white dark:bg-gray-700 text-black dark:text-white flex items-center"
     >
-      <i *ngIf="isDarkMode" class="fa-solid fa-moon w-6 h-6 pt-1 animate-bounce"></i>
+      <i
+        *ngIf="isDarkMode"
+        class="fa-solid fa-moon w-6 h-6 pb-10 animate-bounce ml-1 justify-center text-4xl"
+      ></i>
       <i
         *ngIf="!isDarkMode"
-        class="fa-solid fa-sun w-6 h-6 text-yellow-300 pt-1 animate-bounce"
+        class="fa-solid fa-sun w-6 h-6 text-yellow-300 pb-10 pr-3 justify-center mr-3 animate-bounce text-4xl"
       ></i>
     </button>
 

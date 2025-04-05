@@ -62,12 +62,20 @@ export class SidebarComponent {
       ],
     },
     {
-      title: 'Gestionar inventario',
-      iconClass: 'fa-solid fa-boxes-stacked',
+      title: 'Módulos',
+      iconClass: 'fa-solid fa-folder-tree',
       children: [
         { title: 'Proveedores', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/view' },
         { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/index/products/view' },
         { title: 'Categorias', iconClass: 'fa-solid fa-tags', route: '/index/categories/view' },
+
+      ]
+    },
+    {
+      title: 'Gestionar inventario',
+      iconClass: 'fa-solid fa-boxes-stacked',
+      children: [
+        
         { title: 'Ingresar mercadería', iconClass: 'fa-solid fa-dolly', route: '/index/merchandise/entry' },
 
       ],

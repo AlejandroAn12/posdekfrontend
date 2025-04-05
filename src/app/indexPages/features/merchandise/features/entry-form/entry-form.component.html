@@ -3,9 +3,9 @@
     <h1 class="text-2xl uppercase">Ingreso de mercadería</h1>
   </div>
 </div>
-<div id="card-body" class="flex flex-col border border-gray-100 rounded mt-5">
+<div id="card-body" class="flex flex-col  rounded mt-5">
   <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-800 p-4 space-y-4">
+  <div class="bg-white dark:bg-gray-700 p-4 space-y-4">
     <form [formGroup]="form">
       <!-- Primera fila -->
 
@@ -32,34 +32,36 @@
           <!-- Boton para limpiar campos -->
           <button
             (click)="btnResetForm()"
-            class="bg-white text-sm text-gray-500 mt-7 font-semibold border rounded-sm p-2 w-auto hover:bg-gray-100 mr-2"
+            class="bg-green-500 text-sm text-white dark:bg-gray-200 dark:hover:bg-gray-300 mt-7 font-semibold border rounded-sm p-2 w-auto hover:bg-gray-100 mr-2"
           >
-            <i class="fa-solid fa-eraser"></i> Limpiar campo
+            <i class="fa-solid fa-eraser"></i> Limpiar
           </button>
         </div>
       </div>
 
       <div class="flex mt-5 mb-5" *ngIf="order?.orderItems.length > 0" disabled>
         <div class="w-42 mr-4">
-          <label for="supplier" class="text-sm font-semibold text-gray-600"
+          <label for="supplier" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Proveedor</label
           >
           <input
             formControlName="supplier"
             type="text"
             id="supplier"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            [value]="order?.supplier"
           />
         </div>
         <div class="w-42 mr-4">
-          <label for="orderDate" class="text-sm font-semibold text-gray-600"
-            >Fecha de pedido</label
+          <label for="orderDate" class="text-sm font-semibold text-gray-600 dark:text-white"
+            >Fecha de generación</label
           >
           <input
             formControlName="orderDate"
             type="text"
             id="orderDate"
-            class="rounded p-2 block w-full border border-gray-300"
+            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            [value]="order?.orderDate | date: 'dd/MM/yyyy'"
           />
         </div>
       </div>
@@ -69,10 +71,10 @@
       <div class="h-full w-full bg-white mt-10">
         <div class="relative overflow-x-auto">
           <table
-            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-white"
           >
             <thead
-              class="text-xs text-white uppercase bg-blue-600 dark:bg-gray-700 dark:text-gray-400"
+              class="text-xs text-white uppercase bg-blue-600 dark:bg-blue-600 dark:text-white"
             >
               <tr>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
@@ -90,13 +92,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of order?.orderItems; let i = index">
+              <tr *ngFor="let item of order?.orderItems; let i = index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <td class="px-6 py-4">{{ item.product?.barcode }}</td>
                 <td class="px-6 py-4">{{ item.product?.name }}</td>
                 <td class="px-6 py-4">{{ item.quantity }}</td>
                 <td class="px-6 py-4">
-                  <input type="number" min="0" class="rounded-lg"
-                  [formControl]="getQuantityControl(i)"/>
+                  <input type="number" min="0" class="rounded-lg dark:bg-gray-700" [formControl]="getQuantityControl(i)"/>
                 </td>
               </tr>
               <!-- <tr
@@ -141,7 +142,7 @@
 
           <button
             (click)="btnBackDashboard()"
-            class="text-gray-500 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 border text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
+            class="text-gray-500 bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
           >
             Regresar
           </button>
