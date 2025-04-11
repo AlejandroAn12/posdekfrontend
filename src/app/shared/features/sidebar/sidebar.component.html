@@ -27,7 +27,7 @@
       <a
         *ngIf="!option.children"
         [routerLink]="option.route"
-        class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded cursor-pointer"
+        class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded cursor-pointer"
       >
         <i
           [ngClass]="option.iconClass"
@@ -43,7 +43,7 @@
       <div
         *ngIf="option.children"
         (click)="toggleSubmenu(i)"
-        class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm text-indigo-600 rounded cursor-pointer"
+        class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-800 text-sm text-indigo-600 rounded cursor-pointer"
       >
         <i
           [ngClass]="option.iconClass"
@@ -71,7 +71,7 @@
         <li *ngFor="let child of option.children">
           <a
             [routerLink]="child.route"
-            class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded text-gray-500"
+            class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded text-gray-500"
           >
             <i
               [ngClass]="child.iconClass"

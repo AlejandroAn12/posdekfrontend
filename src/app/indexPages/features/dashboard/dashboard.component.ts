@@ -4,11 +4,13 @@ import { Router } from '@angular/router';
 import { OrdersService } from '../ordersPages/data-access/orders.service';
 import { Config } from 'datatables.net';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
-import { Subject } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
+import { ProductsService } from '../productsPages/data-access/products.service';
+import { CountUpDirective } from '../../../shared/directives/count-up.directive';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DataTablesModule],
+  imports: [DataTablesModule, CountUpDirective],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -17,16 +19,48 @@ export default class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.getUserLogged()
     this.loadTable();
+    this.loadTotalProducts();
+    this.loadTotalOrders();
+    this.renderer.setAttribute(document.body, 'class', 'hold-transition sidebar-mini layout-fixed');
   }
 
   private router = inject(Router);
   private authStateService = inject(AuthStateService);
+  private productsService = inject(ProductsService);
   private orderService = inject(OrdersService);
   private renderer = inject(Renderer2);
   dtOptions: Config = {};
 
   userLogged: string = '';
   role: string = '';
+
+  TotalProducts: number = 0;
+  TotalOrders: number = 0;
+
+
+  loadTotalProducts() {
+    this.productsService.getTotalProducts().subscribe({
+      next: (resp: any) => {
+        this.TotalProducts = resp.total;
+      },
+      error: (error) => {
+        return EMPTY;
+      }
+
+    });
+  }
+
+  loadTotalOrders() {
+    this.orderService.getTotalOrders().subscribe({
+      next: (resp: any) => {
+        this.TotalOrders = resp.total;
+      },
+      error: (error) => {
+        return EMPTY;
+      }
+
+    });
+  }
 
   //Cargar DataTable
   loadTable() {
@@ -88,6 +122,7 @@ export default class DashboardComponent implements OnInit {
     }
   }
 
+  //Metodo para obtener el usuario logueado
   getUserLogged() {
     this.authStateService.userAuth().subscribe({
       next: (user) => {
@@ -100,6 +135,7 @@ export default class DashboardComponent implements OnInit {
     })
   }
 
+  //Metodo para ir a la vista de historial de ordenes
   navigateToOrders() {
     this.router.navigate(['/index/orders/history']);
   }

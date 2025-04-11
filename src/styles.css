@@ -48,3 +48,47 @@ th {
 td {
   text-align: center !important;
 }
+
+
+/* Puedes usar esto como clases reutilizables */
+.btn-action {
+  @apply text-white text-sm font-semibold rounded-sm p-2 w-auto;
+}
+
+.input-floating {
+  @apply relative z-0 w-full;
+}
+
+.input-floating input {
+  @apply block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600;
+}
+
+.input-floating label {
+  @apply peer-focus:font-medium absolute text-sm text-gray-500 dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0];
+}
+
+.label {
+  @apply block mb-2 text-sm font-medium text-gray-500 dark:text-white;
+}
+
+.select {
+  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white;
+}
+
+
+.btn-primary {
+  @apply bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-blue-700;
+}
+
+.section-header {
+  @apply bg-blue-700 p-5 text-white font-semibold text-2xl uppercase;
+}
+
+.label {
+  @apply text-sm font-semibold text-gray-600 dark:text-white mb-2;
+}
+
+.input {
+  @apply rounded p-2 block w-full border border-gray-300 dark:bg-gray-800;
+}
+

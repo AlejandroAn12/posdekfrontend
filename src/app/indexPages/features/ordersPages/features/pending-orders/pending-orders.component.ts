@@ -49,7 +49,7 @@ export default class PendingOrdersComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar pedido:",
         lengthMenu: "",
-        info: "Existen _TOTAL_ pedidos pendientes",
+        info: "Pedidos pendientes: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

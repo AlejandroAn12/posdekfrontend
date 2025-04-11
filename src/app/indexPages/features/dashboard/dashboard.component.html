@@ -4,13 +4,12 @@
     <div class="p-2">
       <img
         loading="lazy"
-        class="w-20 h-20 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
-        src="assets/img/avatar.jpg"
+        class="w-20 h-20 p-1 rounded-full ring-2 bg-white dark:bg-white"
+        src="assets/img/profile.jpeg"
         alt="Bordered avatar"
       />
     </div>
     <div class="p-1">
-      <!-- <p class="text-white font-medium text-sm">Bienvenido</p> -->
       <h2 class="text-white font-semibold mt-1.5 text-2xl">{{ userLogged }}</h2>
       <p class="text-white font-medium text-sm">{{ role }}</p>
     </div>
@@ -20,79 +19,89 @@
 
 <div class="bg-white dark:bg-gray-700">
   <!-- Cards -->
-  <div class="flex flex-row">
-    <!-- Card productos realizados -->
-    <div class="w-1/5 p-5">
-      <div
-        class="bg-white rounded-lg shadow p-5 dark:bg-gray-800 dark:text-white border"
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 p-5">
+    <!-- Card: Productos registrados -->
+    <div
+      class="bg-white dark:bg-gray-800 dark:hover:shadow-lg rounded-2xl shadow-md p-6 hover:shadow-lg transition-all"
+    >
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
+        Productos registrados
+      </h2>
+      <p
+        class="text-4xl font-bold text-gray-800 dark:text-white"
+        [appCountUp]="TotalProducts"
+        [duration]="1000"
+        [formatCurrency]="false"
       >
-        <div id="title">
-          <h1 class="mb-1 text-gray-600 dark:text-white text-lg font-semibold">
-            Productos registrados
-          </h1>
-        </div>
-        <div id="body">
-          <h1 class="font-bold text-3xl">1005</h1>
-        </div>
-      </div>
+        {{ TotalProducts }}
+      </p>
     </div>
 
-    <!-- Card pedidos realizados -->
-    <div class="w-1/5 p-5">
-      <div
-        class="bg-white rounded-lg shadow p-5 dark:bg-gray-800 dark:text-white border"
+    <!-- Card: Pedidos realizados -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all"
+    >
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
+        Pedidos realizados
+      </h2>
+      <p
+        class="text-4xl font-bold text-gray-800 dark:text-white"
+        [appCountUp]="TotalOrders"
+        [duration]="1000"
+        [formatCurrency]="false"
       >
-        <div id="title">
-          <h1 class="mb-1 text-gray-600 dark:text-white text-lg font-semibold">
-            Pedidos realizados
-          </h1>
-        </div>
-        <div id="body">
-          <h1 class="font-bold text-3xl">85</h1>
-        </div>
-      </div>
+        {{ TotalOrders }}
+      </p>
     </div>
-    <!-- Card ganancias -->
-    <div class="w-1/5 p-5">
-      <div
-        class="bg-white rounded-lg shadow p-5 dark:bg-gray-800 dark:text-white border"
+
+    <!-- Card: Ganancias -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all"
+    >
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
+        Ganancias
+      </h2>
+      <p
+        class="text-4xl font-bold text-green-600 dark:text-green-400"
+        [appCountUp]="150000"
+        [duration]="1500"
+        [useSuffix]="true"
+        [formatCurrency]="true"
+        currency="CLP"
+        locale="es-CL"
       >
-        <div id="title">
-          <h1 class="mb-1 text-gray-600 dark:text-white text-lg font-semibold">
-            Ganancias
-          </h1>
-        </div>
-        <div id="body">
-          <h1 class="font-bold text-3xl">$0</h1>
-        </div>
-      </div>
+        0
+      </p>
+    </div>
+
+    <!-- Card: Tu Suscripción -->
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all"
+    >
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
+        Tu Suscripción
+      </h2>
+      <p class="text-4xl font-bold text-gray-800 dark:text-white">Activa</p>
     </div>
   </div>
 
-  <div class="flex flex-col lg:flex-row p-10 gap-5">
-    <!-- Tarjeta Reutilizable -->
-    <div class="card p-4">
-      <div class="flex justify-between items-center mb-2">
-        <h2 class="card-title text-gray-600 text-lg dark:text-white">
-          Últimas órdenes generadas
-        </h2>
-        <button
-          (click)="navigateToOrders()"
-          class="border border-blue-600 bg-blue-600 px-3 py-1 rounded text-white hover:bg-blue-600 hover:text-white text-sm"
-        >
-          Ver historial completo
-        </button>
-      </div>
-      <hr class="mb-4" />
+  <!-- Fin de las Cards -->
 
-      <div class="overflow-x-auto">
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover table-auto w-full text-sm"
-        ></table>
-      </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
+    <!-- Gráfico de Ventas -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
+        Ventas
+      </h2>
+      <!-- <app-chart></app-chart> -->
     </div>
-  </div>
+
+    <!-- Gráfico de Productos Vendidos -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
+        Productos Vendidos
+      </h2>
+      <!-- <app-chart-products></app-chart-products> -->
+    </div>
+
 </div>

@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export default [
     {
-        path: 'view',
+        path: 'generate',
         loadComponent: () =>
             import('./features/view-orders/view-orders.component'),
     },

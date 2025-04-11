@@ -1,169 +1,91 @@
+<!-- Header -->
 <div class="bg-blue-700 p-5">
-  <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase">Proveedores</h1>
-  </div>
+  <h1 class="text-white font-semibold text-2xl uppercase">Proveedores</h1>
 </div>
 
-<div id="card-body" class="flex flex-col border border-gray-100 rounded mt-5">
-  <!-- Título -->
+<!-- Card Body -->
+<div class="flex flex-col border-gray-100 rounded mt-5">
+  <!-- Título del formulario -->
   <div class="p-2 bg-gray-300">
-    <h1 class="text-sm font-semibold text-gray-600 uppercase">
-      Información del proveedor
-    </h1>
+    <h2 class="text-sm font-semibold text-gray-600 uppercase">Información del proveedor</h2>
   </div>
 
   <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-700 p-4 space-y-4">
+  <div class="bg-white dark:bg-gray-900 p-4 space-y-6">
     <form [formGroup]="SupplierForm">
-      <!-- Primera fila -->
-      <div class="flex mt-5 mb-5">
-        <div class="w-42 mr-4">
-          <label
-            for="typeofdocumentId"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Tipo de documento</label
-          >
-          <select
-            formControlName="typeofdocumentId"
-            id="typeofdocumentId"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-          >
+
+      <!-- Fila 1 -->
+      <div class="flex flex-wrap gap-4">
+        <div class="w-full sm:w-40 mt-5">
+          <label for="typeofdocumentId" class="label">Tipo de documento</label>
+          <select formControlName="typeofdocumentId" id="typeofdocumentId" class="input">
             <option value="" disabled selected>Tipo de documento</option>
-            <option
-              *ngFor="let typeOfDoc of tyOfDocuments"
-              [value]="typeOfDoc.id"
-            >
+            <option *ngFor="let typeOfDoc of tyOfDocuments" [value]="typeOfDoc.id">
               {{ typeOfDoc.name }}
             </option>
           </select>
         </div>
-        <div class="w-64 mr-4">
-          <label for="ruc" class="text-sm font-semibold text-gray-600 dark:text-white"
-            >N° Identificación</label
-          >
-          <input
-            formControlName="ruc"
-            type="text"
-            id="ruc"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-          />
+        <div class="w-full sm:w-64 mt-5">
+          <label for="ruc" class="label">N° Identificación</label>
+          <input formControlName="ruc" id="ruc" type="text" class="input" />
         </div>
-        <div class="w-1/3 mr-4">
-          <label for="company_name" class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Nombre del proveedor</label
-          >
-          <input
-            formControlName="company_name"
-            type="text"
-            id="company_name"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-          />
+        <div class="flex-1 mt-5">
+          <label for="company_name" class="label">Nombre del proveedor</label>
+          <input formControlName="company_name" id="company_name" type="text" class="input" />
         </div>
-        <div class="w-1/3">
-          <label
-            for="legal_representative"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Nombre de encargado</label
-          >
-          <input
-            formControlName="legal_representative"
-            type="text"
-            id="legal_representative"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-          />
+        <div class="flex-1 mt-5">
+          <label for="legal_representative" class="label">Nombre de encargado</label>
+          <input formControlName="legal_representative" id="legal_representative" type="text" class="input" />
         </div>
       </div>
 
-      <!-- Cuarta fila - Precios -->
-      <div class="flex mt-5 mb-5">
-        <div class="w-42 mr-4">
-          <label for="phone" class="text-sm font-semibold text-gray-600 dark:text-white">
-            Teléfono de contacto
-          </label>
-          <input
-            formControlName="phone"
-            type="tel"
-            id="phone"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-            placeholder="+593 999 999 999"
-          />
+      <!-- Fila 2 -->
+      <div class="flex flex-wrap gap-4 mt-5">
+        <div class="w-full sm:w-40">
+          <label for="phone" class="label">Teléfono de contacto</label>
+          <input formControlName="phone" id="phone" type="tel" class="input" placeholder="+593 999 999 999" />
         </div>
-        <div class="w-64">
-          <label for="email" class="text-sm font-semibold text-gray-600 dark:text-white">
-            Correo electrónico
-          </label>
-
-          <input
-            formControlName="email"
-            type="email"
-            id="email"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-            placeholder="supplier@posdek.com"
-          />
+        <div class="w-full sm:w-64">
+          <label for="email" class="label">Correo electrónico</label>
+          <input formControlName="email" id="email" type="email" class="input" placeholder="supplier@posdek.com" />
         </div>
       </div>
 
-      <!-- Cuarta fila - Precios -->
-      <div class="flex mt-5 mb-5">
-        <div class="w-42 mr-4">
-          <label for="country" class="text-sm font-semibold text-gray-600 dark:text-white">
-            País
-          </label>
-          <input
-            formControlName="country"
-            type="text"
-            id="country"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-            placeholder="Ecuador"
-          />
+      <!-- Fila 3 -->
+      <div class="flex flex-wrap gap-4 mt-5">
+        <div class="w-full sm:w-40">
+          <label for="country" class="label">País</label>
+          <input formControlName="country" id="country" type="text" class="input" placeholder="Ecuador" />
         </div>
-        <div class="w-42">
-          <label for="city" class="text-sm font-semibold text-gray-600 dark:text-white">
-            Ciudad
-          </label>
-
-          <input
-            formControlName="city"
-            type="text"
-            id="city"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-            placeholder="Quito"
-          />
+        <div class="w-full sm:w-40">
+          <label for="city" class="label">Ciudad</label>
+          <input formControlName="city" id="city" type="text" class="input" placeholder="Quito" />
         </div>
       </div>
 
-      <!-- Quinta fila -->
-      <div class="flex mt-5 mb-5">
-        <div class="w-full mr-4">
-          <label for="address" class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Dirección matriz</label
-          >
-          <textarea
-            formControlName="address"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
-            id="address"
-          ></textarea>
-        </div>
+      <!-- Fila 4 -->
+      <div class="flex flex-wrap gap-4 mt-5">
+        <label for="address" class="text-sm font-semibold text-gray-600 dark:text-white">Dirección matriz</label>
+        <textarea formControlName="address" id="address" class="rounded block w-full border border-gray-300 dark:bg-gray-800"></textarea>
       </div>
 
-      <!-- Quinta fila -->
-      <div class="flex mt-5 mb-5">
-        <div class="w-1/3 mr-4">
-          <button
-            (click)="saveSupplier()"
-            class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-blue-700 mr-2"
-          >
-            <i class="fa-solid fa-floppy-disk"></i>
-            {{ isUpdate ? "Guardar cambios" : "Añadir" }}
-          </button>
-          <button
-            (click)="btnBack()"
-            class="text-gray-500 bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
-          >
-            Regresar
-          </button>
-        </div>
+      <!-- Botones -->
+      <div class="flex gap-4 mt-5">
+        <button
+          (click)="saveSupplier()"
+          class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 hover:bg-blue-700"
+        >
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ isUpdate ? 'Guardar cambios' : 'Añadir' }}
+        </button>
+        <button
+          (click)="btnBack()"
+          class="bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-white text-sm font-semibold rounded-sm p-2 hover:bg-gray-300 dark:hover:bg-gray-400"
+        >
+          Regresar
+        </button>
       </div>
+
     </form>
   </div>
 </div>

@@ -5,7 +5,7 @@
 </div>
 <div id="card-body" class="flex flex-col  rounded mt-5">
   <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-700 p-4 space-y-4">
+  <div class="bg-white dark:bg-gray-900 p-4 space-y-4">
     <form [formGroup]="form">
       <!-- Primera fila -->
 
@@ -16,10 +16,10 @@
           >
           <input
             formControlName="orderNumber"
-            placeholder="000-0000"
+            placeholder="000-000"
             type="text"
             id="orderNumber"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
         </div>
         <div class="w-1/3 mr-4">
@@ -32,7 +32,7 @@
           <!-- Boton para limpiar campos -->
           <button
             (click)="btnResetForm()"
-            class="bg-green-500 text-sm text-white dark:bg-gray-200 dark:hover:bg-gray-300 mt-7 font-semibold border rounded-sm p-2 w-auto hover:bg-gray-100 mr-2"
+            class="bg-green-500 dark:bg-green-500 text-sm text-white  dark:hover:bg-green-600 mt-7 font-semibold rounded-sm p-2 w-auto hover:bg-gray-100 mr-2"
           >
             <i class="fa-solid fa-eraser"></i> Limpiar
           </button>

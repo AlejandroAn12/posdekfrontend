@@ -84,8 +84,8 @@ export default class ViewUsersComponent implements OnInit {
       scrollX: true,
       language: {
         search: "Buscar:", // Cambia el texto del buscador
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        info: "Hay _TOTAL_ credenciales registradas",
+        lengthMenu: "",
+        info: "Credenciales registradas: _TOTAL_ ",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -95,7 +95,7 @@ export default class ViewUsersComponent implements OnInit {
       columns: [
         { title: 'Código de empleado', data: 'employee.codeEmployee', className: 'text-center' },
         { title: 'Usuario', data: 'username', className: 'text-center' },
-        { title: 'Rol', data: 'role.name', className: 'text-center' },
+        { title: 'Cargo asignado', data: 'role.name', className: 'text-center' },
         { title: 'Fecha de Registro', data: 'registration_date', className: 'text-center' },
         { title: 'Fecha de Última Actualización', data: 'lastUpdated_date', className: 'text-center' },
         {

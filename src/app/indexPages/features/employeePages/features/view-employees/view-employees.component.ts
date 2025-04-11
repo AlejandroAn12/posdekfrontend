@@ -81,8 +81,8 @@ export default class ViewEmployeesComponent implements OnInit {
       scrollX: true,
       language: {
         search: "Buscar:", // Cambia el texto del buscador
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ empleados",
+        lengthMenu: "",
+        info: "Colaboradores registrados: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

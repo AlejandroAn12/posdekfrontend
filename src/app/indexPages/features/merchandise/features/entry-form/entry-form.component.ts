@@ -36,49 +36,14 @@ export default class IncomeFormComponent {
     });
   }
 
-  // searchOrder(): void {
-
-  //   const data = this.form.value.orderNumber;
-
-  //   if (!data) {
-  //     this.alertsService.showError('Por favor, introduzca un número de pedido', 'Error');
-  //     return;
-  //   }
-
-  //   this.ordersService.getOrderByNumber(data).subscribe({
-  //     next: (response) => {
-  //       //Carga los datos en el formulario
-  //       this.form.patchValue({
-  //         supplier: response.data.supplier.company_name,
-  //         orderDate: response.data.orderDate
-  //       });
-
-  //       //Carga los productos en la tabla
-  //       if (response?.data) {
-  //         this.order = response.data;
-
-  //         // Asegurar que orderItems es un array
-  //         this.order.orderItems = Array.isArray(this.order.orderItems) ? this.order.orderItems : [];
-
-  //       } else {
-  //         this.alertsService.showError('No se encontró la orden', 'Error');
-  //         this.order = {}; // Reinicia la variable en caso de error
-  //       }
-  //     },
-  //     error: (err) => {
-  //       this.alertsService.showError(err.error.message, '');
-  //     },
-  //   });
-  // }
-
   searchOrder(): void {
     const data = this.form.value.orderNumber;
-  
+
     if (!data) {
       this.alertsService.showError('Debe introducir el número del pedido', 'Error');
       return;
     }
-  
+
     this.ordersService.getOrderByNumber(data).subscribe({
       next: (response) => {
         if (response?.data) {
@@ -87,10 +52,10 @@ export default class IncomeFormComponent {
             supplier: response.data.supplier.company_name,
             orderDate: response.data.orderDate
           });
-  
+
           // Reiniciar items en caso de nueva búsqueda
           this.items.clear();
-  
+
           // Agregar los productos al FormArray con un campo para la cantidad recibida
           response.data.orderItems.forEach((item: any) => {
             this.items.push(this.fb.group({
@@ -108,97 +73,87 @@ export default class IncomeFormComponent {
       }
     });
   }
-  
+
   // Getter para acceder fácilmente a los items
   get items() {
     return this.form.get('items') as FormArray;
   }
-  
-  saveEntry() {
+
+  saveEntry(): void {
     if (this.items.invalid) {
       this.alertsService.showError('Revise las cantidades ingresadas', 'Error');
       return;
+    }
+    if(this.items.value.quantity <= 0) {
+      this.alertsService.showError('La cantidad recibida debe ser mayor a 0', 'Error');
     }
   
     const orderId = this.order.id;
     const items = this.items.value.map((item: any) => ({
       id: item.id,
-      quantity: item.quantityReceived
+      quantity: item.quantityReceived,
     }));
-
-    console.log(items)
-
-
+  
     Swal.fire({
-      title: "Guardar pedido",
-      text: "Desea guardar el pedido ingresado?",
-      icon: "warning",
+      title: 'Guardar pedido',
+      text: '¿Desea guardar el pedido ingresado?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, guardar!",
-      cancelButtonText: "No, cancelar!",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, guardar!',
+      cancelButtonText: 'No, cancelar!',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.merchandiseService.entryProductStock(orderId, items).subscribe({
-          next: () => {
-            Swal.fire({
-              title: "Pedido guardado",
-              text: "El pedido ha sido guardado correctamente.",
-              icon: "success"
-            });
-          },
-          error: (error) => {
-            console.error('Error al actualizar stock:', error);
-            this.alertsService.showError('Error al actualizar el stock', 'Error');
-          }
-        });
-        console.log('uno')
-        Swal.fire({
-          title: "Pedido guardado!",
-          text: "El pedido ha sido guardado correctamente.",
-          icon: "success"
-        });
-  
-        // ✅ Limpiar el formulario y la tabla después de guardar
-        this.form.reset();
-        this.form.patchValue({ supplier: '', orderDate: '' });
-        this.order = null; // O limpiar orderItems manualmente
-        
+        this.sendOrderToBackend(orderId, items);
       }
     });
   }
+  
+  private sendOrderToBackend(orderId: string, items: any[]): void {
+    Swal.fire({
+      title: 'Guardando pedido...',
+      text: 'Por favor espere',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+  
+    this.merchandiseService.entryProductStock(orderId, items).subscribe({
+      next: () => {
+        Swal.close();
+        this.showSuccessAlert();
+        this.resetFormAfterSave();
+      },
+      error: (error) => {
+        Swal.close();
+        console.error('Error al actualizar stock:', error);
+        this.alertsService.showError('Error al actualizar el stock', 'Error');
+      },
+    });
+  }
+  
+  private showSuccessAlert(): void {
+    Swal.fire({
+      title: 'Pedido guardado',
+      text: 'El pedido ha sido guardado correctamente.',
+      icon: 'success',
+    });
+  }
+  
+  private resetFormAfterSave(): void {
+    this.form.reset();
+    this.form.patchValue({ supplier: '', orderDate: '' });
+    this.order = null;
+  }
+  
 
   getQuantityControl(index: number): FormControl {
     return this.items.at(index).get('quantityReceived') as FormControl;
   }
-  
-//   saveEntry(){
-//     console.log('clik');
-//     Swal.fire({
-//       title: "Guardar pedido",
-//       text: "Desea guardar el pedido ingresado?",
-//       icon: "warning",
-//       showCancelButton: true,
-//       confirmButtonColor: "#3085d6",
-//       cancelButtonColor: "#d33",
-//       confirmButtonText: "Si, guardar!",
-//       cancelButtonText: "No, cancelar!",
-//     }).then((result) => {
-//       if (result.isConfirmed) {
-//         Swal.fire({
-//           title: "Pedido guardado!",
-//           text: "El pedido ha sido guardado correctamente.",
-//           icon: "success"
-//         });
-//       }
-//     });
-// //TODO:IMPLEMENTAR LIMPIAR EL FORMULARIO
-//     // this.form.reset();
 
-//   }
-
-  btnResetForm(){
+  btnResetForm() {
     this.form.reset();
   }
 

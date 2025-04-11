@@ -51,7 +51,7 @@ export default class OrdersHistoryComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar pedido:", // Cambia el texto del buscador
         lengthMenu: "",
-        info: "Total de pedidos finalizados: _TOTAL_",
+        info: "Pedidos finalizados: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

@@ -13,30 +13,12 @@
   </div>
 
   <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-800 p-4 space-y-4">
+  <div class="bg-white dark:bg-gray-900 p-4 space-y-4">
     <form [formGroup]="EmployeesForm">
-      <!-- Primera fila -->
-      <!-- <div class="flex mt-5 mb-5" *ngIf="!hidden">
-        <div class="w-64 mr-4">
-          <label for="role" class="text-sm font-semibold text-gray-600"
-            >Rol</label
-          >
-          <select
-            formControlName="role"
-            id="role"
-            class="rounded p-2 block w-full border border-gray-300"
-          >
-            <option value="" disabled selected>Selecciona el rol</option>
-            <option *ngFor="let role of roles" [value]="role.id">
-              {{ role.name }}
-            </option>
-          </select>
-        </div>
-      </div> -->
-
+    
       <div class="flex mt-5 mb-5" *ngIf="isUpdate">
         <div class="w-32 mr-4">
-          <label for="codeEmployee" class="text-sm font-semibold text-gray-600"
+          <label for="codeEmployee" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Código colaborador</label
           >
           <input
@@ -51,7 +33,7 @@
 
       <div class="flex mt-5 mb-5">
         <div class="w-64 mr-4">
-          <label for="dni" class="text-sm font-semibold text-gray-600"
+          <label for="dni" class="text-sm font-semibold text-gray-600 dark:text-white"
             >N.U.I</label
           >
           <input
@@ -62,7 +44,7 @@
           />
         </div>
         <div class="w-1/3 mr-4">
-          <label for="name" class="text-sm font-semibold text-gray-600"
+          <label for="name" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Nombres completos</label
           >
           <input
@@ -73,7 +55,7 @@
           />
         </div>
         <div class="w-1/3">
-          <label for="surname" class="text-sm font-semibold text-gray-600"
+          <label for="surname" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Apellidos completos</label
           >
           <input
@@ -88,7 +70,7 @@
       <!-- Cuarta fila - Precios -->
       <div class="flex mt-5 mb-5">
         <div class="w-42 mr-4">
-          <label for="tlf" class="text-sm font-semibold text-gray-600">
+          <label for="tlf" class="text-sm font-semibold text-gray-600 dark:text-white">
             Teléfono de contacto
           </label>
           <input
@@ -100,7 +82,7 @@
           />
         </div>
         <div class="w-64">
-          <label for="email" class="text-sm font-semibold text-gray-600">
+          <label for="email" class="text-sm font-semibold text-gray-600 dark:text-white">
             Correo electrónico
           </label>
 
@@ -117,7 +99,7 @@
       <!-- Quinta fila -->
       <div class="flex mt-5 mb-5">
         <div class="w-full mr-4">
-          <label for="address" class="text-sm font-semibold text-gray-600"
+          <label for="address" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Dirección domiciliaria</label
           >
           <textarea
@@ -140,7 +122,7 @@
           </button>
           <button
             (click)="btnViewEmployees()"
-            class="text-gray-500 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 border text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
+            class="text-gray-500 bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold rounded-sm p-2 w-auto hover:bg-gray-300 mr-2"
           >
             Regresar
           </button>

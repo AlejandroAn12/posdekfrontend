@@ -18,6 +18,10 @@ export class OrdersService {
         return this.http.get(`${environment.API_URL}/orders/all`);
     }
 
+    getTotalOrders() {
+        return this.http.get(`${environment.API_URL}/orders/total-orders`);
+      }
+
     getPendingOrders(): Observable<any>{
         return this.http.get(`${environment.API_URL}/orders/pending`);
     }

@@ -12,7 +12,7 @@
       Detalles del negocio
     </h1>
   </div>
-  <div class="bg-white dark:bg-gray-800 p-4">
+  <div class="bg-white dark:bg-gray-900 p-4">
     <form [formGroup]="EnterpriseForm" class="space-y-5">
       <div class="grid grid-cols-3 gap-4">
         <div>
@@ -133,7 +133,7 @@
   <div class="p-2 bg-gray-300">
     <h1 class="text-sm font-semibold text-gray-600 uppercase">Impuestos</h1>
   </div>
-  <div class="bg-white dark:bg-gray-800 border p-4">
+  <div class="bg-white dark:bg-gray-900 p-4">
     <form [formGroup]="EnterpriseForm" class="space-y-5">
       <div class="grid grid-cols-3 gap-4">
         <div>
@@ -207,10 +207,10 @@
         </div>
 
         <div *ngIf="showSelectTypeTaxes">
-          <label for="tipoImpuesto" class="text-sm font-semibold text-gray-600"
+          <label for="tipoImpuesto" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Tipo de impuesto</label
           >
-          <select formControlName="taxId" id="tipoImpuesto" class="input-field">
+          <select formControlName="taxId" id="tipoImpuesto" class="input-field dark:bg-gray-800">
             <option value="" disabled selected>Selecciona el impuesto</option>
             <option *ngFor="let tax of iTaxes" [value]="tax.id">
               {{ tax.name }} - {{ tax.rate }}{{ tax.symbol }}
@@ -221,18 +221,6 @@
     </form>
   </div>
 </div>
-
-<!-- Impuestos -->
-<!-- <div class="flex flex-col border border-gray-400 rounded mt-5">
-  <div class="p-2 bg-gray-300">
-    <h1 class="text-sm font-semibold text-gray-600 uppercase">
-      Configuraciones extras
-    </h1>
-  </div>
-  <div class="bg-white p-4"> -->
-  <!-- BODY -->
-  <!-- </div>
-</div> -->
 
 <!-- Botón de guardar -->
 <div class="flex justify-start mt-5">

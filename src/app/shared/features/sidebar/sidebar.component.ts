@@ -40,18 +40,15 @@ export class SidebarComponent {
       route: '/index/dashboard',
     },
     {
-      title: 'Administración',
-      iconClass: 'fa-solid fa-gear',
+      title: 'Autenticación',
+      iconClass: 'fa-solid fa-user',
+      // iconClass: 'fa-solid fa-gear',
       children: [
-        { title: 'Colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
         { title: 'Credenciales de acceso', iconClass: 'fa-solid fa-user-tie', route: '/index/users/credentials' },
-
-
-
       ],
     },
     {
-      title: 'Gestionar negocio',
+      title: 'Tienda',
       iconClass: 'fa-solid fa-store',
       children: [
         { title: 'Información del negocio', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
@@ -68,15 +65,21 @@ export class SidebarComponent {
         { title: 'Proveedores', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/view' },
         { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/index/products/view' },
         { title: 'Categorias', iconClass: 'fa-solid fa-tags', route: '/index/categories/view' },
+        { title: 'Colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
 
       ]
     },
     {
-      title: 'Gestionar inventario',
+      title: 'Inventario',
       iconClass: 'fa-solid fa-boxes-stacked',
       children: [
         
         { title: 'Ingresar mercadería', iconClass: 'fa-solid fa-dolly', route: '/index/merchandise/entry' },
+        { title: 'Realizar inventario', iconClass: 'fa-solid fa-clipboard', route: '/index/merchandise/inventory' },
+        { title: 'Ajuste de inventario', iconClass: 'fa-solid fa-boxes-stacked', route: '/index/merchandise/adjustment' },
+        { title: 'Historial de inventario', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/merchandise/history-inventories' },
+        // { title: 'Historial de productos', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/products/history' },
+
 
       ],
     },
@@ -84,19 +87,19 @@ export class SidebarComponent {
       title: 'Pedidos',
       iconClass: 'fa-solid fa-cart-shopping',
       children: [
-        { title: 'Generar pedido', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/view' },
+        { title: 'Generar pedido', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/generate' },
         { title: 'Pedidos pendientes', iconClass: 'fa-solid fa-clock', route: '/index/orders/pending' },
         { title: 'Historial', iconClass: 'fa-solid fa-clipboard', route: '/index/orders/history' }
 
       ]
     },
-    {
-      title: 'Reportes',
-      iconClass: 'fa-solid fa-folder',
-      children: [
-        { title: 'Reporte de compras', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/history' }
-      ],
-    }
+    // {
+    //   title: 'Reportes',
+    //   iconClass: 'fa-solid fa-folder',
+    //   children: [
+    //     { title: 'Reporte de compras', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/history' }
+    //   ],
+    // }
   ];
 
   // Estado para controlar el despliegue del submenú
