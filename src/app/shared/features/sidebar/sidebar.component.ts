@@ -35,23 +35,24 @@ export class SidebarComponent {
 
   sidebarOptions: SidebarOption[] = [
     {
-      title: 'Inicio',
+      title: 'Dashboard',
       iconClass: 'fa-brands fa-usps',
       route: '/index/dashboard',
     },
     {
-      title: 'Autenticación',
-      iconClass: 'fa-solid fa-user',
-      // iconClass: 'fa-solid fa-gear',
+      title: 'Administración',
+      // iconClass: 'fa-solid fa-user',
+      iconClass: 'fa-solid fa-gear',
       children: [
-        { title: 'Credenciales de acceso', iconClass: 'fa-solid fa-user-tie', route: '/index/users/credentials' },
+        { title: 'Usuarios', iconClass: 'fa-solid fa-user-tie', route: '/index/users/credentials' },
+        { title: 'Colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
       ],
     },
     {
       title: 'Tienda',
       iconClass: 'fa-solid fa-store',
       children: [
-        { title: 'Información del negocio', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
+        { title: 'Información', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
         { title: 'Configuración', iconClass: 'fa-solid fa-gear', route: '/index/enterprise/settings' },
 
 
@@ -65,8 +66,6 @@ export class SidebarComponent {
         { title: 'Proveedores', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/view' },
         { title: 'Productos', iconClass: 'fa-solid fa-box', route: '/index/products/view' },
         { title: 'Categorias', iconClass: 'fa-solid fa-tags', route: '/index/categories/view' },
-        { title: 'Colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
-
       ]
     },
     {

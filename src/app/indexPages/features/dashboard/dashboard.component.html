@@ -10,7 +10,7 @@
       />
     </div>
     <div class="p-1">
-      <h2 class="text-white font-semibold mt-1.5 text-2xl">{{ userLogged }}</h2>
+      <h2 class="text-white font-semibold mt-1.5 text-2xl">Hola, {{ userLogged }}</h2>
       <p class="text-white font-medium text-sm">{{ role }}</p>
     </div>
   </div>
@@ -22,7 +22,7 @@
   <div class="grid grid-cols-2 md:grid-cols-4 gap-6 p-5">
     <!-- Card: Productos registrados -->
     <div
-      class="bg-white dark:bg-gray-800 dark:hover:shadow-lg rounded-2xl shadow-md p-6 hover:shadow-lg transition-all"
+      class="bg-white dark:bg-gray-800 dark:hover:shadow-lg rounded-2xl border p-6 hover:shadow-lg transition-all"
     >
       <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
         Productos registrados
@@ -39,7 +39,7 @@
 
     <!-- Card: Pedidos realizados -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all"
+      class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
     >
       <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
         Pedidos realizados
@@ -56,27 +56,26 @@
 
     <!-- Card: Ganancias -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all"
+      class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
     >
       <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
-        Ganancias
+        Ganancias estimadas
       </h2>
       <p
         class="text-4xl font-bold text-green-600 dark:text-green-400"
-        [appCountUp]="150000"
+        [appCountUp]="TotalEarnings"
         [duration]="1500"
         [useSuffix]="true"
         [formatCurrency]="true"
         currency="CLP"
         locale="es-CL"
       >
-        0
       </p>
     </div>
 
     <!-- Card: Tu Suscripción -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all"
+      class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
     >
       <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
         Tu Suscripción
@@ -89,7 +88,7 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
     <!-- Gráfico de Ventas -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border p-6">
       <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
         Ventas
       </h2>
@@ -97,7 +96,7 @@
     </div>
 
     <!-- Gráfico de Productos Vendidos -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border p-6">
       <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
         Productos Vendidos
       </h2>

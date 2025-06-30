@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { EnterpriseService } from '../../data-access/enterprise.service';
+import { StoreService } from '../../data-access/enterprise.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '../../../../../shared/services/alerts.service';
@@ -14,7 +14,7 @@ import { TaxesService } from '../../../../../shared/services/taxes.service';
 export default class InitialSettingsComponent implements OnInit {
 
   private fb = inject(FormBuilder);
-  private enterpriseService = inject(EnterpriseService);
+  private enterpriseService = inject(StoreService);
   private taxesService = inject(TaxesService);
   private alertsService = inject(AlertService);
 
@@ -74,7 +74,7 @@ export default class InitialSettingsComponent implements OnInit {
 
     const data = this.EnterpriseForm.value; // Se obtienen los valores actualizados
 
-    this.enterpriseService.addEnterprise(data).subscribe({
+    this.enterpriseService.addStore(data).subscribe({
       next: (response: any) => {
       },
       error: (err) => {

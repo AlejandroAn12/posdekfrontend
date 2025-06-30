@@ -6,26 +6,26 @@
 </div>
 
 <!-- Body -->
-<div class="flex flex-col p-5 dark:text-white dark:bg-gray-900 bg-white">
+<div class="flex flex-col p-5 dark:text-white border dark:bg-gray-900 bg-white">
   <div class="flex flex-col">
     <div class="flex justify-end mb-10">
       <button
         (click)="routeToNewProduct()"
-        class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-blue-700 mr-2"
+        class="text-sm font-semibold rounded-md bg-blue-600 pt-3 pb-3 pl-10 mr-3 pr-10 hover:bg-blue-700 text-white"
       >
-        <i class="fa-solid fa-square-plus"></i> Agregar Producto
+        <i class="fa-solid fa-square-plus mr-1"></i> Nuevo
       </button>
       <button
         (click)="downloadExcel()"
-        class="bg-green-500 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-green-600 mr-2"
+        class="text-sm font-semibold rounded-md pt-3 pb-3 pl-10 pr-10 mr-3 text-blue-600 border hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
       >
-        <i class="fa-solid fa-file-excel"></i> Descargar Excel
+        <i class="fa-solid fa-upload mr-1 text-blue-600"></i> Excel
       </button>
       <button
-        (click)="downloadAllProductsPdf()"
-        class="bg-red-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-red-700"
+      (click)="downloadAllProductsPdf()"
+        class="text-sm font-medium rounded-md pt-3 pb-3 pl-10 pr-10 border text-red-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
       >
-        <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+        <i class="fa-solid fa-upload mr-1 text-red-600"></i> pdf
       </button>
     </div>
     <hr class="mb-5" />

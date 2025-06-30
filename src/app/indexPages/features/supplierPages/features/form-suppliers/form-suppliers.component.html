@@ -6,86 +6,172 @@
 <!-- Card Body -->
 <div class="flex flex-col border-gray-100 rounded mt-5">
   <!-- Título del formulario -->
-  <div class="p-2 bg-gray-300">
-    <h2 class="text-sm font-semibold text-gray-600 uppercase">Información del proveedor</h2>
+  <div class="p-2 bg-gray-100">
+    <h2 class="text-sm font-semibold text-gray-600 uppercase">
+      Datos del proveedor
+    </h2>
   </div>
 
   <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-900 p-4 space-y-6">
+  <div class="bg-white dark:bg-gray-900 p-4 space-y-6 border">
     <form [formGroup]="SupplierForm">
-
       <!-- Fila 1 -->
       <div class="flex flex-wrap gap-4">
-        <div class="w-full sm:w-40 mt-5">
-          <label for="typeofdocumentId" class="label">Tipo de documento</label>
-          <select formControlName="typeofdocumentId" id="typeofdocumentId" class="input">
+        <div class="w-full sm:w-40 mt-5 mr-10">
+          <label
+            for="typeofdocumentId"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
+            >Tipo de documento<small class="text-red-600 text-lg">*</small></label
+          >
+          <select
+            formControlName="typeofdocumentId"
+            id="typeofdocumentId"
+            class="rounded-md border-gray-300 dark:bg-gray-800"
+          >
             <option value="" disabled selected>Tipo de documento</option>
-            <option *ngFor="let typeOfDoc of tyOfDocuments" [value]="typeOfDoc.id">
+            <option
+              *ngFor="let typeOfDoc of tyOfDocuments"
+              [value]="typeOfDoc.id"
+            >
               {{ typeOfDoc.name }}
             </option>
           </select>
         </div>
         <div class="w-full sm:w-64 mt-5">
-          <label for="ruc" class="label">N° Identificación</label>
-          <input formControlName="ruc" id="ruc" type="text" class="input" />
+          <label
+            for="ruc"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
+            >N° Identificación<small class="text-red-600 text-lg">*</small></label
+          >
+          <input
+            formControlName="ruc"
+            id="ruc"
+            type="text"
+            class="rounded-md border-gray-300 dark:bg-gray-800"
+          />
         </div>
         <div class="flex-1 mt-5">
-          <label for="company_name" class="label">Nombre del proveedor</label>
-          <input formControlName="company_name" id="company_name" type="text" class="input" />
+          <label
+            for="company_name"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
+            >Nombre del proveedor<small class="text-red-600 text-lg">*</small></label
+          >
+          <input
+            formControlName="company_name"
+            id="company_name"
+            type="text"
+            class="block w-full border border-gray-300 dark:bg-gray-800 rounded-md"
+          />
         </div>
         <div class="flex-1 mt-5">
-          <label for="legal_representative" class="label">Nombre de encargado</label>
-          <input formControlName="legal_representative" id="legal_representative" type="text" class="input" />
+          <label
+            for="legal_representative"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
+            >Nombre de encargado<small class="text-red-600 text-lg">*</small></label
+          >
+          <input
+            formControlName="legal_representative"
+            id="legal_representative"
+            type="text"
+            class="block w-full border border-gray-300 dark:bg-gray-800 rounded-md"
+          />
         </div>
       </div>
 
       <!-- Fila 2 -->
       <div class="flex flex-wrap gap-4 mt-5">
-        <div class="w-full sm:w-40">
-          <label for="phone" class="label">Teléfono de contacto</label>
-          <input formControlName="phone" id="phone" type="tel" class="input" placeholder="+593 999 999 999" />
+        <div class="w-full sm:w-40 mr-10">
+          <label
+            for="phone"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
+            >Teléfono de contacto<small class="text-red-600 text-lg">*</small></label
+          >
+          <input
+            formControlName="phone"
+            id="phone"
+            type="tel"
+            class="rounded-md border-gray-300 dark:bg-gray-800"
+            placeholder="+593 999 999 999"
+          />
         </div>
         <div class="w-full sm:w-64">
-          <label for="email" class="label">Correo electrónico</label>
-          <input formControlName="email" id="email" type="email" class="input" placeholder="supplier@posdek.com" />
+          <label
+            for="email"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
+            >Correo electrónico<small class="text-red-600 text-lg">*</small></label
+          >
+          <input
+            formControlName="email"
+            id="email"
+            type="email"
+            class="rounded-md border-gray-300 dark:bg-gray-800"
+            placeholder="proveedor@mail.com"
+          />
         </div>
       </div>
 
       <!-- Fila 3 -->
       <div class="flex flex-wrap gap-4 mt-5">
-        <div class="w-full sm:w-40">
-          <label for="country" class="label">País</label>
-          <input formControlName="country" id="country" type="text" class="input" placeholder="Ecuador" />
+        <div class="w-full sm:w-40 mr-10">
+          <label
+            for="country"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
+            >País</label
+          >
+          <input
+            formControlName="country"
+            id="country"
+            type="text"
+            class="rounded-md border-gray-300 dark:bg-gray-800"
+            placeholder="Ecuador"
+          />
         </div>
         <div class="w-full sm:w-40">
-          <label for="city" class="label">Ciudad</label>
-          <input formControlName="city" id="city" type="text" class="input" placeholder="Quito" />
+          <label
+            for="city"
+            class="text-sm font-semibold text-gray-600 dark:text-white"
+            >Ciudad</label
+          >
+          <input
+            formControlName="city"
+            id="city"
+            type="text"
+            class="rounded-md border-gray-300 dark:bg-gray-800"
+            placeholder="Quito"
+          />
         </div>
       </div>
 
       <!-- Fila 4 -->
       <div class="flex flex-wrap gap-4 mt-5">
-        <label for="address" class="text-sm font-semibold text-gray-600 dark:text-white">Dirección matriz</label>
-        <textarea formControlName="address" id="address" class="rounded block w-full border border-gray-300 dark:bg-gray-800"></textarea>
+        <label
+          for="address"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Dirección matriz</label
+        >
+        <textarea
+          formControlName="address"
+          id="address"
+          class="rounded block w-full border border-gray-300 dark:bg-gray-800"
+        ></textarea>
       </div>
 
       <!-- Botones -->
       <div class="flex gap-4 mt-5">
         <button
-          (click)="saveSupplier()"
-          class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 hover:bg-blue-700"
+          (click)="btnBack()"
+          class="text-gray-800 rounded-full border border-gray-300 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-3 pr-5 pl-5 w-auto hover:bg-gray-100"
         >
-          <i class="fa-solid fa-floppy-disk"></i>
-          {{ isUpdate ? 'Guardar cambios' : 'Añadir' }}
+          Cancelar
         </button>
         <button
-          (click)="btnBack()"
-          class="bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-white text-sm font-semibold rounded-sm p-2 hover:bg-gray-300 dark:hover:bg-gray-400"
+          (click)="saveSupplier()"
+          class="bg-blue-600 text-white text-sm font-semibold rounded-full p-3 pr-5 pl-5 hover:bg-blue-700"
         >
-          Regresar
+          <i class="fa-solid fa-floppy-disk mr-1"></i>
+          {{ isUpdate ? "Guardar cambios" : "Añadir" }}
         </button>
       </div>
-
     </form>
   </div>
 </div>

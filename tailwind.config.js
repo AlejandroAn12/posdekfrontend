@@ -17,7 +17,7 @@ module.exports = {
         colorDanger: "#e11d48", // Color rojo
       },
       fontFamily: {
-        sans: ['Roboto', 'sans-serif'], // Inter como fuente principal
+        sans: ['Noto', 'ui-sans-serif', 'system-ui'],// Inter como fuente principal
       },
     },
   },

@@ -14,7 +14,7 @@ import { Config } from 'datatables.net';
 
 @Component({
   selector: 'app-view-users',
-  imports: [ReactiveFormsModule, CommonModule, ModalComponent, DataTablesModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, ModalComponent, DataTablesModule],
   templateUrl: './view-users.component.html',
   styleUrl: './view-users.component.css'
 })
@@ -41,7 +41,7 @@ export default class ViewUsersComponent implements OnInit {
   //
   credential: any = [];
   roles: IRole[] = [];
-  employees: any[] = [];
+  employees: any[] = ["s"];
   credentials: ICredentialsAccess[] = [];
   selectedCredentialId: string | null = null;
 
@@ -50,11 +50,11 @@ export default class ViewUsersComponent implements OnInit {
     this.loadEmployeesWOutCredentials();
     this.loadRoles();
     this.CredentialsForm = this.fb.group({
-      employee: ['', Validators.required],
-      username: ['', Validators.required],
-      employeeId: ['', Validators.required],
-      password: ['', Validators.required],
-      roleId: ['', Validators.required],
+      employee: ['', [Validators.required]],
+      username: ['', [Validators.required]],
+      employeeId: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+      roleId: ['', [Validators.required]],
     });
   }
   ngOnInit(): void {
@@ -64,7 +64,6 @@ export default class ViewUsersComponent implements OnInit {
   //Cargar DataTable
   loadTable() {
     this.dtOptions = {
-
       ajax: (dataTablesParameters: any, callback) => {
         this.authService.getCredendentials().subscribe((resp: any) => {
           callback({
@@ -83,9 +82,12 @@ export default class ViewUsersComponent implements OnInit {
       ],
       scrollX: true,
       language: {
-        search: "Buscar:", // Cambia el texto del buscador
+        emptyTable: this.errorMessage || "No hay información disponible",
+        loadingRecords: "Cargando datos...",
+        zeroRecords: "No se encontraron resultados",
+        search: "Buscar:",
         lengthMenu: "",
-        info: "Credenciales registradas: _TOTAL_ ",
+        info: "total de registros: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -93,11 +95,11 @@ export default class ViewUsersComponent implements OnInit {
       },
       lengthMenu: [10],
       columns: [
-        { title: 'Código de empleado', data: 'employee.codeEmployee', className: 'text-center' },
-        { title: 'Usuario', data: 'username', className: 'text-center' },
-        { title: 'Cargo asignado', data: 'role.name', className: 'text-center' },
-        { title: 'Fecha de Registro', data: 'registration_date', className: 'text-center' },
-        { title: 'Fecha de Última Actualización', data: 'lastUpdated_date', className: 'text-center' },
+        { title: 'Cod. Empleado', data: 'employee.codeEmployee', className: 'text-center text-sm text-gray-500' },
+        { title: 'Nombre Usuario', data: 'username', className: 'text-center text-sm text-gray-600' },
+        { title: 'Cargo Actual', data: 'role.name', className: 'text-center text-sm text-gray-600' },
+        { title: 'Fecha de registro', data: 'registration_date', className: 'text-center text-sm text-gray-500' },
+        { title: 'Fecha de actualización', data: 'lastUpdated_date', className: 'text-center text-sm text-gray-500' },
         {
           title: 'Habilitado', data: 'status',
           render: (data: any, type: any, row: any) => {
@@ -105,7 +107,7 @@ export default class ViewUsersComponent implements OnInit {
               <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
           `;
           },
-          className: 'text-center' // Centrar la columna
+          className: 'text-center text-sm text-gray-500'
         },
         {
           title: 'Acciones',
@@ -114,17 +116,19 @@ export default class ViewUsersComponent implements OnInit {
             return `
           <div>
 
-                <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                        <i class="fa-solid fa-pen-to-square"></i>
+                <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                        Editar
                 </button>
 
-                <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                        <i class="fa-solid fa-trash"></i>
+                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash mr-1"></i>
+                        Eliminar
                 </button>
 
           </div>`;
           },
-           className: 'text-center'
+          className: 'text-center text-sm text-gray-500'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {
@@ -198,14 +202,15 @@ export default class ViewUsersComponent implements OnInit {
   onStatusChange(event: Event, credentials: any): void {
     const checkbox = event.target as HTMLInputElement;
     credentials.status = checkbox.checked;
-
-    // Aquí puedes enviar la actualización al backend si es necesario
     this.updateProductStatus(credentials);
   }
 
   updateProductStatus(credentials: any): void {
     this.authService.updateCredentialsStatus(credentials.id, credentials.status).subscribe({
-      next: (res: any) => this.alertsService.showSuccess(`${res.message}`, `Información`),
+      next: (res: any) => {
+        console.log(res)
+        this.alertsService.showSuccess(`${res.message}`, `Sistema`)
+      },
       error: (error) => this.alertsService.showError(`${error.error.message}`, `${error.statusText}`),
     });
   }
@@ -274,7 +279,7 @@ export default class ViewUsersComponent implements OnInit {
 
     if (credential) {
       this.isEditing = true;
-      this.titleModal = 'Actualizar Credenciales';
+      this.titleModal = 'Actualizar credencial';
       this.selectedCredentialId = credential.id;
 
       this.CredentialsForm.patchValue({
@@ -284,7 +289,7 @@ export default class ViewUsersComponent implements OnInit {
       });
     } else {
       this.isEditing = false;
-      this.titleModal = 'Añadir credencial';
+      this.titleModal = 'Agregar credencial';
       this.selectedCredentialId = null;
       this.CredentialsForm.reset();
     }
@@ -316,6 +321,10 @@ export default class ViewUsersComponent implements OnInit {
         dtInstance.ajax.reload();
       });
     }
+  }
+
+  get f() {
+    return this.CredentialsForm.controls;
   }
 
 }

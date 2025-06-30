@@ -7,16 +7,16 @@
 <!-- Final contenedor 1 -->
 
 <!-- Body -->
-<div class="flex flex-col p-5 bg-white dark:bg-gray-900">
+<div class="flex flex-col p-5 bg-white dark:bg-gray-900 border">
   <div class="flex justify-end mb-10">
     <button
-    (click)="downloadExcel()"
-    class="bg-green-500 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-green-600 mr-2"
-  >
-    <i class="fa-solid fa-file-excel"></i> Descargar Excel
-  </button>
+      (click)="downloadExcel()"
+      class="bg-green-500 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-green-600 mr-2"
+    >
+      <i class="fa-solid fa-file-excel"></i> Descargar Excel
+    </button>
     <button
-    (click)="downloadAllOrders()"
+      (click)="downloadAllOrders()"
       class="bg-red-600 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-red-700"
     >
       <i class="fa-solid fa-download"></i> Descargar PDF
@@ -27,7 +27,7 @@
     datatable
     [dtOptions]="dtOptions"
     [dtTrigger]="dtTrigger"
-    class="row-border hover whitespace-nowrap"
+    class="row-border hover whitespace-nowrap dark:text-white dark:bg-gray-900"
   ></table>
 </div>
 <!-- Final del body -->

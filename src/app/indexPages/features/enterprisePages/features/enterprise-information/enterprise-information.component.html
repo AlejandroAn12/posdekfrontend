@@ -1,12 +1,257 @@
 <div class="bg-blue-700 p-5">
   <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase">Información del negocio</h1>
+    <h1 class="text-2xl uppercase">Información de Tienda</h1>
   </div>
 </div>
 
+<!-- Información de la empresa -->
+<div class="flex flex-col border rounded mt-5">
+  <div class="m-5">
+    <label class="text-sm text-green-600 font-bold dark:text-white"
+      >Habilitar Formulario</label
+    >
+    <div class="flex space-x-4 mt-2">
+      <label class="inline-flex items-center cursor-pointer">
+        <input
+          type="checkbox"
+          class="sr-only peer"
+          (change)="toggleForm($event)"
+        />
+        <div
+          class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+        ></div>
+        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+          {{ canEdit ? "Habilitado" : "No habilitado" }}
+        </span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="canEdit" class="flex mt-5 p-2 space-x-2">
+  <input
+    placeholder="Ingrese el ruc.."
+    [(ngModel)]="ruc"
+    type="text"
+    class="border border-gray-300 rounded"
+  />
+  <button
+    (click)="buscarRuc()"
+    class="bg-blue-500 text-white px-4 py-2 font-semibold rounded hover:bg-blue-600"
+  >
+    Consultar
+  </button>
+
+  <div *ngIf="cargando">Consultando SRI...</div>
+
+  <!-- <div *ngIf="resultado">
+    <div *ngIf="resultado.existe; else noExiste">
+      <pre>{{ resultado.data | json }}</pre>
+    </div>
+    <ng-template #noExiste>
+      <p class="text-red-600 font-semibold">El RUC no existe en el SRI.</p>
+    </ng-template>
+  </div> -->
+</div>
+
+<div class="bg-white mt-5 border dark:bg-gray-900 p-4">
+  <form [formGroup]="EnterpriseForm" class="space-y-5">
+    <div class="grid grid-cols-6 gap-4">
+      <div>
+        <label
+          for="numeroRuc"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >RUC</label
+        >
+        <input
+          formControlName="numeroRuc"
+          type="text"
+          id="numeroRuc"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+      <div>
+        <label
+          for="razonSocial"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Razón social</label
+        >
+        <input
+          formControlName="razonSocial"
+          type="text"
+          id="razonSocial"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label
+        for="representantesLegales"
+        class="text-sm font-semibold text-gray-600 dark:text-white"
+        >Representante legal</label
+      >
+      <input
+        formControlName="representantesLegales"
+        type="text"
+        id="representantesLegales"
+        class="rounded p-2 block w-6/12 border border-gray-300 dark:bg-gray-800"
+      />
+    </div>
+
+    <div>
+      <label
+        for="country"
+        class="text-sm font-semibold text-gray-600 dark:text-white"
+        >Actividad económica principal</label
+      >
+      <input
+        formControlName="actividadEconomicaPrincipal"
+        type="text"
+        id="actividadEconomicaPrincipal"
+        class="rounded p-2 block w-6/12 border border-gray-300 dark:bg-gray-800"
+      />
+    </div>
+
+    <div class="grid grid-cols-6 gap-4">
+      <div>
+        <label
+          for="tipoContribuyente"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Tipo contribuyente</label
+        >
+        <input
+          formControlName="tipoContribuyente"
+          type="text"
+          id="tipoContribuyente"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+      <div>
+        <label
+          for="regimen"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Régimen</label
+        >
+        <input
+          formControlName="regimen"
+          type="text"
+          id="regimen"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+      <div>
+        <label
+          for="categoria"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Categoria</label
+        >
+        <input
+          formControlName="categoria"
+          type="text"
+          id="categoria"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-6 gap-4">
+      <div>
+        <label
+          for="obligadoLlevarContabilidad"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Obligado a llevar contabilidad</label
+        >
+        <input
+          formControlName="obligadoLlevarContabilidad"
+          type="text"
+          id="obligadoLlevarContabilidad"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+      <div>
+        <label
+          for="agenteRetencion"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Agente retención</label
+        >
+        <input
+          formControlName="agenteRetencion"
+          type="text"
+          id="agenteRetencion"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+      <div>
+        <label
+          for="contribuyenteEspecial"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Contribuyente especial</label
+        >
+        <input
+          formControlName="contribuyenteEspecial"
+          type="text"
+          id="contribuyenteEspecial"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-6 gap-4">
+      <div>
+        <label
+          for="email"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Correo electrónico</label
+        >
+        <input
+          formControlName="email"
+          type="text"
+          id="legal_representative"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+      <div>
+        <label
+          for="telefono"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Teléfono</label
+        >
+        <input
+          formControlName="telefono"
+          type="tel"
+          id="telefono"
+          class="input-field dark:bg-gray-800"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label
+        for="address"
+        class="text-sm font-semibold text-gray-600 dark:text-white"
+        >Dirección</label
+      >
+      <input
+        formControlName="address"
+        type="text"
+        id="address"
+        class="rounded p-2 block w-6/12 border border-gray-300 dark:bg-gray-800"
+      />
+    </div>
+    <button
+      *ngIf="canEdit"
+      (click)="onSubmit()"
+      type="submit"
+      class="mt-5 px-4 py-2 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700"
+    >
+      Guardar
+    </button>
+  </form>
+</div>
 
 <div class="flex flex-row justify-center mt-10">
-  <div class="w-96 p-3">
+  <!-- <div class="w-96 p-3">
     <form [formGroup]="EnterpriseForm">
       <div class="title flex justify-center">
         <h1 class="uppercase text-gray-500 font-semibold">Datos de Empresa</h1>
@@ -191,16 +436,16 @@
           </div>
         </div>
       </div>
-      <!-- <button
-        (click)="onSubmit()"
-        type="submit"
-        class="mt-5 px-4 py-2 bg-colorPrimary text-white rounded hover:bg-blue-700"
-        [disabled]="!isFormChanged"
-      >
-        Guardar cambios
-      </button> -->
     </form>
-  </div>
+  </div> -->
+  <!-- <button
+    (click)="onSubmit()"
+    type="submit"
+    class="mt-5 px-4 py-2 bg-colorPrimary text-white rounded hover:bg-blue-700"
+    [disabled]="!isFormChanged"
+  >
+    Guardar cambios
+  </button> -->
 
   <!-- FORMULARIO PARA SUBIR EL LOGO IMG -->
   <div class="w-96 p-3">
@@ -224,7 +469,7 @@
           class="mt-2"
         /> -->
       </div>
-  
+
       <!-- Barra de progreso -->
       <!-- <div *ngIf="isUploading" class="w-full mt-3">
         <div class="w-full bg-gray-200 rounded h-2.5">
@@ -235,7 +480,7 @@
         </div>
         <p class="text-gray-500 text-sm mt-1">{{ uploadProgress }}% Subido</p>
       </div> -->
-  
+
       <!-- <button
         (click)="uploadLogo()"
         type="button"
@@ -246,6 +491,4 @@
       </button> -->
     </form>
   </div>
-  
-  
 </div>

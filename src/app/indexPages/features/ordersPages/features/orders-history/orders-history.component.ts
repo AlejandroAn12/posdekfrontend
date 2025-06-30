@@ -1,10 +1,9 @@
-import { Component, inject, OnInit, Renderer2, signal, ViewChild, viewChild } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { OrdersService } from '../../data-access/orders.service';
-import { OrdersGenerated } from '../../interfaces/interface';
 import { AlertService } from '../../../../../shared/services/alerts.service';
 import { Subject } from 'rxjs';
 import { OrderReportService } from '../../data-access/reports.service';
@@ -51,7 +50,7 @@ export default class OrdersHistoryComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar pedido:", // Cambia el texto del buscador
         lengthMenu: "",
-        info: "Pedidos finalizados: _TOTAL_",
+        info: "Total de registros: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -156,7 +155,7 @@ export default class OrdersHistoryComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `reporte_orden_${date}.pdf`;
+        a.download = `${date}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

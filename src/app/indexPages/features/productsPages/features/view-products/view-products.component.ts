@@ -86,9 +86,12 @@ export default class ViewProductsComponent implements OnInit {
       },
       scrollX: true,
       language: {
-        search: "Buscar:", // Cambia el texto del buscador
+        emptyTable: this.errorMessage || "No hay información disponible",
+        loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
+        zeroRecords: "No se encontraron resultados",
+        search: "Buscar:",
         lengthMenu: "",
-        info: "Hay _TOTAL_ productos registrados",
+        info: "Total de registros: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -97,12 +100,12 @@ export default class ViewProductsComponent implements OnInit {
       lengthMenu: [10], // Cambia la cantidad de registros por página
       columns: [
         // { title: 'ID', data: 'id' },
-        { title: 'Código de barra', data: 'barcode' },
-        { title: 'Código Interno', data: 'code' },
-        { title: 'Producto', data: 'name' },
+        { title: 'Código de barra', data: 'barcode', className: 'text-sm text-gray-500' },
+        { title: 'Código generado', data: 'code', className: 'text-sm text-gray-500' },
+        { title: 'Artículo/Servicio', data: 'name', className: 'text-sm text-gray-500' },
 
         {
-          title: 'Precio compra', data: 'purchase_price',
+          title: 'Precio compra', data: 'purchase_price', className: 'text-sm text-gray-500',
           render: (data: any) => {
             return new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -111,7 +114,7 @@ export default class ViewProductsComponent implements OnInit {
           }
         },
         {
-          title: 'Precio venta', data: 'sale_price',
+          title: 'Precio venta', data: 'sale_price', className: 'text-sm text-gray-500',
           render: (data: any) => {
             return new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -120,7 +123,7 @@ export default class ViewProductsComponent implements OnInit {
           }
         },
         {
-          title: 'Precio venta | Impuesto', data: 'price_sale_tax',
+          title: 'Precio venta | Impuesto', data: 'price_sale_tax', className: 'text-sm text-gray-500',
           render: (data: any) => {
             return new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -128,11 +131,11 @@ export default class ViewProductsComponent implements OnInit {
             }).format(data);
           }
         },
-        { title: 'Unidad de medida', data: 'unitOfMeasurement.name' },
-        { title: 'Stock', data: 'stock' },
-        { title: 'Stock Mínino', data: 'stockMin' },
-        { title: 'Categoria', data: 'category.name' },
-        { title: 'Proveedor', data: 'supplier.company_name' },
+        { title: 'Unidad de medida', data: 'unitOfMeasurement.name', className: 'text-sm text-gray-500' },
+        { title: 'Stock disponible', data: 'stock', className: 'text-sm text-gray-500' },
+        { title: 'Stock mínino', data: 'stockMin', className: 'text-sm text-gray-500' },
+        { title: 'Categoria', data: 'category.name', className: 'text-sm text-gray-500' },
+        { title: 'Proveedor', data: 'supplier.company_name', className: 'text-sm text-gray-500' },
         {
           title: 'Servicio', data: 'its_service',
           render: (data: any, type: any, row: any) => {
@@ -140,7 +143,7 @@ export default class ViewProductsComponent implements OnInit {
                 <input type="checkbox" class="service-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
             `;
           },
-          className: 'text-center' // Centrar la columna
+          className: 'text-center text-sm text-gray-500' // Centrar la columna
 
         },
         {
@@ -151,27 +154,29 @@ export default class ViewProductsComponent implements OnInit {
                 <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
             `;
           },
-          className: 'text-center' // Centrar la columna
+          className: 'text-center text-gray-500 text-sm' // Centrar la columna
         },
-        { title: 'Fecha de registro', data: 'registration_date' },
+        { title: 'Fecha de registro', data: 'registration_date', className: 'text-sm text-gray-500' },
         {
-          title: 'Opciones',
+          title: 'Acciones',
           data: null,
           render: (data: any, type: any, row: any) => {
             return `
             <div>
 
-                  <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                          <i class="fa-solid fa-pen-to-square"></i>
-                  </button>
+                   <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                        Editar
+                </button>
 
-                  <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                          <i class="fa-solid fa-trash"></i>
-                  </button>
+                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash mr-1"></i>
+                        Eliminar
+                </button>
 
             </div>`;
           },
-          className: 'action-column'
+          className: 'action-column text-sm text-gray-500'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {

@@ -1,39 +1,41 @@
 <div class="h-screen flex flex-col items-center justify-center">
   <img
-  *ngIf="!isDarkMode"
+    *ngIf="!isDarkMode"
     src="assets/img/new_logo.png"
     alt="logo"
     class="w-64 mb-10 animate-pulse"
   />
   <img
-  *ngIf="isDarkMode"
+    *ngIf="isDarkMode"
     src="assets/img/logos_img/new_logo_mode_dark.png"
     alt="logo"
     class="w-64 mb-10 animate-pulse"
   />
-  <h1
+  <!-- <h1
     class="text-2xl font-bold tracking-tight text-primary leading-none mb-4 text-center"
   >
     ¡Hola!,
     <span class="bg-blue-600 text-white rounded-br-xl p-1">Bienvenido</span>
-  </h1>
+  </h1> -->
   <p class="pb-5 text-gray-400 text-sm">
-    Ingresa con tus credenciales de acceso
+    Inicia sesión con tus credenciales
   </p>
   <form
     [formGroup]="loginForm"
     (ngSubmit)="onLogin()"
     class="max-w-md w-full mx-auto"
   >
-    <div class="relative z-0 w-full mb-5 group">
+    <div class="mb-4">
+      <label
+        for="username"
+        class="text-sm font-semibold text-gray-600 dark:text-white"
+        >Usuario</label
+      >
       <input
         formControlName="username"
         type="text"
-        name="floating_username"
-        id="floating_username"
-        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-        placeholder=" "
-        required
+        id="username"
+        class="input-field dark:bg-gray-800"
       />
       <div
         *ngIf="
@@ -45,21 +47,19 @@
         <i class="fa-solid fa-circle-info"></i>
         El nombre de usuario es requerido.
       </div>
-      <label
-        for="floating_username"
-        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-        >Usuario</label
-      >
     </div>
-    <div class="relative z-0 w-full mb-5 group">
+
+    <div class="mb-4">
+      <label
+        for="password"
+        class="text-sm font-semibold text-gray-600 dark:text-white"
+        >Contraseña</label
+      >
       <input
-        type="password"
         formControlName="password"
-        name="floating_password"
-        id="floating_password"
-        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-primary peer flex-shrink-0"
-        placeholder=" "
-        required
+        type="password"
+        id="password"
+        class="input-field dark:bg-gray-800"
       />
       <div
         *ngIf="
@@ -71,11 +71,6 @@
         <i class="fa-solid fa-circle-info"></i>
         La contraseña es requerida.
       </div>
-      <label
-        for="floating_password"
-        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-        >Contraseña</label
-      >
     </div>
 
     <button
@@ -85,11 +80,10 @@
         'bg-blue-600 hover:bg-blue-700': !loginForm.invalid,
         'bg-gray-300 cursor-not-allowed': loginForm.invalid
       }"
-      class="bg-blue-600 text-white text-sm font-semibold rounded-sm p-2 w-full"
+      class="bg-blue-600 text-white text-sm font-semibold rounded-full p-3 w-full"
     >
       Ingresar
     </button>
   </form>
 </div>
 <app-footer></app-footer>
-

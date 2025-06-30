@@ -46,6 +46,8 @@ export default class ViewCategoriesComponent implements OnInit {
   categoriesSignal = signal<ICategory[]>([]);
   categories: ICategory[] = [];
   selectedCategoryId: string | null = null;
+  errorMessage: string = '';
+
 
 
   //Cargar DataTable
@@ -60,9 +62,12 @@ export default class ViewCategoriesComponent implements OnInit {
       },
       scrollX: true,
       language: {
-        search: "Buscar:", // Cambia el texto del buscador
+        emptyTable: this.errorMessage || "No hay información disponible",
+        loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
+        zeroRecords: "No se encontraron resultados",
+        search: "Buscar:",
         lengthMenu: "",
-        info: "Total de categorias: _TOTAL_",
+        info: "Total de registros: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -71,7 +76,7 @@ export default class ViewCategoriesComponent implements OnInit {
       lengthMenu: [10],
       columns: [
         // { title: 'ID', data: 'id' },
-        { title: 'Categoria', data: 'name' },
+        { title: 'Nombre', data: 'name' },
         {
           title: 'Habilitado',
           data: 'status',
@@ -82,7 +87,7 @@ export default class ViewCategoriesComponent implements OnInit {
           },
           className: 'text-center' // Centrar la columna
         },
-        { title: 'Fecha de Registro', data: 'registration_date' },
+        { title: 'Fecha de registro', data: 'registration_date' },
         {
           title: 'Opciones',
           data: null,

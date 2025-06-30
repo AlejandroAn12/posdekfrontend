@@ -80,9 +80,12 @@ export default class ViewEmployeesComponent implements OnInit {
       },
       scrollX: true,
       language: {
-        search: "Buscar:", // Cambia el texto del buscador
+        emptyTable: this.errorMessage || "No hay información disponible",
+        loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
+        zeroRecords: "No se encontraron resultados",
+        search: "Buscar:",
         lengthMenu: "",
-        info: "Colaboradores registrados: _TOTAL_",
+        info: "Total de registros: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -90,12 +93,13 @@ export default class ViewEmployeesComponent implements OnInit {
       },
       lengthMenu: [10],
       columns: [
-        { title: 'Identificación', data: 'dni' },
-        { title: 'Código de empleado', data: 'codeEmployee' },
-        { title: 'Nombres  Completos', data: 'name' },
-        { title: 'Apellidos Completos', data: 'surname' },
-        { title: 'Correo Electrónico', data: 'email' },
-        { title: 'Teléfono de Contacto', data: 'tlf' },
+        { title: 'Cód.', data: 'codeEmployee', className: 'text-sm text-gray-500' },
+        { title: 'N°. identificación', data: 'dni', className: 'text-sm text-gray-500' },
+        { title: 'Nombres', data: 'name', className: 'text-sm text-gray-500' },
+        { title: 'Apellidos', data: 'surname', className: 'text-sm text-gray-500' },
+        { title: 'Correo electrónico', data: 'email', className: 'text-sm text-gray-500' },
+        { title: 'Teléfono', data: 'tlf', className: 'text-sm text-gray-500' },
+        { title: 'Fecha de registro', data: 'registration_date', className: 'text-sm text-gray-500' },
         {
           title: 'Habilitado', data: 'status',
           render: (data: any, type: any, row: any) => {
@@ -103,28 +107,29 @@ export default class ViewEmployeesComponent implements OnInit {
                 <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
             `;
           },
-          className: 'text-center' // Centrar la columna
+          className: 'text-center text-sm text-gray-500' // Centrar la columna
         },
 
-        { title: 'Fecha de registro', data: 'registration_date' },
         {
-          title: 'Opciones',
+          title: 'Acciones',
           data: null,
           render: (data: any, type: any, row: any) => {
             return `
             <div>
 
-                  <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                          <i class="fa-solid fa-pen-to-square"></i>
-                  </button>
+                  <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                        Editar
+                </button>
 
-                  <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                          <i class="fa-solid fa-trash"></i>
-                  </button>
+                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash mr-1"></i>
+                        Eliminar
+                </button>
 
             </div>`;
           },
-          className: 'action-column'
+          className: 'action-column text-sm text-gray-500'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {

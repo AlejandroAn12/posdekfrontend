@@ -17,6 +17,7 @@ import { CountUpDirective } from '../../../shared/directives/count-up.directive'
 export default class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
+    this.getEarnings();
     this.getUserLogged()
     this.loadTable();
     this.loadTotalProducts();
@@ -36,6 +37,7 @@ export default class DashboardComponent implements OnInit {
 
   TotalProducts: number = 0;
   TotalOrders: number = 0;
+  TotalEarnings: number = 0;
 
 
   loadTotalProducts() {
@@ -134,6 +136,18 @@ export default class DashboardComponent implements OnInit {
       }
     })
   }
+
+  getEarnings() {
+    this.productsService.getEarnings().subscribe({
+      next: (resp: any) => {
+        this.TotalEarnings = resp.totalEarnings;
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
 
   //Metodo para ir a la vista de historial de ordenes
   navigateToOrders() {

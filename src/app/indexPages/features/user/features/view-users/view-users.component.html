@@ -6,24 +6,32 @@
 <!-- Cuerpo -->
 <div class="flex flex-col p-5 bg-white dark:bg-gray-900">
   <div class="flex justify-end mb-10 space-x-2">
-    <button (click)="toggleModal()" class="btn-action bg-blue-600 p-2 hover:bg-blue-700 text-white">
-      <i class="fa-solid fa-square-plus"></i> Agregar Credenciales
+    <button
+      (click)="toggleModal()"
+      class="text-sm font-semibold rounded-md bg-blue-600 pt-3 pb-3 pl-10 pr-10 hover:bg-blue-700 text-white"
+    >
+      <i class="fa-solid fa-square-plus mr-1"></i> Agregar
     </button>
-    <button (click)="downloadExcel()" class="btn-action bg-green-500 p-2 hover:bg-green-600 text-white">
-      <i class="fa-solid fa-file-excel"></i> Descargar Excel
+    <button
+      (click)="downloadExcel()"
+      class="text-sm font-semibold rounded-md pt-3 pb-3 pl-10 pr-10 mr-3 border text-green-600 hover:bg-gray-100 hover:text-green-600"
+    >
+      <i class="fa-solid fa-upload mr-1"></i> Excel
     </button>
-    <button class="btn-action bg-red-600 hover:bg-red-700 p-2 text-white">
-      <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+    <button
+      class="text-sm font-semibold rounded-md border pt-3 pb-3 pl-10 pr-10 text-red-600 hover:bg-gray-100 hover:text-red-600"
+    >
+      <i class="fa-solid fa-upload mr-1"></i> PDF
     </button>
   </div>
 
-  <hr class="mb-5" />
+  <!-- <hr class="mb-5" /> -->
 
   <table
     datatable
     [dtOptions]="dtOptions"
     [dtTrigger]="dtTrigger"
-    class="row-border hover whitespace-nowrap dark:text-white"
+    class="row-border hover border rounded-md whitespace-nowrap dark:text-white"
   ></table>
 </div>
 
@@ -38,27 +46,46 @@
     <div class="flex flex-col space-y-4 mt-4">
       <!-- Empleado -->
       <ng-container *ngIf="isEditing; else selectEmpleado">
-        <div class="input-floating">
+        <div class="flex flex-col">
+          <label
+            for="input-employee"
+            class="text-gray-600 text-sm font-semibold mb-1"
+            >Nombre de usuario</label
+          >
           <input
+            class="rounded-md border-gray-300"
             formControlName="employee"
             [disabled]="isEditing"
             type="text"
-            id="floating_employee"
-            placeholder=" "
+            id="input-employee"
+            placeholder="Ingrese un usuario para el empleado"
             required
           />
-          <label for="floating_employee">Empleado</label>
         </div>
       </ng-container>
 
       <ng-template #selectEmpleado>
-        <div>
-          <label for="employeeId" class="label">Empleado</label>
-          <select
-            id="employeeId"
-            formControlName="employeeId"
-            class="select"
+        <div class="flex flex-col">
+          <label for="employeeId" class="text-sm font-medium text-gray-600 mb-1"
+            >Colaborador</label
           >
+
+          <select
+            formControlName="employeeId"
+            id="employeeId"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option
+              class="font-semibold"
+              disabled
+              *ngIf="employees.length > 0"
+              value=""
+            >
+              Seleccione un colaborador
+            </option>
+            <option *ngIf="employees.length < 1" class="font-semibold" value="">
+              No hay colaboradores registrados
+            </option>
             <option *ngFor="let employee of employees" [value]="employee.id">
               {{ employee.name }} {{ employee.surname }}
             </option>
@@ -66,46 +93,64 @@
         </div>
       </ng-template>
 
-      <!-- Usuario -->
-      <div class="input-floating">
-        <input
-          formControlName="username"
-          type="text"
-          id="floating_username"
-          placeholder=" "
-          required
-        />
-        <label for="floating_username">Usuario de acceso</label>
-      </div>
-
-      <!-- Contraseña -->
-      <div *ngIf="!isEditing" class="input-floating">
-        <input
-          formControlName="password"
-          type="password"
-          id="floating_password"
-          placeholder=" "
-          required
-        />
-        <label for="floating_password">Contraseña</label>
-      </div>
-
       <!-- Rol -->
-      <div>
-        <label for="roleId" class="label">Seleccione el rol</label>
+      <div class="flex flex-col">
+        <label for="roleId" class="text-sm font-medium text-gray-600 mb-1"
+          >Rol</label
+        >
         <select
           id="roleId"
           formControlName="roleId"
-          class="select"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
+          <option
+            class="font-semibold"
+            disabled
+            *ngIf="roles.length > 0"
+            value=""
+          >
+            Seleccione un rol
+          </option>
+          <option *ngIf="roles.length < 1" class="font-semibold" value="">
+            No hay roles registrados
+          </option>
           <option *ngFor="let role of roles" [value]="role.id">
             {{ role.name }}
           </option>
         </select>
       </div>
 
-      <button type="submit" class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded">
-        {{ isEditing ? 'Guardar cambios' : 'Añadir' }}
+      <!-- Usuario -->
+      <div class="flex flex-col">
+        <label for="username" class="text-sm font-medium text-gray-600 mb-1"
+          >Usuario</label
+        >
+        <input
+          type="text"
+          formControlName="username"
+          id="username"
+          class="rounded border border-gray-300 text-sm"
+        />
+      </div>
+
+      <!-- Contraseña -->
+      <div *ngIf="!isEditing" class="flex flex-col">
+        <label for="password" class="text-sm font-medium text-gray-600 mb-1"
+          >Contraseña</label
+        >
+        <input
+          type="password"
+          formControlName="password"
+          id="password"
+          class="rounded border border-gray-300 text-sm"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md"
+      >
+        {{ isEditing ? "Actualizar" : "Guardar" }}
       </button>
     </div>
   </form>

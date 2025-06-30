@@ -47,9 +47,9 @@ export default class PendingOrdersComponent implements OnInit {
         emptyTable: this.errorMessage || "No hay información disponible",
         loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
         zeroRecords: "No se encontraron resultados",
-        search: "Buscar pedido:",
+        search: "Buscar:",
         lengthMenu: "",
-        info: "Pedidos pendientes: _TOTAL_",
+        info: "Total de registros: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

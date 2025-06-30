@@ -18,6 +18,11 @@ export default [
         path: 'history-inventories',
         loadComponent: () =>
             import('./features/history-inventory/history-inventory.component'),
+    },
+    {
+        path: 'save-inventory',
+        loadComponent: () =>
+            import('./features/save-inventory/save-inventory.component'),
     }
 
 ] as Routes;

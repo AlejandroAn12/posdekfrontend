@@ -131,7 +131,7 @@ export default class FormEmployeeComponent implements OnInit {
 
   }
 
-  btnViewEmployees() {
+  btnBack() {
     this.router.navigate(['index/employees/view']);
   }
 }

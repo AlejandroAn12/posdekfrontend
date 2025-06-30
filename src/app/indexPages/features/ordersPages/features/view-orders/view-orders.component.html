@@ -7,7 +7,9 @@
 
 <!-- Final contenedor 1 -->
 <!-- Body Table-->
-<div class="flex flex-col p-5 bg-white dark:bg-gray-900">
+<div
+  class="flex flex-col p-5 bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg shadow-md mt-5"
+>
   <p class="mt-5 mb-5 text-sm text-blue-500 dark:text-white font-semibold">
     <i class="fa-solid fa-circle-info mr-1"></i>Recuerde que solo se puede
     generar una órden por Proveedor.
@@ -27,7 +29,11 @@
         (change)="onSupplierChange($event)"
       >
         <option value="" disabled selected>Selecciona un proveedor</option>
-        <option *ngFor="let supplier of suppliers" [value]="supplier.id" class="dark:text-white">
+        <option
+          *ngFor="let supplier of suppliers"
+          [value]="supplier.id"
+          class="dark:text-white"
+        >
           {{ supplier.company_name }}
         </option>
       </select>
@@ -48,16 +54,21 @@
         (change)="addToTable(productSelect)"
       >
         <option value="" disabled selected>Selecciona un producto</option>
-        <option *ngFor="let product of products" [value]="product.id" class="dark:text-white">
-          {{ product.barcode }} - {{ product.name }} - <small>[stock: {{ product.stock }}]</small>
-          {{ product.name }} - <small>[stock: {{ product.stock }}]</small>
+        <option
+          *ngFor="let product of products"
+          [value]="product.id"
+          class="dark:text-white"
+        >
+          {{ product.barcode }} - {{ product.name }} -
+          <small>[stock: {{ product.stock }}]</small> {{ product.name }} -
+          <small>[stock: {{ product.stock }}]</small>
         </option>
       </select>
     </div>
 
-    <div class="relative mr-5">
+    <!-- <div class="relative mr-5">
       <button (click)="cleanFilters()" class="bg-white p-2 border text-gray-600 font-semibold rounded">Limpiar filtros</button>
-    </div>
+    </div> -->
     <!--Final Select Productos -->
   </div>
   <!-- Final de contenedores Selects -->
@@ -72,7 +83,9 @@
           class="text-xs text-white uppercase bg-blue-600 dark:bg-blue-600 dark:text-white"
         >
           <tr>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Código de barra</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">
+              Código de barra
+            </th>
             <th scope="col" class="px-6 py-3 whitespace-nowrap">Producto</th>
             <th scope="col" class="px-6 py-3 whitespace-nowrap">Precio</th>
             <th scope="col" class="px-6 py-3 whitespace-nowrap">Cantidad</th>
@@ -85,7 +98,7 @@
             *ngFor="let product of selectedProducts; trackBy: trackByProductId"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
           >
-          <th
+            <th
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
@@ -108,15 +121,17 @@
                 min="1"
               />
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-bold text-gray-900 dark:text-white"
+            >
               {{ product.quantity * product.purchase_price | currency }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <button
-                class="bg-colorDanger hover:bg-red-700 p-2 text-white m-1 rounded-md"
+                class="bg-colorDanger hover:bg-red-700 p-2 font-semibold text-white m-1 rounded-md"
                 (click)="removeProduct(product.id)"
               >
-              <i class="fa-solid fa-circle-minus"></i>
+                <i class="fa-solid fa-circle-minus mr-1"></i>
                 Quitar
               </button>
             </td>
@@ -128,13 +143,15 @@
   <!-- Final tabla -->
 
   <!-- Total de la orden de compra -->
-  <p class="font-bold ml-5 mt-5">Total: {{ getTotal() | currency }}</p>
+  <p class="font-bold ml-5 mt-5 dark:text-white">
+    Total: {{ getTotal() | currency }}
+  </p>
 
   <!-- Boton para generar la orden de compra -->
   <button
-  *ngIf="selectedProducts.length > 0"
-  [disabled]="selectedProducts.length === 0"
-    class="ml-5 mt-3 bg-blue-600 hover:bg-blue-700 rounded-sm p-2  font-semibold  text-white w-64"
+    *ngIf="selectedProducts.length > 0"
+    [disabled]="selectedProducts.length === 0"
+    class="ml-5 mt-3 bg-blue-600 hover:bg-blue-700 rounded-full p-2 font-semibold text-white w-64"
     (click)="submitOrder()"
   >
     Generar pedido

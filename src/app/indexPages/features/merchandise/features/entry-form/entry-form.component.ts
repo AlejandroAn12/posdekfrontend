@@ -74,7 +74,7 @@ export default class IncomeFormComponent {
     });
   }
 
-  // Getter para acceder fácilmente a los items
+  // Getter para acceder a los items
   get items() {
     return this.form.get('items') as FormArray;
   }
@@ -128,7 +128,7 @@ export default class IncomeFormComponent {
       },
       error: (error) => {
         Swal.close();
-        console.error('Error al actualizar stock:', error);
+        // console.error('Error al actualizar stock:', error);
         this.alertsService.showError('Error al actualizar el stock', 'Error');
       },
     });
@@ -137,7 +137,7 @@ export default class IncomeFormComponent {
   private showSuccessAlert(): void {
     Swal.fire({
       title: 'Pedido guardado',
-      text: 'El pedido ha sido guardado correctamente.',
+      text: 'El stock ha sido actualizado correctamente',
       icon: 'success',
     });
   }
@@ -157,7 +157,7 @@ export default class IncomeFormComponent {
     this.form.reset();
   }
 
-  btnBackDashboard() {
+  btnBack() {
     this.router.navigate(['index/dashboard']);
   }
 }

@@ -88,9 +88,12 @@ export default class ViewSuppliersComponent implements OnInit {
       },
       scrollX: true,
       language: {
-        search: "Buscar:", // Cambia el texto del buscador
+        emptyTable: this.errorMessage || "No hay información disponible",
+        loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
+        zeroRecords: "No se encontraron resultados",
+        search: "Buscar:",
         lengthMenu: "",
-        info: "Total de proveedores: _TOTAL_",
+        info: "Total de registros: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

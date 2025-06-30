@@ -1,25 +1,34 @@
 import { Component, inject } from '@angular/core';
-import { EnterpriseService } from '../../data-access/enterprise.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { StoreService } from '../../data-access/enterprise.service';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
+import { AlertService } from '../../../../../shared/services/alerts.service';
+import { SriService } from '../../../../../shared/services/services.sri.service';
 
 @Component({
   selector: 'app-enterprise-information',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './enterprise-information.component.html',
   styleUrl: './enterprise-information.component.css'
 })
 export default class EnterpriseInformationComponent {
 
-  private enterpriseService = inject(EnterpriseService);
+  private storeService = inject(StoreService);
+  private alertsService = inject(AlertService);
+  private sriService = inject(SriService);
   private fb = inject(FormBuilder);
   private id: string = '';
+  ruc: string = '';
+
+  resultado: any = null;
+  cargando: boolean = false;
 
   //Formulario
   EnterpriseForm: FormGroup;
-  isDisabled: boolean = true;
+  isDisabled: boolean = false;
+  canEdit: boolean = true;
   isFormChanged = false;
   initialFormValues: any;
   selectedFile!: File | null;
@@ -28,20 +37,23 @@ export default class EnterpriseInformationComponent {
 
   constructor() {
     this.EnterpriseForm = this.fb.group({
-      name: [{ value: '', disabled: this.isDisabled }],
-      company_name: [{ value: '', disabled: this.isDisabled }],
-      logoURL: [''],
-      ruc: [{ value: '', disabled: this.isDisabled }],
-      legal_representative: [{ value: '', disabled: this.isDisabled }],
+      numeroRuc: [{ value: '', disabled: this.isDisabled }, [Validators.required, Validators.minLength(13)]],
+      razonSocial: [{ value: '', disabled: this.isDisabled }, Validators.required],
+      tipoContribuyente: [{ value: '', disabled: this.isDisabled }, Validators.required],
+      regimen: [{ value: '', disabled: this.isDisabled }],
+      categoria: [{ value: '', disabled: this.isDisabled }],
+      obligadoLlevarContabilidad: [{ value: '', disabled: this.isDisabled }],
+      agenteRetencion: [{ value: '', disabled: this.isDisabled }],
+      contribuyenteEspecial: [{ value: '', disabled: this.isDisabled }],
+      representantesLegales: [{ value: '', disabled: this.isDisabled }],
+      actividadEconomicaPrincipal: [{ value: '', disabled: this.isDisabled }],
+      email: [{ value: '', disabled: this.isDisabled }, [Validators.email]],
+      telefono: [{ value: '', disabled: this.isDisabled }],
       address: [{ value: '', disabled: this.isDisabled }],
-      phone: [{ value: '', disabled: this.isDisabled }],
-      email: [{ value: '', disabled: this.isDisabled }],
-      country: [{ value: '', disabled: this.isDisabled }],
-      city: [{ value: '', disabled: this.isDisabled }],
     });
 
     //Cargas
-    this.getInformationEnterprise();
+    this.getInformationStore();
 
     // Guardar valores iniciales
     this.initialFormValues = this.EnterpriseForm.value;
@@ -52,29 +64,102 @@ export default class EnterpriseInformationComponent {
     });
   }
 
+
+  buscarRuc() {
+    this.cargando = true;
+
+    if (!this.ruc || this.ruc.length < 13) {
+      Swal.fire({
+        icon: "error",
+        title: `Error`,
+        text: `Debe ingresar un RUC válido.`,
+        showConfirmButton: false,
+        timer: 8000,
+        confirmButtonText: 'Entendido',
+        timerProgressBar: true,
+      });
+      this.cargando = false;
+      return;
+    }
+
+    this.sriService.consultarRuc(this.ruc).subscribe({
+      next: (res) => {
+        console.log('✅ Respuesta:', res);
+        this.cargarDatosDesdeSri(res.data);
+        this.resultado = res;
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('❌ Error en servicio:', err);
+        this.resultado = null;
+        this.cargando = false;
+
+        Swal.fire({
+          icon: "error",
+          title: `Error`,
+          text: `${err.error.message}`,
+          showConfirmButton: false,
+          timer: 8000,
+          confirmButtonText: 'Entendido',
+          timerProgressBar: true,
+        });
+      }
+    });
+  }
+
+  cargarDatosDesdeSri(data: any) {
+    if (!data || !Array.isArray(data) || data.length === 0) return;
+
+    const contribuyente = data[0];
+
+    // ✅ Obtener nombre(s) de representantes legales de forma segura
+    const representantesLegales = Array.isArray(contribuyente.representantesLegales)
+      ? contribuyente.representantesLegales
+        .map((r: any) => `${r.nombre} (${r.identificacion})`)
+        .join(' - ')
+      : '';
+
+    // ✅ Actualizar los valores del formulario con seguridad
+    this.EnterpriseForm.patchValue({
+      numeroRuc: contribuyente.numeroRuc || '',
+      razonSocial: contribuyente.razonSocial || '',
+      actividadEconomicaPrincipal: contribuyente.actividadEconomicaPrincipal || '',
+      tipoContribuyente: contribuyente.tipoContribuyente || '',
+      regimen: contribuyente.regimen || '',
+      categoria: contribuyente.categoria || '',
+      obligadoLlevarContabilidad: contribuyente.obligadoLlevarContabilidad || '',
+      agenteRetencion: contribuyente.agenteRetencion || '',
+      contribuyenteEspecial: contribuyente.contribuyenteEspecial || '',
+      representantesLegales: representantesLegales,
+    });
+  }
+
   compareFormValues(): boolean {
     return JSON.stringify(this.EnterpriseForm.value) === JSON.stringify(this.initialFormValues);
   }
 
-  getInformationEnterprise() {
-    this.enterpriseService.getInformationEnterprise().subscribe({
-      next: (res) => {
+  getInformationStore() {
+    
+    this.storeService.getInformationStore().subscribe({
+      next: (res: any) => {
         this.id = res.data.id;
         this.EnterpriseForm.patchValue({
-          name: res.data.name,
-          company_name: res.data.company_name,
-          logoURL: res.data.logoURL,
-          ruc: res.data.ruc,
-          legal_representative: res.data.legal_representative,
-          address: res.data.address,
-          phone: res.data.phone,
-          email: res.data.email,
-          country: res.data.country,
-          city: res.data.city,
+          numeroRuc: res.data.numeroRuc || '',
+          razonSocial: res.data.razonSocial || '',
+          actividadEconomicaPrincipal: res.data.actividadEconomicaPrincipal || '',
+          tipoContribuyente: res.data.tipoContribuyente || '',
+          regimen: res.data.regimen || '',
+          categoria: res.data.categoria || '',
+          obligadoLlevarContabilidad: res.data.obligadoLlevarContabilidad || '',
+          agenteRetencion: res.data.agenteRetencion || '',
+          contribuyenteEspecial: res.data.contribuyenteEspecial || '',
+          representantesLegales: res.data.representantesLegales || '',
+          email: res.data.email || '',
+          telefono: res.data.telefono || '',
+          address: res.data.address || ''
         });
       },
       error: (err) => {
-        // console.error('Error al cargar la información de la empresa', err);
         Swal.fire({
           icon: "error",
           title: `${err.statusText}`,
@@ -84,25 +169,69 @@ export default class EnterpriseInformationComponent {
     })
   }
 
+  onSubmitUpdate(): void {
+    if (this.canEdit) {
+      if (this.EnterpriseForm.valid) {
+        const formData = this.EnterpriseForm.value;
+        this.storeService.updateInformationStore(this.id, formData).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: `Actualización exitosa`,
+              text: `${res.message}`,
+              showConfirmButton: false,
+              timer: 2000
+            });
+
+            // Actualizar valores iniciales
+            this.initialFormValues = this.EnterpriseForm.value;
+            this.isFormChanged = false;
+            this.EnterpriseForm.disable(); // Deshabilitar el formulario después de la actualización
+            this.canEdit = false; // Deshabilitar el checkbox de edición
+            // this.toggleForm({ target: { checked: false } }); // Desmarcar el checkbox de edición
+          },
+          error: (err) => {
+            console.error('Error al actualizar la información de la empresa', err);
+            Swal.fire({
+              icon: "error",
+              title: `${err.statusText}`,
+              text: `${err.error.message}`
+            });
+          },
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: `Error`,
+          text: `El formulario es inválido o no se encuentra activo para actualizar`,
+        });
+      }
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: `Error`,
+        text: `El formulario no se encuentra activo para actualizar`,
+      });
+    }
+  }
+
   onSubmit(): void {
     if (this.EnterpriseForm.valid) {
-      const formData = this.EnterpriseForm.value;
-      this.enterpriseService.updateInformationEnterprise(this.id, formData).subscribe({
+      const formData = this.EnterpriseForm.getRawValue();
+      this.storeService.addStore(formData).subscribe({
         next: (res: any) => {
           Swal.fire({
             position: "top-end",
             icon: "success",
+            title: `Éxito`,
             text: `${res.message}`,
             showConfirmButton: false,
-            timer: 1500
+            timer: 2000
           });
-
-          // Actualizar valores iniciales
-          this.initialFormValues = this.EnterpriseForm.value;
-          this.isFormChanged = false;
         },
         error: (err) => {
-          console.error('Error al actualizar la información de la empresa', err);
+          console.error('Error al registrar la información de la empresa', err);
           Swal.fire({
             icon: "error",
             title: `${err.statusText}`,
@@ -111,12 +240,15 @@ export default class EnterpriseInformationComponent {
         },
       });
     } else {
+      console.log('Formulario inválido', this.EnterpriseForm.errors);
       Swal.fire({
         icon: "error",
-        title: `Formulario inválido`,
+        title: `Error`,
+        text: `El formulario es inválido`,
       });
     }
   }
+
 
   onFileChange(event: any) {
     const file = event.target.files[0];
@@ -138,7 +270,7 @@ export default class EnterpriseInformationComponent {
       this.isUploading = true;
       this.uploadProgress = 0;
 
-      this.enterpriseService.uploadLogo(enterpriseId, this.selectedFile).subscribe({
+      this.storeService.uploadLogo(enterpriseId, this.selectedFile).subscribe({
         next: (event: any) => {
           if (event.type === HttpEventType.UploadProgress) {
             // Calcular el progreso
@@ -170,4 +302,17 @@ export default class EnterpriseInformationComponent {
       });
     }
   }
+
+  toggleForm(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    this.canEdit = isChecked;
+
+    if (this.canEdit) {
+      this.EnterpriseForm.enable();
+      this.alertsService.showInfo('Formulario habilitado para editar', 'Formulario habilitado');
+    } else {
+      this.EnterpriseForm.disable();
+    }
+  }
+
 }

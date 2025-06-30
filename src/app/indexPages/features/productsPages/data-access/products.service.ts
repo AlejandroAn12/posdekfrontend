@@ -22,6 +22,10 @@ export class ProductsService {
     return this.http.get(`${environment.API_URL}/products/all`);
   }
 
+  getEarnings() {
+    return this.http.get(`${environment.API_URL}/products/all-earnings`);
+  }
+
   getTotalProducts() {
     return this.http.get(`${environment.API_URL}/products/total-products`);
   }
