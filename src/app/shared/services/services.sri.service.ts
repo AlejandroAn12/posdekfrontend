@@ -12,6 +12,6 @@ export class SriService {
     private http = inject(HttpClient);
 
     consultarRuc(ruc: string): Observable<{ existe: boolean, data: [] }> {
-        return this.http.get<{ existe: boolean, data: [] }>(`${environment.API_SERVICES}?ruc=${ruc}`);
+        return this.http.get<{ existe: boolean, data: [] }>(`${environment.API_URL}?ruc=${ruc}`);
     }
 }
