@@ -2,7 +2,7 @@ import { Component, inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { InventoryService } from '../../data-access/inventory.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,9 +19,9 @@ export default class HistoryInventoryComponent implements OnInit {
     this.loadDataTable();
   }
 
-  private renderer = inject(Renderer2);
   private alertsService = inject(AlertService);
   private inventoryService = inject(InventoryService);
+  private renderer = inject(Renderer2);
 
   dtOptions: Config = {};
 
@@ -41,7 +41,7 @@ export default class HistoryInventoryComponent implements OnInit {
     this.dtOptions = {
 
       ajax: (dataTablesParameters: any, callback) => {
-        this.inventoryService.getAllInventory().subscribe({
+        this.inventoryService.getAllInventoryFinished().subscribe({
           next: (resp) => {
             callback({
               data: resp.data ?? []
@@ -58,9 +58,9 @@ export default class HistoryInventoryComponent implements OnInit {
         emptyTable: "No hay información disponible",
         loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
         zeroRecords: "No se encontraron resultados",
-        search: "Buscar inventario:", // Cambia el texto del buscador
+        search: "Buscar:", // Cambia el texto del buscador
         lengthMenu: "",
-        info: "Inventarios totales: _TOTAL_",
+        info: "Inventarios: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -68,11 +68,11 @@ export default class HistoryInventoryComponent implements OnInit {
       },
       lengthMenu: [10],
       columns: [
-        { title: 'Código', data: 'numberInventory' },
-        { title: 'Categoria', data: 'category.name' },
-        { title: 'Fecha', data: 'createdAt' },
-        { title: 'Estado', data: 'status.name' },
-        { title: 'Generado por', data: 'user' },
+        { title: 'Código', data: 'numberInventory', className: 'text-sm text-gray-500' },
+        { title: 'Categoria', data: 'category.name', className: 'text-sm text-gray-500' },
+        { title: 'Fecha', data: 'createdAt', className: 'text-sm text-gray-500' },
+        { title: 'Estado', data: 'status.name', className: 'text-sm text-gray-500' },
+        { title: 'Generado por', data: 'user', className: 'text-sm text-gray-500' },
         {
           title: 'Opciones',
           data: null,
@@ -80,21 +80,24 @@ export default class HistoryInventoryComponent implements OnInit {
             return `
             <div>
 
-                  <button class="btn-print border border-green-600 w-10 hover:bg-green-600 text-sm text-green-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                          <i class="fa-solid fa-eye"></i>
+                  <button class="btn-print bg-green-500 hover:bg-green-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                          <i class="fa-solid fa-eye mr-1"></i>
+                          Ver documento
                   </button>
 
-                  <button class="btn-print border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                          <i class="fa-solid fa-print"></i>
+                  <button class="btn-print bg-red-500 hover:bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                          <i class="fa-solid fa-print mr-1"></i>
+                          Imprimir
                   </button>
 
-                  <button class="btn-download border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                          <i class="fa-solid fa-download"></i>
+                  <button class="btn-download bg-blue-500 hover:bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                          <i class="fa-solid fa-download mr-1"></i>
+                          Descargar
                   </button>
 
             </div>`;
           },
-          className: 'action-column'
+          className: 'action-column text-gray-500 text-sm'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {

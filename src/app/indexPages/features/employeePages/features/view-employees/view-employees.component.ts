@@ -5,12 +5,12 @@ import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
 import { CommonModule } from '@angular/common';
-import { RoleService } from '../../../../../shared/services/role.service';
-import { IRole } from '../../../../../shared/interfaces/role.interface';
+import { RoleService } from '../../../../../core/services/role.service';
+import { IRole } from '../../../../../core/models/role.interface';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { Router } from '@angular/router';
 
 @Component({

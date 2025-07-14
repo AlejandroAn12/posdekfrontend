@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
-import { AlertService } from '../../../../../shared/services/alerts.service';
-import { SriService } from '../../../../../shared/services/services.sri.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
+import { SriService } from '../../../../../core/services/services.sri.service';
 
 @Component({
   selector: 'app-enterprise-information',

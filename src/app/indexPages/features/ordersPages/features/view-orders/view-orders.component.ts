@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { SuppliersService } from '../../../supplierPages/data-access/suppliers.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { OrdersService } from '../../data-access/orders.service';
 import Swal from 'sweetalert2';
 
@@ -34,7 +34,7 @@ export default class ViewOrdersComponent {
         this.suppliers = response.suppliers;
       },
       error: (err) => {
-        this.alertsService.showError(err.error.message,'')
+        this.alertsService.showError(err.error.message, '')
       },
     });
   }
@@ -42,10 +42,10 @@ export default class ViewOrdersComponent {
   onSupplierChange(event: any): void {
     const supplierId = event.target.value;
     this.selectedSupplierId = supplierId;
-  
+
     // Limpia la lista de productos seleccionados y la tabla
     this.selectedProducts = [];
-  
+
     // Carga los productos del proveedor seleccionado
     this.supplierService.getProductsBySupplier(supplierId).subscribe({
       next: (response) => {
@@ -56,7 +56,7 @@ export default class ViewOrdersComponent {
       },
     });
   }
-  
+
 
 
 
@@ -70,7 +70,7 @@ export default class ViewOrdersComponent {
       this.orderItems.push({
         id: selectedProduct.id,
         name: selectedProduct.name,
-        unitPrice: selectedProduct.purchase_price,
+        unitPrice: selectedProduct.purchasePrice,
         quantity: 1,
       });
     }
@@ -97,38 +97,31 @@ export default class ViewOrdersComponent {
 
 
     Swal.fire({
-          title: "Generar pedido",
-          text: "Desea generar el nuevo pedido?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, generar!",
-          cancelButtonText: "No, cancelar!",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.ordersService.generateOrder(order).subscribe({
-              next: (response: any) => {
-                // Manejar la respuesta del backend
-                // this.alertsService.showSuccess(`${response.message}`, `${response.title}`);
-                Swal.fire({
-                  title: `${response.title}`,
-                  text: `${response.message}`,
-                  icon: "success"
-                });
-                this.resetOrderForm();
-              },
-              error: (err) => {
-                this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-              },
+      title: "¿Estás listo para continuar?",
+      text: "Estás a punto de generar un nuevo pedido. ¿Deseas continuar con esta acción?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, generar pedido",
+      cancelButtonText: "No, volver atrás",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.ordersService.generateOrder(order).subscribe({
+          next: (response: any) => {
+            Swal.fire({
+              title: `${response.title}`,
+              text: `${response.message}`,
+              icon: "success"
             });
-            
-          }
+            this.resetOrderForm();
+          },
+          error: (err) => {
+            this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
+          },
         });
-    
-
-    // Enviar la orden al backend
-    
+      }
+    });
   }
 
   resetOrderForm(): void {
@@ -139,51 +132,51 @@ export default class ViewOrdersComponent {
 
   addToTable(selectElement: HTMLSelectElement): void {
     const productId = selectElement.value;
-  
+
     if (!productId) {
       this.alertsService.showError('El valor del producto es inválido.', 'Error');
 
       return;
     }
-  
+
     const product = this.products.find((p) => p.id === productId);
-  
+
     if (!product) {
       this.alertsService.showError('Producto no encontrado.', 'Error');
       return;
     }
-  
+
     const existingProduct = this.selectedProducts.find((p) => p.id === productId);
     if (existingProduct) {
       this.alertsService.showWarning('El producto ya está en la lista.', 'Aviso');
       return;
     }
-  
+
     // Agrega el producto a la tabla
     this.selectedProducts.push({ ...product, quantity: 1 });
-  
+
     // Resetea el select
     selectElement.value = "";
   }
-  
-  
-  
+
+
+
 
   removeProduct(productId: string): void {
     this.selectedProducts = this.selectedProducts.filter((p) => p.id !== productId);
-  
+
     // Opcional: resetear el select al eliminar
     const selectElement = document.querySelector('#productSelect') as HTMLSelectElement;
     if (selectElement) {
       selectElement.value = "";
     }
   }
-  
-  
+
+
 
   getTotal(): number {
     return this.selectedProducts.reduce(
-      (sum, product) => sum + product.quantity * product.purchase_price,
+      (sum, product) => sum + product.quantity * product.purchasePrice,
       0
     );
   }
@@ -192,8 +185,8 @@ export default class ViewOrdersComponent {
     return product.id;
   }
 
-  cleanFilters(){
+  cleanFilters() {
     // this.suppliers = [];
   }
-  
+
 }

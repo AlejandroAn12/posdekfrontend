@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { AuthStateService } from '../../../shared/services/auth-state.service';
+import { AuthStateService } from '../../../core/services/auth-state.service';
 import { Router } from '@angular/router';
 import { OrdersService } from '../ordersPages/data-access/orders.service';
 import { Config } from 'datatables.net';

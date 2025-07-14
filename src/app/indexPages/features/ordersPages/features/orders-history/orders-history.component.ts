@@ -4,7 +4,7 @@ import { Config } from 'datatables.net';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OrdersService } from '../../data-access/orders.service';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { Subject } from 'rxjs';
 import { OrderReportService } from '../../data-access/reports.service';
 
@@ -38,7 +38,7 @@ export default class OrdersHistoryComponent implements OnInit {
             });
           },
           error: (err) => {
-            this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+            // this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
             callback({ data: [] });
           }
         });
@@ -48,9 +48,9 @@ export default class OrdersHistoryComponent implements OnInit {
         emptyTable: "No hay información disponible",
         loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
         zeroRecords: "No se encontraron resultados",
-        search: "Buscar pedido:", // Cambia el texto del buscador
+        search: "Buscar:", // Cambia el texto del buscador
         lengthMenu: "",
-        info: "Total de registros: _TOTAL_",
+        info: "órdenes: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -58,8 +58,8 @@ export default class OrdersHistoryComponent implements OnInit {
       },
       lengthMenu: [10],
       columns: [
-        { title: 'N°', data: 'numberOrder' },
-        { title: 'Proveedor', data: 'supplier.company_name' },
+        { title: '# Orden', data: 'numberOrder', className: 'text-sm text-gray-500' },
+        { title: 'Proveedor', data: 'supplier.company_name', className: 'text-sm text-gray-500' },
         {
           title: 'Total', data: 'totalAmount',
           render: (data: any) => {
@@ -67,11 +67,11 @@ export default class OrdersHistoryComponent implements OnInit {
               style: 'currency',
               currency: 'USD'
             }).format(data);
-          }
+          }, className: 'text-sm text-gray-500'
         },
-        { title: 'Fecha de generación', data: 'orderDate' },
-        {title: 'Estado', data: 'typeofstatus.name'},
-        { title: 'Responsable', data: 'user' },
+        { title: 'Fecha de generación', data: 'orderDate', className: 'text-sm text-gray-500' },
+        {title: 'Estado', data: 'typeofstatus.name', className: 'text-sm text-gray-500'},
+        { title: 'Responsable', data: 'user', className: 'text-sm text-gray-500' },
 
 
 
@@ -92,7 +92,7 @@ export default class OrdersHistoryComponent implements OnInit {
 
             </div>`;
           },
-          className: 'action-column'
+          className: 'action-column text-sm text-gray-500'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {

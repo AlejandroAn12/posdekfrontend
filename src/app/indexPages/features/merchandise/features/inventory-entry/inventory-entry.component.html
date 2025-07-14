@@ -1,0 +1,64 @@
+<div class="bg-blue-700 p-5">
+  <div class="text-white font-semibold">
+    <h1 class="text-2xl uppercase">Ingreso de inventario</h1>
+  </div>
+</div>
+
+<div class="header mt-5">
+  <h2 class="text-lg font-semibold text-gray-600">
+    Fecha de ingreso: 01/07/2025
+  </h2>
+  <h2 class="text-lg font-semibold text-gray-600">
+    Usuario responsable: Rodrigo Fernandez
+  </h2>
+  <p class="mt-5 mb-5 text-sm text-blue-500 dark:text-white font-semibold">
+    <i class="fa-solid fa-circle-info mr-1"></i>
+    Recuerde ingresar la cantidad que tiene en físico.
+  </p>
+</div>
+
+<!-- TABLA -->
+
+<div class="h-full w-full bg-white mt-10">
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-white">
+      <thead
+        class="text-xs text-gray-500 uppercase bg-gray-300 dark:bg-blue-600 dark:text-white"
+      >
+        <tr>
+          <th class="px-6 py-3">Cód. de barra</th>
+          <th class="px-6 py-3">Cód. interno</th>
+          <th class="px-6 py-3">Producto</th>
+          <th class="px-6 py-3">Stock sistema</th>
+          <th class="px-6 py-3">Stock Físico</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let item of inventoryItems"
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+        >
+          <td class="px-6 py-4">{{ item.barcode }}</td>
+          <td class="px-6 py-4">{{ item.code }}</td>
+          <td class="px-6 py-4">{{ item.name }}</td>
+          <td class="px-6 py-4">{{ item.quantity }}</td>
+          <td class="px-6 py-4">
+            <input
+              type="number"
+              min="0"
+              class="rounded-lg dark:bg-gray-700"
+              [(ngModel)]="item.physicalQuantity"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<button
+  class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+  (click)="saveInventory()"
+>
+  Guardar inventario
+</button>

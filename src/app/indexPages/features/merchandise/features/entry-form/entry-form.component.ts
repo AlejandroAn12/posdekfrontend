@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { OrdersService } from '../../../ordersPages/data-access/orders.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MerchandiseService } from '../../data-access/merchandise.service';
@@ -40,7 +40,12 @@ export default class IncomeFormComponent {
     const data = this.form.value.orderNumber;
 
     if (!data) {
-      this.alertsService.showError('Debe introducir el número del pedido', 'Error');
+      Swal.fire({
+        title: 'Error',
+        text: 'Debe introducir el número del pedido. Inténtalo de nuevo.',
+        icon: 'error',
+        confirmButtonText: 'Entendido'
+      });
       return;
     }
 
@@ -84,32 +89,32 @@ export default class IncomeFormComponent {
       this.alertsService.showError('Revise las cantidades ingresadas', 'Error');
       return;
     }
-    if(this.items.value.quantity <= 0) {
+    if (this.items.value.quantity <= 0) {
       this.alertsService.showError('La cantidad recibida debe ser mayor a 0', 'Error');
     }
-  
+
     const orderId = this.order.id;
     const items = this.items.value.map((item: any) => ({
       id: item.id,
       quantity: item.quantityReceived,
     }));
-  
+
     Swal.fire({
       title: 'Guardar pedido',
-      text: '¿Desea guardar el pedido ingresado?',
+      text: '¿Seguro que quiere guardar el pedido?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, guardar!',
-      cancelButtonText: 'No, cancelar!',
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         this.sendOrderToBackend(orderId, items);
       }
     });
   }
-  
+
   private sendOrderToBackend(orderId: string, items: any[]): void {
     Swal.fire({
       title: 'Guardando pedido...',
@@ -119,7 +124,7 @@ export default class IncomeFormComponent {
         Swal.showLoading();
       }
     });
-  
+
     this.merchandiseService.entryProductStock(orderId, items).subscribe({
       next: () => {
         Swal.close();
@@ -128,12 +133,12 @@ export default class IncomeFormComponent {
       },
       error: (error) => {
         Swal.close();
-        // console.error('Error al actualizar stock:', error);
+        console.error('Error al actualizar stock:', error);
         this.alertsService.showError('Error al actualizar el stock', 'Error');
       },
     });
   }
-  
+
   private showSuccessAlert(): void {
     Swal.fire({
       title: 'Pedido guardado',
@@ -141,13 +146,13 @@ export default class IncomeFormComponent {
       icon: 'success',
     });
   }
-  
+
   private resetFormAfterSave(): void {
     this.form.reset();
     this.form.patchValue({ supplier: '', orderDate: '' });
     this.order = null;
   }
-  
+
 
   getQuantityControl(index: number): FormControl {
     return this.items.at(index).get('quantityReceived') as FormControl;

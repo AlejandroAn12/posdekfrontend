@@ -8,7 +8,7 @@ import { ModalComponent } from '../../../../../shared/features/components/modal/
 import { Config } from 'datatables.net';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 
 @Component({
   selector: 'app-view-categories',
@@ -76,7 +76,7 @@ export default class ViewCategoriesComponent implements OnInit {
       lengthMenu: [10],
       columns: [
         // { title: 'ID', data: 'id' },
-        { title: 'Nombre', data: 'name' },
+        { title: 'Nombre', data: 'name', className: 'text-sm text-gray-500' },
         {
           title: 'Habilitado',
           data: 'status',
@@ -85,27 +85,29 @@ export default class ViewCategoriesComponent implements OnInit {
               <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
           `;
           },
-          className: 'text-center' // Centrar la columna
+          className: 'text-center text-sm text-gray-500' // Centrar la columna
         },
-        { title: 'Fecha de registro', data: 'registration_date' },
+        { title: 'Fecha de registro', data: 'registration_date', className: 'text-sm text-gray-500' },
         {
-          title: 'Opciones',
+          title: 'Acciones',
           data: null,
           render: (data: any, type: any, row: any) => {
             return `
           <div>
 
-                <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                        <i class="fa-solid fa-pen-to-square"></i>
+                <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                        Editar
                 </button>
 
-                <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                        <i class="fa-solid fa-trash"></i>
+                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash mr-1"></i>
+                        Eliminar
                 </button>
 
           </div>`;
           },
-          className: 'action-column'
+          className: 'action-column text-gray-500 text-sm'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {
@@ -152,7 +154,7 @@ export default class ViewCategoriesComponent implements OnInit {
 
   updateCategorieStatus(categorie: any): void {
     this.categoriesService.updateCategoryStatus(categorie.id, categorie.status).subscribe({
-      next: (resp: any) => { 
+      next: (resp: any) => {
         this.alertsService.showSuccess(`${resp.message}`, `Información`)
       },
       error: (err) => this.alertsService.showError(`${err.error.message}`, `${err.statusText}`),

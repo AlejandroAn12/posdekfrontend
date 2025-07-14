@@ -8,30 +8,38 @@
   class="flex flex-col rounded mt-5 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
 >
   <div class="title-user m-3">
-    <h1 class="font-semibold uppercase">Usuario: {{ userLogged }}</h1>
-    <p class="text-sm text-gray-600 dark:text-gray-400 mt-5">
-      <i class="fa-solid fa-circle-info mr-1"></i>Primero debes seleccionar una categoria para poder generar el inventario.
+    <!-- <h1 class="font-semibold uppercase text-gray-500">
+      Usuario: {{ userLogged }}
+    </h1> -->
+    <p class="text-sm text-blue-600 font-semibold italic dark:text-gray-400 mt-5">
+      <i class="fa-solid fa-circle-info mr-1"></i>Primero debe seleccionar una
+      categoria para poder generar el inventario.
       <br />
     </p>
   </div>
 
   <div class="flex mt-5 ml-3 mb-3 w-auto h-auto">
     <div class="w-full mr-4 flex flex-row items-center">
-      <form [formGroup]="inventoryForm" class="flex flex-row items-center space-x-4">
+      <form
+        [formGroup]="inventoryForm"
+        class="flex flex-row items-center space-x-4"
+      >
         <select
           id="categoryId"
           formControlName="categoryId"
           class="rounded p-2 border border-gray-300 dark:bg-gray-800"
         >
-          <option value="" disabled selected class="text-gray-400">Selecciona una categoria</option>
+          <option value="" disabled selected class="text-gray-400">
+            Seleccione una categoria
+          </option>
           <option *ngFor="let category of categories" [value]="category.id">
             {{ category.name }}
           </option>
         </select>
-        
+
         <button
-        (click)="generateInventory()"
-          class="p-2 px-6 font-semibold text-white bg-blue-600 rounded-full"
+          (click)="generateInventory()"
+          class="p-2 px-6 font-semibold text-white bg-blue-600 rounded-md"
         >
           Generar inventario
         </button>
@@ -46,9 +54,10 @@
   ></table> -->
 </div>
 
- <table
-    datatable
-    [dtOptions]="dtOptions"
-    [dtTrigger]="dtTrigger"
-    class="row-border hover whitespace-nowrap"
-  ></table>
+<table
+id="inventoryTable"
+  datatable
+  [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
+  class="row-border hover whitespace-nowrap"
+></table>

@@ -1,18 +1,18 @@
 <!-- Contenedor 1 -->
 <div class="bg-blue-700 p-5">
   <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase">Generación de pedido</h1>
+    <h1 class="text-2xl uppercase">Generación de orden</h1>
   </div>
 </div>
 
 <!-- Final contenedor 1 -->
 <!-- Body Table-->
 <div
-  class="flex flex-col p-5 bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg shadow-md mt-5"
+  class="flex flex-col p-5 bg-white dark:bg-gray-900 dark:border-gray-700 rounded-lg mt-5"
 >
   <p class="mt-5 mb-5 text-sm text-blue-500 dark:text-white font-semibold">
     <i class="fa-solid fa-circle-info mr-1"></i>Recuerde que solo se puede
-    generar una órden por Proveedor.
+    generar una órden por proveedor.
   </p>
   <!-- Contenedor de Selects -->
   <div class="flex mt-15">
@@ -124,7 +124,7 @@
             <td
               class="px-6 py-4 whitespace-nowrap text-bold text-gray-900 dark:text-white"
             >
-              {{ product.quantity * product.purchase_price | currency }}
+              {{ product.quantity * product.purchasePrice | currency }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <button
@@ -143,7 +143,7 @@
   <!-- Final tabla -->
 
   <!-- Total de la orden de compra -->
-  <p class="font-bold ml-5 mt-5 dark:text-white">
+  <p class="font-bold ml-5 mt-5 text-xl text-gray-600 dark:text-white">
     Total: {{ getTotal() | currency }}
   </p>
 
@@ -151,7 +151,7 @@
   <button
     *ngIf="selectedProducts.length > 0"
     [disabled]="selectedProducts.length === 0"
-    class="ml-5 mt-3 bg-blue-600 hover:bg-blue-700 rounded-full p-2 font-semibold text-white w-64"
+    class="ml-5 mt-3 bg-blue-600 hover:bg-blue-700 rounded-md p-2 font-semibold text-white w-64"
     (click)="submitOrder()"
   >
     Generar pedido

@@ -1,6 +1,6 @@
 <!--Inicio del Header -->
 <div class="bg-blue-600 rounded-t-2xl p-5 mt-2">
-  <div class="flex flex-row">
+  <div class="flex flex-col sm:flex-row items-center sm:items-start">
     <div class="p-2">
       <img
         loading="lazy"
@@ -9,8 +9,10 @@
         alt="Bordered avatar"
       />
     </div>
-    <div class="p-1">
-      <h2 class="text-white font-semibold mt-1.5 text-2xl">Hola, {{ userLogged }}</h2>
+    <div class="p-1 text-center sm:text-left">
+      <h2 class="text-white font-semibold mt-1.5 text-2xl">
+        Hola, {{ userLogged }}
+      </h2>
       <p class="text-white font-medium text-sm">{{ role }}</p>
     </div>
   </div>
@@ -19,78 +21,94 @@
 
 <div class="bg-white dark:bg-gray-700">
   <!-- Cards -->
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 p-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-5">
     <!-- Card: Productos registrados -->
     <div
       class="bg-white dark:bg-gray-800 dark:hover:shadow-lg rounded-2xl border p-6 hover:shadow-lg transition-all"
     >
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
-        Productos registrados
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
+        PRODUCTOS
       </h2>
-      <p
-        class="text-4xl font-bold text-gray-800 dark:text-white"
-        [appCountUp]="TotalProducts"
-        [duration]="1000"
-        [formatCurrency]="false"
-      >
-        {{ TotalProducts }}
-      </p>
+      <div class="flex items-center justify-between flex-wrap">
+        <p
+          class="text-4xl font-bold text-gray-800 dark:text-white"
+          [appCountUp]="TotalProducts"
+          [duration]="1000"
+          [formatCurrency]="false"
+        ></p>
+        <i
+          class="fa-solid fa-boxes-stacked text-4xl text-gray-400 dark:text-gray-300"
+        ></i>
+      </div>
     </div>
 
     <!-- Card: Pedidos realizados -->
     <div
       class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
     >
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
-        Pedidos realizados
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
+        ORDENES DE COMPRAS
       </h2>
-      <p
-        class="text-4xl font-bold text-gray-800 dark:text-white"
-        [appCountUp]="TotalOrders"
-        [duration]="1000"
-        [formatCurrency]="false"
-      >
-        {{ TotalOrders }}
-      </p>
+      <div class="flex items-center justify-between flex-wrap">
+        <p
+          class="text-4xl font-bold text-gray-800 dark:text-white"
+          [appCountUp]="TotalOrders"
+          [duration]="1000"
+          [formatCurrency]="false"
+        ></p>
+        <i
+          class="fa-solid fa-cart-flatbed text-4xl text-gray-400 dark:text-gray-300"
+        ></i>
+      </div>
     </div>
 
     <!-- Card: Ganancias -->
     <div
       class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
     >
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
-        Ganancias estimadas
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
+        UTILIDAD ESTIMADA
       </h2>
-      <p
-        class="text-4xl font-bold text-green-600 dark:text-green-400"
-        [appCountUp]="TotalEarnings"
-        [duration]="1500"
-        [useSuffix]="true"
-        [formatCurrency]="true"
-        currency="CLP"
-        locale="es-CL"
-      >
-      </p>
+      <div class="flex items-center justify-between flex-wrap">
+        <p
+          class="text-4xl font-bold text-green-500 dark:text-white"
+          [appCountUp]="TotalEarnings"
+          [duration]="1500"
+          [useSuffix]="true"
+          [formatCurrency]="true"
+          currency="CLP"
+          locale="es-CL"
+        ></p>
+        <i
+          class="fa-solid fa-coins text-4xl text-yellow-400 dark:text-gray-300"
+        ></i>
+      </div>
     </div>
 
     <!-- Card: Tu Suscripción -->
     <div
       class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
     >
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
-        Tu Suscripción
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
+        SUSCRIPCIÓN
       </h2>
-      <p class="text-4xl font-bold text-gray-800 dark:text-white">Activa</p>
+      <div class="flex items-center justify-between flex-wrap">
+        <p class="text-4xl font-bold text-gray-800 dark:text-white">
+          Activa
+        </p>
+        <i
+          class="fa-solid fa-file-invoice text-4xl text-gray-400 dark:text-gray-300"
+        ></i>
+      </div>
     </div>
   </div>
-
   <!-- Fin de las Cards -->
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
     <!-- Gráfico de Ventas -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl border p-6">
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
-        Ventas
+      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
+        VENTAS
       </h2>
       <!-- <app-chart></app-chart> -->
     </div>
@@ -98,9 +116,9 @@
     <!-- Gráfico de Productos Vendidos -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl border p-6">
       <h2 class="text-sm text-gray-500 dark:text-gray-300 font-medium mb-1">
-        Productos Vendidos
+        PRODUCTOS VENDIDOS
       </h2>
       <!-- <app-chart-products></app-chart-products> -->
     </div>
-
+  </div>
 </div>

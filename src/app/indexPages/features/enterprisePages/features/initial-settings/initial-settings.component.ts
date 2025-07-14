@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { StoreService } from '../../data-access/enterprise.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlertService } from '../../../../../shared/services/alerts.service';
-import { TaxesService } from '../../../../../shared/services/taxes.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
+import { TaxesService } from '../../../../../core/services/taxes.service';
 
 @Component({
   selector: 'app-initial-settings',
@@ -27,17 +27,6 @@ export default class InitialSettingsComponent implements OnInit {
   
   constructor() {
     this.EnterpriseForm = this.fb.group({
-      name: ['', Validators.required],
-      company_name: ['', Validators.required],
-      logoURL: [''],
-      ruc: [],
-      legal_representative: ['', Validators.required],
-      address: ['', Validators.required],
-      phone: ['', Validators.required],
-      email: ['', Validators.required],
-      country: ['', Validators.required],
-      city: ['', Validators.required],
-      price_taxes: [false],
       work_taxes: [false],
       taxId: []
     });
@@ -68,6 +57,7 @@ export default class InitialSettingsComponent implements OnInit {
   
   save() {
     if (this.EnterpriseForm.invalid) {
+      console.log('Formulario inválido', this.EnterpriseForm.value);
       this.alertsService.showInfo('Por favor, complete los campos requeridos', 'Formulario incompleto');
       return;
     }

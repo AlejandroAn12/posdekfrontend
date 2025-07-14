@@ -49,4 +49,12 @@ export class ProductsService {
   deletedProduct(id: string) {
     return this.http.delete(`${environment.API_URL}/products/delete/${id}`)
   }
+
+  adjustProductStock(barcode: string, body: any) {
+    return this.http.post(`${environment.API_URL}/products/${barcode}/adjust-stock`, body);
+  }
+
+  movementProducts() {
+    return this.http.get(`${environment.API_URL}/products/movements`);
+  }
 }

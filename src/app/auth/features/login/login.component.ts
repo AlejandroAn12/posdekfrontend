@@ -34,20 +34,18 @@ export default class LoginComponent {
 
   onLogin() {
     if (this.loginForm.valid) {
-      // Crea un objeto con la interfaz ILogin
       const loginData: ILogin = this.loginForm.value;
-
       this.authService.login(loginData).subscribe({
-        next: (response) => {
-          this._router.navigateByUrl('index/dashboard');
-        },
+        next: () => this._router.navigateByUrl('index/dashboard'),
         error: (err) => {
-          // console.error('Error al iniciar sesión', {err});
-          Swal.fire({
-            icon: "error",
-            title: `Error`,
-            text: `${err.error.message}`
-          });
+          if (err.status === 500) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error del servidor',
+              text: 'El servidor no está disponible en este momento. Por favor, inténtalo más tarde.',
+              confirmButtonText: 'Entendido'
+            });
+          }
         },
       });
     }

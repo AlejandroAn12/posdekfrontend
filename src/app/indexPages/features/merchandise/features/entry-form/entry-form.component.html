@@ -5,7 +5,7 @@
 </div>
 <div
   id="card-body"
-  class="flex flex-col rounded mt-5 border border-gray-300 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800"
+  class="flex flex-col rounded mt-5 dark:border-gray-700 bg-white dark:bg-gray-800"
 >
   <!-- Formulario -->
   <div class="bg-white dark:bg-gray-900 p-4 space-y-4">
@@ -17,7 +17,7 @@
           <label
             for="orderNumber"
             class="text-sm font-semibold text-gray-600 dark:text-white"
-            >N° Pedido</label
+            ># Orden</label
           >
           <input
             formControlName="orderNumber"
@@ -30,18 +30,10 @@
         <div class="flex-grow mr-4 mt-5">
           <button
             (click)="searchOrder()"
-            class="bg-blue-600 text-white text-sm font-semibold rounded-full p-3 pr-5 pl-5 hover:bg-blue-700 mr-1"
+            class="bg-blue-600 text-white text-sm font-semibold rounded-md p-3 pr-5 pl-5 hover:bg-blue-700 mr-1"
           >
-            <i class="fa-solid fa-upload"></i> Cargar
+            Cargar
           </button>
-          <!-- Boton para limpiar campos -->
-          <!-- <button
-            (click)="btnResetForm()"
-            class="text-gray-800 border border-gray-300 text-sm font-semibold rounded-full p-3 pr-5 pl-5 hover:bg-gray-500 ml-1 dark:text-white"
-          >
-            <i class="fa-solid fa-eraser text-gray-500 dark:text-white"></i>
-            Limpiar
-          </button> -->
         </div>
       </div>
 
@@ -84,7 +76,7 @@
             class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-white"
           >
             <thead
-              class="text-xs text-white uppercase bg-blue-600 dark:bg-blue-600 dark:text-white"
+              class="text-xs text-gray-500 uppercase bg-gray-200 dark:bg-blue-600 dark:text-white"
             >
               <tr>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
@@ -160,9 +152,9 @@
 
           <button
             (click)="btnBack()"
-            class="text-gray-800 rounded-full border border-gray-300 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-3 pr-5 pl-5 w-auto hover:bg-gray-100"
+            class="text-gray-500 rounded-md dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-3 pr-5 pl-5 w-auto hover:bg-gray-100"
           >
-            Cancelar
+            Regresar
           </button>
         </div>
       </div>

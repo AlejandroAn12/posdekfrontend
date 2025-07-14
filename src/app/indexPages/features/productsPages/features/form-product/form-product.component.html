@@ -1,20 +1,23 @@
 <div class="bg-blue-700 p-5">
   <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase">Productos</h1>
+    <h1 class="text-2xl uppercase font-bold">Productos</h1>
   </div>
 </div>
 
-<div id="card-body" class="flex flex-col rounded mt-5">
+<div id="card-body" class="flex flex-col rounded mt-5 border">
   <!-- Título -->
   <div class="p-2 bg-gray-100">
-    <h1 class="text-sm font-semibold text-gray-500 uppercase">
-      Detalles del producto
+    <h1 class="text-xl font-semibold text-white p-2 bg-blue-600 uppercase">
+      {{ isUpdate ? "ACTUALIZACION DE PRODUCTO" : "NUEVO PRODUCTO" }}
     </h1>
   </div>
 
   <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-900 p-4 space-y-4">
-    <form [formGroup]="ProductForm">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+    <div class="title">
+      <h1 class="font-bold text-xl text-gray-500">DETALLE DEL PRODUCTO</h1>
+    </div>
+    <form [formGroup]="form">
       <!-- Primera fila -->
       <div class="flex mt-5 mb-5">
         <div class="w-42 mr-4">
@@ -73,22 +76,32 @@
       </div>
 
       <div class="flex mt-5 mb-5">
-        <div class="w-1/3 mr-4">
+        <div class="w-full mr-4">
           <label
             for="barcode"
             class="text-sm font-semibold text-gray-500 dark:text-white"
-            >Código de barra</label
+            ><i class="fa-solid fa-barcode mr-1"></i>Código de barra</label
           >
           <input
             formControlName="barcode"
+            placeholder="Escanee o ingrese el código de barras"
             type="text"
             id="barcode"
+            [ngClass]="{
+              'border-red-500': f['barcode'].invalid && f['barcode'].touched
+            }"
             class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['barcode'].invalid && f['barcode'].touched"
+            class="text-red-500 text-sm"
+          >
+            El código de barras es obligatorio y debe tener 13 dígitos.
+          </div>
         </div>
       </div>
       <div class="flex mt-5 mb-5">
-        <div class="w-2/3">
+        <div class="w-full mr-4">
           <label
             for="name"
             class="text-sm font-semibold text-gray-500 dark:text-white"
@@ -96,9 +109,10 @@
           >
           <input
             formControlName="name"
+            placeholder="Ingrese el nombre del producto o servicio"
             type="text"
             id="name"
-            class="rounded text-sm p-2 block w-96 border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
       </div>
@@ -107,13 +121,13 @@
       <div class="flex mt-5 mb-5">
         <div class="w-42 mr-4">
           <label
-            for="unitOfmeasurementId"
+            for="unitOfMeasurementId"
             class="text-sm font-semibold text-gray-500 dark:text-white"
             >Unidad de medida</label
           >
           <select
-            formControlName="unitOfmeasurementId"
-            id="unitOfmeasurementId"
+            formControlName="unitOfMeasurementId"
+            id="unitOfMeasurementId"
             class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           >
             <option value="" disabled selected>
@@ -124,16 +138,16 @@
             </option>
           </select>
         </div>
-        <div class="w-24 mr-4">
+        <div class="w-36 mr-4">
           <label
-            for="stock"
+            for="addStock"
             class="text-sm font-semibold text-gray-500 dark:text-white"
             >Stock</label
           >
           <input
-            formControlName="stock"
+            formControlName="addStock"
             type="number"
-            id="stock"
+            id="addStock"
             class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
@@ -143,22 +157,22 @@
       <div class="flex mt-10 mb-5">
         <div class="w-42 mr-4">
           <label
-            for="purchase_price"
+            for="purchasePrice"
             class="text-sm font-semibold text-gray-500 dark:text-white"
           >
             $ Precio de compra <small>(Proveedor)</small>
           </label>
           <input
-            formControlName="purchase_price"
+            formControlName="purchasePrice"
             type="text"
-            id="purchase_price"
+            id="purchasePrice"
             class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
             placeholder="$ 0.00"
           />
         </div>
         <div class="w-42">
           <label
-            for="sale_price"
+            for="salePrice"
             class="text-sm font-semibold text-gray-500 dark:text-white"
           >
             $ Precio de venta <small>(Público)</small>
@@ -178,10 +192,10 @@
           </div> -->
           <!-- Final Tooltip -->
           <input
-            formControlName="sale_price"
+            formControlName="salePrice"
             type="text"
-            id="sale_price"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            id="salePrice"
+            class="rounded text-sm p-2 block w-52 border border-gray-300 dark:bg-gray-800"
             placeholder="$ 0.00"
           />
         </div>
@@ -189,7 +203,7 @@
 
       <!-- Quinta fila -->
       <div class="flex mt-5 mb-5">
-        <div class="w-1/3 mr-4">
+        <div class="w-full mr-4">
           <label
             for="barcode"
             class="text-sm font-semibold text-gray-500 dark:text-white"
@@ -197,6 +211,7 @@
           >
           <textarea
             formControlName="description"
+            placeholder="Ingrese una descripción breve del producto o servicio"
             class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
             id="barcode"
           ></textarea>
@@ -205,10 +220,10 @@
 
       <!-- Quinta fila -->
       <div class="flex mt-5 mb-5">
-        <div class="w-1/3 mr-4">
+        <div class="mr-4">
           <button
             (click)="btnBack()"
-            class="text-gray-500 rounded-md  dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-3 pr-5 pl-5 w-auto hover:bg-gray-100 mr-2"
+            class="text-gray-500 rounded-md hover:bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-3 pr-5 pl-5 w-auto mr-2"
           >
             Cancelar
           </button>

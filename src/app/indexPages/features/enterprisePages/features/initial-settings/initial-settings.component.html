@@ -50,39 +50,6 @@
           </div>
         </div>
 
-        <div>
-          <label class="text-sm font-semibold text-gray-600 dark:text-white"
-            >¿El precio de venta de productos incluye impuestos?</label
-          >
-          <!-- ToolTip -->
-          <div class="relative group inline-block">
-            <i class="fa-solid fa-circle-info text-indigo-500 ml-2"></i>
-            <div
-              class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-40 bg-gray-900 text-white text-sm px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            >
-              <small>Si su opción es "NO" el impuesto por defecto es sobre el 15% según lo estipulado en el Reglamento Tributario.</small>
-            </div>
-          </div>
-          <!-- Final Tooltip -->
-          <div class="flex space-x-4 mt-2">
-            <label class="inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                class="sr-only peer"
-                formControlName="price_taxes"
-              />
-              <div
-                class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-              ></div>
-              <span
-                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                {{ EnterpriseForm.get("price_taxes")?.value ? "Sí" : "No" }}
-              </span>
-            </label>
-          </div>
-        </div>
-
         <div *ngIf="showSelectTypeTaxes">
           <label for="tipoImpuesto" class="text-sm font-semibold text-gray-600 dark:text-white"
             >Tipo de impuesto</label

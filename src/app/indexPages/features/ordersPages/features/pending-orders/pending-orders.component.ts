@@ -5,7 +5,7 @@ import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { OrdersService } from '../../data-access/orders.service';
 import { Subject } from 'rxjs';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 
 @Component({
   selector: 'app-pending-orders',
@@ -49,7 +49,7 @@ export default class PendingOrdersComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Total de registros: _TOTAL_",
+        info: "Pedidos: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -57,10 +57,11 @@ export default class PendingOrdersComponent implements OnInit {
       },
       lengthMenu: [10],
       columns: [
-        { title: 'N° Pedido', data: 'numberOrder' },
-        { title: 'Proveedor', data: 'supplier.company_name' },
+        { title: '# Orden', data: 'numberOrder', className: 'text-sm text-gray-500' },
+        { title: 'Proveedor', data: 'supplier.company_name', className: 'text-sm text-gray-500' },
         {
-          title: 'Total', data: 'totalAmount',
+          title: 'Valor total', data: 'totalAmount',
+          className: 'text-sm text-gray-500',
           render: (data: any) => {
             return new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -68,9 +69,9 @@ export default class PendingOrdersComponent implements OnInit {
             }).format(data);
           }
         },
-        { title: 'Fecha de generación', data: 'orderDate' },
-        { title: 'Estado', data: 'typeofstatus.name' },
-        { title: 'Responsable', data: 'user' },
+        { title: 'Fecha de generación', data: 'orderDate', className: 'text-sm text-gray-500' },
+        { title: 'Estado', data: 'typeofstatus.name', className: 'text-sm text-gray-500' },
+        { title: 'Responsable', data: 'user', className: 'text-sm text-gray-500' },
       ],
     };
 

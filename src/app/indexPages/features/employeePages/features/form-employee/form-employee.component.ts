@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { EmployeeService } from '../../data-access/employee.service';
 import { CommonModule } from '@angular/common';
-import { IRole } from '../../../../../shared/interfaces/role.interface';
-import { RoleService } from '../../../../../shared/services/role.service';
+import { IRole } from '../../../../../core/models/role.interface';
+import { RoleService } from '../../../../../core/services/role.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 

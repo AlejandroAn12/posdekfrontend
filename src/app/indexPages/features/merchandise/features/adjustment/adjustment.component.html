@@ -1,5 +1,95 @@
 <div class="bg-blue-700 p-5">
   <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase">Ajuste de mercadería</h1>
+    <h1 class="text-2xl uppercase">Ajuste de inventario</h1>
   </div>
+</div>
+
+<div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+  <form [formGroup]="form" class="space-y-4">
+    <div class="mb-4">
+      <label
+        for="movementTypeId"
+        class="block mb-2 text-sm font-medium text-gray-600 dark:text-white"
+        >Motivo de ajuste</label
+      >
+      <select
+        formControlName="movementTypeId"
+        id="movementTypeId"
+        [ngClass]="{
+          'border-red-500': f.movementTypeId.invalid && f.movementTypeId.touched
+        }"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        <option class="font-semibold" *ngIf="movementTypes.length > 0" value="">
+          Seleccione un motivo para el ajuste
+        </option>
+        <option *ngIf="movementTypes.length < 1" class="font-semibold" value="">
+          No hay motivos de ajustes disponibles
+        </option>
+        <option *ngFor="let type of movementTypes" [value]="type.id">
+          {{ type.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="f.movementTypeId.invalid && f.movementTypeId.touched"
+        class="text-red-500 text-sm"
+      >
+        Debe seleccionar un motivo para el ajuste
+      </div>
+    </div>
+    <div class="mb-4">
+      <label
+        class="block mb-2 text-gray-600 font-semibold text-sm"
+        for="barcode"
+        >Codigo de barra</label
+      >
+      <input
+        type="text"
+        formControlName="barcode"
+        id="barcode"
+        [ngClass]="{
+          'border-red-500': f.barcode.invalid && f.barcode.touched
+        }"
+        placeholder="7861042548041"
+        class="text-sm rounded-md border-gray-300"
+      />
+      <div
+        *ngIf="f.barcode.invalid && f.barcode.touched"
+        class="text-red-500 text-sm"
+      >
+        Este campo es obligatorio y debe ser un código EAN-13 válido
+      </div>
+    </div>
+    <div class="mb-4">
+      <label
+        class="block mb-2 text-gray-600 font-semibold text-sm"
+        for="quantity"
+        >Cantidad</label
+      >
+      <input
+        type="number"
+        formControlName="quantity"
+        id="quantity"
+        min="0"
+        [ngClass]="{
+          'border-red-500': f.quantity.invalid && f.quantity.touched
+        }"
+        placeholder="0"
+        class="text-sm rounded-md border-gray-300"
+      />
+      <div
+        *ngIf="f.quantity.invalid && f.quantity.touched"
+        class="text-red-500 text-sm"
+      >
+        Este campo es obligatorio
+      </div>
+    </div>
+  </form>
+  <button
+    (click)="OnSubmit()"
+    class="text-sm font-semibold p-3 bg-blue-600 text-white hover:bg-blue-700 rounded-md mt-5"
+  >
+    <i class="fa-solid fa-floppy-disk mr-1"></i>
+    Ajustar
+  </button>
 </div>

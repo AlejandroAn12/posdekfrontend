@@ -8,7 +8,7 @@ import { ModalComponent } from '../../../../../shared/features/components/modal/
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -93,7 +93,7 @@ export default class ViewSuppliersComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Total de registros: _TOTAL_",
+        info: "Proveedores: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -102,23 +102,23 @@ export default class ViewSuppliersComponent implements OnInit {
       lengthMenu: [10],
       columns: [
         // { title: 'ID', data: 'id' },
-        { title: 'N° RUC', data: 'ruc' },
-        { title: 'Nombre de proveedor', data: 'company_name' },
-        { title: 'Correo electrónico', data: 'email' },
-        { title: 'Teléfono', data: 'phone' },
-        { title: 'Ciudad', data: 'city' },
-        { title: 'Fecha de registro', data: 'registration_date' },
-        { title: 'Fecha de actualización', data: 'lastUpdated_date' },
+        { title: 'N° Ruc', data: 'ruc', className: 'text-gray-500 text-sm' },
+        { title: 'Nombre de proveedor', data: 'company_name', className: 'text-gray-500 text-sm' },
+        { title: 'Correo electrónico', data: 'email', className: 'text-gray-500 text-sm' },
+        { title: 'Teléfono', data: 'phone', className: 'text-gray-500 text-sm' },
+        { title: 'Ciudad', data: 'city', className: 'text-gray-500 text-sm' },
+        { title: 'Fecha de registro', data: 'registration_date', className: 'text-gray-500 text-sm' },
+        { title: 'Fecha de actualización', data: 'lastUpdated_date', className: 'text-gray-500 text-sm' },
 
         {
-          title: 'Vigente',
+          title: 'Habilitado',
           data: 'status',
           render: (data: any, type: any, row: any) => {
             return `
               <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
           `;
           },
-          className: 'text-center' // Centrar la columna
+          className: 'text-center text-sm text-gray-500' // Centrar la columna
         },
         {
           title: 'Opciones',
@@ -127,17 +127,19 @@ export default class ViewSuppliersComponent implements OnInit {
             return `
           <div>
 
-                <button class="btn-update border hover:bg-blue-600 w-10 text-sm text-blue-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                        <i class="fa-solid fa-pen-to-square"></i>
+                <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                        Editar
                 </button>
 
-                <button class="btn-delete border border-red-600 w-10 hover:bg-red-600 text-sm text-red-500 hover:text-white p-2 m-1 rounded-md" data-order-id="${row.id}">
-                        <i class="fa-solid fa-trash"></i>
+                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash mr-1"></i>
+                        Eliminar
                 </button>
 
           </div>`;
           },
-          className: 'action-column'
+          className: 'action-column text-gray-500 text-sm'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {

@@ -20,9 +20,14 @@ export default [
             import('./features/history-inventory/history-inventory.component'),
     },
     {
-        path: 'save-inventory',
+        path: 'entry-inventory/:id',
         loadComponent: () =>
-            import('./features/save-inventory/save-inventory.component'),
+            import('./features/inventory-entry/inventory-entry.component'),
+    },
+    {
+        path: 'movements-products',
+        loadComponent: () =>
+            import('./features/movements-products/movements-products.component'),
     }
 
 ] as Routes;

@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { SuppliersService } from '../../data-access/suppliers.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AlertService } from '../../../../../shared/services/alerts.service';
-import { TypeOfDocumentService } from '../../../../../shared/services/type-of-document.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
+import { TypeOfDocumentService } from '../../../../../core/services/type-of-document.service';
 
 @Component({
   selector: 'app-form-suppliers',

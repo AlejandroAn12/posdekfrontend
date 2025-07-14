@@ -5,9 +5,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
-import { RoleService } from '../../../../../shared/services/role.service';
-import { IRole } from '../../../../../shared/interfaces/role.interface';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { RoleService } from '../../../../../core/services/role.service';
+import { IRole } from '../../../../../core/models/role.interface';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
@@ -87,7 +87,7 @@ export default class ViewUsersComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "total de registros: _TOTAL_",
+        info: "Usuarios: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -95,11 +95,11 @@ export default class ViewUsersComponent implements OnInit {
       },
       lengthMenu: [10],
       columns: [
-        { title: 'Cod. Empleado', data: 'employee.codeEmployee', className: 'text-center text-sm text-gray-500' },
-        { title: 'Nombre Usuario', data: 'username', className: 'text-center text-sm text-gray-600' },
-        { title: 'Cargo Actual', data: 'role.name', className: 'text-center text-sm text-gray-600' },
-        { title: 'Fecha de registro', data: 'registration_date', className: 'text-center text-sm text-gray-500' },
-        { title: 'Fecha de actualización', data: 'lastUpdated_date', className: 'text-center text-sm text-gray-500' },
+        { title: 'Cod.', data: 'employee.codeEmployee', className: 'text-center text-sm text-gray-500' },
+        { title: 'Usuario', data: 'username', className: 'text-center text-sm text-gray-600' },
+        { title: 'Cargo', data: 'role.name', className: 'text-center text-sm text-gray-600' },
+        { title: 'Fecha de registro', data: 'createdAt', className: 'text-center text-sm text-gray-500' },
+        { title: 'Fecha de actualización', data: 'updatedAt', className: 'text-center text-sm text-gray-500' },
         {
           title: 'Habilitado', data: 'status',
           render: (data: any, type: any, row: any) => {
@@ -208,8 +208,12 @@ export default class ViewUsersComponent implements OnInit {
   updateProductStatus(credentials: any): void {
     this.authService.updateCredentialsStatus(credentials.id, credentials.status).subscribe({
       next: (res: any) => {
-        console.log(res)
-        this.alertsService.showSuccess(`${res.message}`, `Sistema`)
+        if(credentials.status) {
+          this.alertsService.showSuccess(`Credencial activada`, `${res.message}`);
+        }
+        else {
+        this.alertsService.showSuccess(`Credencial inactiva`, `${res.message}`)
+        }
       },
       error: (error) => this.alertsService.showError(`${error.error.message}`, `${error.statusText}`),
     });

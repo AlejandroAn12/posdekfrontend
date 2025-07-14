@@ -95,27 +95,18 @@
     >
       <i
         *ngIf="isDarkMode"
-        class="fa-solid fa-moon w-6 h-6 pb-10 animate-bounce ml-1 justify-center text-4xl"
+        class="fa-solid fa-moon w-6 h-6 pb-10 ml-1 text-lg bg-red-400"
       ></i>
       <i
         *ngIf="!isDarkMode"
-        class="fa-solid fa-sun w-6 h-6 text-yellow-300 pb-10 pr-3 justify-center mr-3 animate-bounce text-4xl"
+        class="fa-solid fa-sun w-6 h-6 text-yellow-300 pb-10 pr-3 justify-center mr-3 text-4xl"
       ></i>
-    </button>
-
-    <!-- boton whatsapp:soporte -->
-    <button
-      (click)="whatsApp()"
-      class="flex items-center bg-green-400 rounded-full p-3 text-white cursor-pointer mb-1"
-    >
-      <i class="fa-brands fa-whatsapp"></i>
-      <!-- <span class="ml-4 hidden group-hover:inline-block text-sm">Soporte WhatsApp</span> -->
     </button>
 
     <!-- botón de logOut -->
     <button
       (click)="logout()"
-      class="flex items-center text-white rounded-full p-3 bg-red-600 cursor-pointer mb-1 mt-2"
+      class="flex items-center text-red-500 hover:bg-red-400 hover:text-white p-3 cursor-pointer mb-1 mt-2"
     >
       <i class="fa-solid fa-right-from-bracket"></i>
       <!-- <span class="ml-4 hidden group-hover:inline-block text-sm ">Cerrar Sesión</span> -->

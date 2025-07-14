@@ -17,9 +17,7 @@
     ¡Hola!,
     <span class="bg-blue-600 text-white rounded-br-xl p-1">Bienvenido</span>
   </h1> -->
-  <p class="pb-5 text-gray-400 text-sm">
-    Inicia sesión con tus credenciales
-  </p>
+  <p class="pb-5 text-gray-400 text-sm">Inicia sesión con tus credenciales</p>
   <form
     [formGroup]="loginForm"
     (ngSubmit)="onLogin()"
@@ -80,9 +78,9 @@
         'bg-blue-600 hover:bg-blue-700': !loginForm.invalid,
         'bg-gray-300 cursor-not-allowed': loginForm.invalid
       }"
-      class="bg-blue-600 text-white text-sm font-semibold rounded-full p-3 w-full"
+      class="bg-blue-600 text-white text-sm font-semibold rounded-md p-3 w-full"
     >
-      Ingresar
+      Ingresar al sistema
     </button>
   </form>
 </div>

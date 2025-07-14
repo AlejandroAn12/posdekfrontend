@@ -5,7 +5,7 @@ import { IProduct } from '../../interface/product.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICategory } from '../../../categoriesPages/interface/icategories.interface';
 import { CategoriesService } from '../../../categoriesPages/data-access/categories.service';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { SuppliersService } from '../../../supplierPages/data-access/suppliers.service';
 import { ISupplier } from '../../../supplierPages/interface/supplier.interface';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
@@ -57,8 +57,8 @@ export default class ViewProductsComponent implements OnInit {
       barcode: ['', Validators.required],
       code: [{ value: '', disabled: this.isDisabled }],
       stock: [0, Validators.required],
-      purchase_price: [0, Validators.required],
-      sale_price: [0, Validators.required],
+      purchasePrice: [0, Validators.required],
+      salePrice: [0, Validators.required],
       supplierId: ['', Validators.required],
       categoryId: ['', Validators.required],
       description: ['', Validators.required],
@@ -91,7 +91,7 @@ export default class ViewProductsComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Total de registros: _TOTAL_",
+        info: "Productos: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -100,12 +100,12 @@ export default class ViewProductsComponent implements OnInit {
       lengthMenu: [10], // Cambia la cantidad de registros por página
       columns: [
         // { title: 'ID', data: 'id' },
-        { title: 'Código de barra', data: 'barcode', className: 'text-sm text-gray-500' },
-        { title: 'Código generado', data: 'code', className: 'text-sm text-gray-500' },
+        { title: 'Cód. de barra', data: 'barcode', className: 'text-sm text-gray-500' },
+        { title: 'Cód. interno', data: 'code', className: 'text-sm text-gray-500' },
         { title: 'Artículo/Servicio', data: 'name', className: 'text-sm text-gray-500' },
 
         {
-          title: 'Precio compra', data: 'purchase_price', className: 'text-sm text-gray-500',
+          title: 'Precio compra', data: 'purchasePrice', className: 'text-sm text-gray-500',
           render: (data: any) => {
             return new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -114,7 +114,7 @@ export default class ViewProductsComponent implements OnInit {
           }
         },
         {
-          title: 'Precio venta', data: 'sale_price', className: 'text-sm text-gray-500',
+          title: 'Precio venta', data: 'salePrice', className: 'text-sm text-gray-500',
           render: (data: any) => {
             return new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -123,7 +123,7 @@ export default class ViewProductsComponent implements OnInit {
           }
         },
         {
-          title: 'Precio venta | Impuesto', data: 'price_sale_tax', className: 'text-sm text-gray-500',
+          title: 'Precio venta | Impuesto', data: 'priceWithTax', className: 'text-sm text-gray-500',
           render: (data: any) => {
             return new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -137,7 +137,7 @@ export default class ViewProductsComponent implements OnInit {
         { title: 'Categoria', data: 'category.name', className: 'text-sm text-gray-500' },
         { title: 'Proveedor', data: 'supplier.company_name', className: 'text-sm text-gray-500' },
         {
-          title: 'Servicio', data: 'its_service',
+          title: 'Servicio', data: 'itsService',
           render: (data: any, type: any, row: any) => {
             return `
                 <input type="checkbox" class="service-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
@@ -156,7 +156,7 @@ export default class ViewProductsComponent implements OnInit {
           },
           className: 'text-center text-gray-500 text-sm' // Centrar la columna
         },
-        { title: 'Fecha de registro', data: 'registration_date', className: 'text-sm text-gray-500' },
+        { title: 'Fecha de registro', data: 'createdAt', className: 'text-sm text-gray-500' },
         {
           title: 'Acciones',
           data: null,
@@ -438,7 +438,7 @@ export default class ViewProductsComponent implements OnInit {
   }
 
   routeToNewProduct() {
-    this.router.navigate(['index/products/form']);
+    this.router.navigateByUrl('index/products/form');
   }
 
 

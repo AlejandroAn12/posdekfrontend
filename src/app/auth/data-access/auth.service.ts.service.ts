@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { ILogin } from '../interfaces/login.interface';
 import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
-import { StorageService } from '../../shared/services/storage.service';
+import { StorageService } from '../../core/services/storage.service';
 
 interface Session {
   access_token: string;

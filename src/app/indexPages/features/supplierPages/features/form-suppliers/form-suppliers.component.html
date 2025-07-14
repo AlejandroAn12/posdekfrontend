@@ -13,20 +13,20 @@
   </div>
 
   <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-900 p-4 space-y-6 border">
+  <div class="bg-white dark:bg-gray-900 p-4 space-y-6">
     <form [formGroup]="SupplierForm">
       <!-- Fila 1 -->
       <div class="flex flex-wrap gap-4">
         <div class="w-full sm:w-40 mt-5 mr-10">
           <label
             for="typeofdocumentId"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Tipo de documento<small class="text-red-600 text-lg">*</small></label
+            class="text-sm font-semibold text-gray-600 dark:text-white mb-1"
+            >Tipo de documento</label
           >
           <select
             formControlName="typeofdocumentId"
             id="typeofdocumentId"
-            class="rounded-md border-gray-300 dark:bg-gray-800"
+            class="rounded-md border-gray-300 text-sm dark:bg-gray-800"
           >
             <option value="" disabled selected>Tipo de documento</option>
             <option
@@ -41,39 +41,39 @@
           <label
             for="ruc"
             class="text-sm font-semibold text-gray-600 dark:text-white"
-            >N° Identificación<small class="text-red-600 text-lg">*</small></label
+            >N° Identificación</label
           >
           <input
             formControlName="ruc"
             id="ruc"
             type="text"
-            class="rounded-md border-gray-300 dark:bg-gray-800"
+            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
           />
         </div>
         <div class="flex-1 mt-5">
           <label
             for="company_name"
             class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Nombre del proveedor<small class="text-red-600 text-lg">*</small></label
+            >Nombre del proveedor</label
           >
           <input
             formControlName="company_name"
             id="company_name"
             type="text"
-            class="block w-full border border-gray-300 dark:bg-gray-800 rounded-md"
+            class="block w-full text-sm border border-gray-300 dark:bg-gray-800 rounded-md"
           />
         </div>
         <div class="flex-1 mt-5">
           <label
             for="legal_representative"
             class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Nombre de encargado<small class="text-red-600 text-lg">*</small></label
+            >Nombre de encargado</label
           >
           <input
             formControlName="legal_representative"
             id="legal_representative"
             type="text"
-            class="block w-full border border-gray-300 dark:bg-gray-800 rounded-md"
+            class="block w-full text-sm border border-gray-300 dark:bg-gray-800 rounded-md"
           />
         </div>
       </div>
@@ -84,13 +84,13 @@
           <label
             for="phone"
             class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Teléfono de contacto<small class="text-red-600 text-lg">*</small></label
+            >Teléfono de contacto</label
           >
           <input
             formControlName="phone"
             id="phone"
             type="tel"
-            class="rounded-md border-gray-300 dark:bg-gray-800"
+            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
             placeholder="+593 999 999 999"
           />
         </div>
@@ -98,13 +98,13 @@
           <label
             for="email"
             class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Correo electrónico<small class="text-red-600 text-lg">*</small></label
+            >Correo electrónico</label
           >
           <input
             formControlName="email"
             id="email"
             type="email"
-            class="rounded-md border-gray-300 dark:bg-gray-800"
+            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
             placeholder="proveedor@mail.com"
           />
         </div>
@@ -122,7 +122,7 @@
             formControlName="country"
             id="country"
             type="text"
-            class="rounded-md border-gray-300 dark:bg-gray-800"
+            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
             placeholder="Ecuador"
           />
         </div>
@@ -136,7 +136,7 @@
             formControlName="city"
             id="city"
             type="text"
-            class="rounded-md border-gray-300 dark:bg-gray-800"
+            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
             placeholder="Quito"
           />
         </div>
@@ -152,7 +152,7 @@
         <textarea
           formControlName="address"
           id="address"
-          class="rounded block w-full border border-gray-300 dark:bg-gray-800"
+          class="rounded text-sm block w-full border border-gray-300 dark:bg-gray-800"
         ></textarea>
       </div>
 
@@ -160,13 +160,13 @@
       <div class="flex gap-4 mt-5">
         <button
           (click)="btnBack()"
-          class="text-gray-800 rounded-full border border-gray-300 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-3 pr-5 pl-5 w-auto hover:bg-gray-100"
+          class="text-gray-600 font-semibold rounded-md dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm  p-3 pr-5 pl-5 w-auto hover:bg-gray-100"
         >
           Cancelar
         </button>
         <button
           (click)="saveSupplier()"
-          class="bg-blue-600 text-white text-sm font-semibold rounded-full p-3 pr-5 pl-5 hover:bg-blue-700"
+          class="bg-blue-600 text-white text-sm font-semibold rounded-md p-3 pr-5 pl-5 hover:bg-blue-700"
         >
           <i class="fa-solid fa-floppy-disk mr-1"></i>
           {{ isUpdate ? "Guardar cambios" : "Añadir" }}

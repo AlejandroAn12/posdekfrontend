@@ -6,9 +6,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { ICategory } from '../../../categoriesPages/interface/icategories.interface';
 import { ISupplier } from '../../../supplierPages/interface/supplier.interface';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnitOfMeasurementService } from '../../../../../shared/services/unit-of-measurement.service';
+import { UnitOfMeasurementService } from '../../../../../core/services/unit-of-measurement.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-product',
@@ -33,23 +34,25 @@ export default class FormProductComponent implements OnInit {
   productId: string | null = null;
 
 
-  ProductForm: FormGroup;
+  form: FormGroup;
   categories: ICategory[] = [];
   suppliers: ISupplier[] = [];
   unitsOfMeasurement: any[] = [];
 
   constructor() {
-    this.ProductForm = this.fB.group({
+    this.form = this.fB.group({
       name: ['', Validators.required],
-      barcode: ['', Validators.required],
+      barcode: ['', [Validators.required, Validators.pattern('^[0-9]{13}$')]],
       code: [{ value: '', disabled: this.isDisabled }],
-      stock: [0,Validators.required],
-      purchase_price: ['',Validators.required],
-      sale_price: ['', Validators.required],
+      addStock: [0, Validators.required],
+      purchasePrice: [0, Validators.required],
+      salePrice: [0, Validators.required],
       supplierId: ['', Validators.required],
       categoryId: ['', Validators.required],
       description: ['', Validators.required],
-      unitOfmeasurementId: ['', Validators.required]
+      unitOfMeasurementId: ['', Validators.required],
+      itsService: [false, Validators.required], // booleano
+      date: [new Date().toISOString(), Validators.required], // string ISO
     });
   }
 
@@ -95,11 +98,11 @@ export default class FormProductComponent implements OnInit {
     this.productService.getProductId(id).subscribe({
       next: (product: any) => {
         console.log(product);
-        this.ProductForm.patchValue({
+        this.form.patchValue({
           ...product,
-          supplierId: product.supplier.id ? product.supplier.id.toString() : '', 
+          supplierId: product.supplier.id ? product.supplier.id.toString() : '',
           categoryId: product.category.id ? product.category.id.toString() : '',
-          unitOfmeasurementId: product.unitOfMeasurement.id ? product.unitOfMeasurement.id.toString() : ''
+          unitOfMeasurementId: product.unitOfMeasurement.id ? product.unitOfMeasurement.id.toString() : ''
         });
       },
       error: (err) => {
@@ -121,18 +124,35 @@ export default class FormProductComponent implements OnInit {
   }
 
   saveProduct() {
-    if (this.ProductForm.invalid) {
-      this.alertsService.showError('Formulario vacío', '');
+    if (this.form.invalid) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Campos incompletos',
+        text: 'Por favor, complete todos los campos requeridos.',
+      })
+      console.error('Formulario inválido', this.form.value);
       return;
     }
 
-    const productData = this.ProductForm.value;
+    const formValue = this.form.value;
+    const productData = {
+      ...formValue,
+      purchasePrice: Number(formValue.purchasePrice),
+      salePrice: Number(formValue.salePrice),
+      addStock: Number(formValue.addStock),
+      itsService: Boolean(formValue.itsService),
+      date: String(formValue.date),
+    };
 
     if (this.isUpdate && this.productId) {
       // Actualizar producto
       this.productService.updateProduct(this.productId, productData).subscribe({
         next: (response: any) => {
-          this.alertsService.showSuccess(response.message, '');
+          Swal.fire({
+            icon: 'success',
+            title: 'Producto actualizado',
+            text: response.message,
+          });
           this.router.navigate(['/index/products/view']);
         },
         error: (err) => {
@@ -143,10 +163,15 @@ export default class FormProductComponent implements OnInit {
       // Crear producto
       this.productService.addProduct(productData).subscribe({
         next: (response) => {
-          this.alertsService.showSuccess(response.message, '');
+          Swal.fire({
+            icon: 'success',
+            title: 'Producto creado',
+            text: response.message,
+          });
           this.router.navigate(['/index/products/view']);
         },
         error: (err) => {
+          console.error(err.error.message);
           this.alertsService.showError(err.error.message, err.statusText);
         }
       });
@@ -156,23 +181,8 @@ export default class FormProductComponent implements OnInit {
   btnBack() {
     this.router.navigate(['/index/products/view']);
   }
-  // saveProduct() {
 
-  //   if(this.ProductForm.invalid) {
-  //     this.alertsService.showError('Error', 'Formulario invalido');
-  //   }
-  //   const newProduct = this.ProductForm.value;
-
-  //   this.productService.addProduct(newProduct).subscribe({
-  //     next: (response) => {
-  //       this.alertsService.showSuccess(`${response.message}`, ``)
-  //     },
-  //     error: (err) => {
-  //       this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
-  //     },
-  //   });
-  //   this.ProductForm.reset();
-  // }
-
-
+  get f() {
+    return this.form.controls;
+  }
 }

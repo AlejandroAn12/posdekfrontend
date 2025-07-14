@@ -4,7 +4,7 @@ import { AuthStateService } from "../services/auth-state.service";
 import { jwtDecode } from "jwt-decode";
 import { Router } from "@angular/router";
 import Swal from "sweetalert2";
-import { catchError, EMPTY, throwError } from "rxjs";
+import { catchError, EMPTY, finalize, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 
 
@@ -27,6 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
       const decoded: any = jwtDecode(token);
       const currentTime = Math.floor(Date.now() / 1000);
 
+      // Si el token ha expirado
       if (decoded.exp < currentTime) {
         const sessionId = decoded?.session?.[0]?.id;
 
@@ -38,30 +39,26 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
             title: 'Sesión expirada',
             text: 'Tu sesión ha caducado. Por favor, vuelve a iniciar sesión.',
             confirmButtonText: 'Entendido',
+            allowOutsideClick: false,
           }).then(() => {
-            router.navigate(['/auth/login']);
-          });
-
-          // Llamar al backend para invalidar la sesión
-          http.post(`${environment.API_URL}/auth/invalidate-session`, { sessionId }).subscribe({
-            complete: () => {
-              authState.logOut();
-              router.navigate(['/auth/login']).finally(() => {
-                setTimeout(() => isHandlingSessionExpired = false, 1000);
-              });
-            },
-            error: () => {
-              authState.logOut();
-              router.navigate(['/auth/login']).finally(() => {
-                setTimeout(() => isHandlingSessionExpired = false, 1000);
-              });
-            }
+            http.post(`${environment.API_URL}/auth/invalidate-session`, { sessionId }).pipe(
+              finalize(() => {
+                authState.logOut();
+                router.navigate(['/auth/login']).finally(() => {
+                  setTimeout(() => isHandlingSessionExpired = false, 1000);
+                });
+              })
+            ).subscribe({
+              next: () => {},
+              error: () => {}
+            });
           });
         }
 
-        return EMPTY; // Evitar que la solicitud continúe
+        return EMPTY; // Detener cualquier solicitud adicional
       }
 
+      // Si el token está vigente, agregarlo al header
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
@@ -75,6 +72,7 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
     }
   }
 
+  // Manejo de errores de respuesta
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
       if ((error.status === 401 || error.status === 403) && !isHandlingSessionExpired) {
@@ -90,34 +88,57 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
   );
 };
 
-
 // export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, next: HttpHandlerFn) => {
 //   const authState = inject(AuthStateService);
 //   const router = inject(Router);
+//   const http = inject(HttpClient);
 //   const token = authState.getSession()?.access_token;
+
+//   const isLoginOrLogout = request.url.includes('/login') || request.url.includes('/invalidate-session');
+
+//   if (isLoginOrLogout) {
+//     return next(request);
+//   }
 
 //   if (token) {
 //     try {
 //       const decoded: any = jwtDecode(token);
 //       const currentTime = Math.floor(Date.now() / 1000);
-//       const sessionId = decoded?.session?.[0]?.id;
 
-//       if (decoded.exp < currentTime && sessionId) {
-//         // Llama al backend para invalidar la sesión
-//         const http = inject(HttpClient);
-//         http.post(`${environment.API_URL}/auth/invalidate-session`, { sessionId }).subscribe({
-//           complete: () => {
+//       if (decoded.exp < currentTime) {
+//         const sessionId = decoded?.session?.[0]?.id;
+
+//         if (!isHandlingSessionExpired && sessionId) {
+//           isHandlingSessionExpired = true;
+
+//           Swal.fire({
+//             icon: 'warning',
+//             title: 'Sesión expirada',
+//             text: 'Tu sesión ha caducado. Por favor, vuelve a iniciar sesión.',
+//             confirmButtonText: 'Entendido',
+//           }).then(() => {
 //             authState.logOut();
 //             router.navigate(['/auth/login']);
-//           },
-//           error: () => {
-//             // En caso de error igual cerrar sesión
-//             authState.logOut();
-//             router.navigate(['/auth/login']);
-//           }
-//         });
+//           });
 
-//         return throwError(() => new Error('Token expirado'));
+//           // Llamar al backend para invalidar la sesión
+//           http.post(`${environment.API_URL}/auth/invalidate-session`, { sessionId }).subscribe({
+//             complete: () => {
+//               authState.logOut();
+//               router.navigate(['/auth/login']).finally(() => {
+//                 setTimeout(() => isHandlingSessionExpired = false, 1000);
+//               });
+//             },
+//             error: () => {
+//               authState.logOut();
+//               router.navigate(['/auth/login']).finally(() => {
+//                 setTimeout(() => isHandlingSessionExpired = false, 1000);
+//               });
+//             }
+//           });
+//         }
+
+//         return EMPTY; // Evitar que la solicitud continúe
 //       }
 
 //       request = request.clone({
@@ -126,9 +147,9 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
 //         },
 //       });
 //     } catch (err) {
-//       console.error('Error al decodificar el token', err);
+//       console.error('Error al decodificar token', err);
 //       authState.logOut();
-//       router.navigate(['auth/login']);
+//       router.navigate(['/auth/login']);
 //       return throwError(() => new Error('Token inválido'));
 //     }
 //   }
@@ -138,10 +159,8 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
 //       if ((error.status === 401 || error.status === 403) && !isHandlingSessionExpired) {
 //         isHandlingSessionExpired = true;
 //         authState.logOut();
-//         router.navigate(['auth/login']).finally(() => {
-//           setTimeout(() => {
-//             isHandlingSessionExpired = false;
-//           }, 1000);
+//         router.navigate(['/auth/login']).finally(() => {
+//           setTimeout(() => isHandlingSessionExpired = false, 1000);
 //         });
 //       }
 
@@ -149,38 +168,6 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
 //     })
 //   );
 // };
-
-// export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, next: HttpHandlerFn) => {
-//   const authState = inject(AuthStateService);
-//   const router = inject(Router);
-//   const token = authState.getSession()?.access_token;
-
-//   if (token) {
-//     request = request.clone({
-//       setHeaders: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//   }
-
-//   return next(request).pipe(
-//     catchError((error: HttpErrorResponse) => {
-//       if ((error.status === 401 || error.status === 403) && !isHandlingSessionExpired) {
-//         isHandlingSessionExpired = true;
-//         authState.logOut();
-//         router.navigate(['/login']).finally(() => {
-//           setTimeout(() => {
-//             isHandlingSessionExpired = false; // Restablecer después de un tiempo seguro
-//           }, 1000);
-//         });
-//       }
-
-//       return throwError(() => error);
-//     })
-//   );
-// };
-
-
 //VERIFCAR CONEXION CON EL SERVIDOR
 export const serverInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);

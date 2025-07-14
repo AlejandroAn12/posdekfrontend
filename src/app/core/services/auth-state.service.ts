@@ -16,21 +16,17 @@ interface Session {
 export class AuthStateService {
 
     private _storageService = inject(StorageService);
-      private http = inject(HttpClient);
-      private authenticationService = inject(AuthService);
-    
+    private http = inject(HttpClient);
+    //   private authenticationService = inject(AuthService);
+
     _router = inject(Router);
 
     logOut() {
-        this.authenticationService.logOut().subscribe({
-            next: (resp) => {return true},
-            error: (err) => {return false}
-        });
-        this._storageService.remove('session');
-        this._router.navigateByUrl('auth/login');
+        localStorage.removeItem('session');
+        this._router.navigate(['/auth/login']);
     }
 
-    userAuth(): Observable<any>{
+    userAuth(): Observable<any> {
         return this.http.get(`${environment.API_URL}/employee/user-session`);
     }
 

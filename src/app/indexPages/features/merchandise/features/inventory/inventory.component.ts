@@ -3,13 +3,15 @@ import { Component, inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
-import { AlertService } from '../../../../../shared/services/alerts.service';
+import 'datatables.net'; // Import DataTables types for TypeScript
+import { AlertService } from '../../../../../core/services/alerts.service';
 import { InventoryService } from '../../data-access/inventory.service';
 import { Subject } from 'rxjs';
-import { AuthStateService } from '../../../../../shared/services/auth-state.service';
+import { AuthStateService } from '../../../../../core/services/auth-state.service';
 import { CategoriesService } from '../../../categoriesPages/data-access/categories.service';
 import { ICategory } from '../../../categoriesPages/interface/icategories.interface';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inventory',
@@ -17,13 +19,14 @@ import Swal from 'sweetalert2';
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css'
 })
-export default class InventoryComponent implements OnInit {
+export default class InventoryComponent {
 
   private renderer = inject(Renderer2);
   private alertsService = inject(AlertService);
   private authStateService = inject(AuthStateService);
   private categoriesService = inject(CategoriesService);
   private inventoryService = inject(InventoryService);
+  private router = inject(Router);
   private fB = inject(FormBuilder);
 
 
@@ -39,6 +42,8 @@ export default class InventoryComponent implements OnInit {
   dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject<any>();
 
+
+
   ngAfterViewInit(): void {
     this.dtTrigger.next(null);
   }
@@ -48,15 +53,11 @@ export default class InventoryComponent implements OnInit {
 
   constructor() {
     this.loadDataTable();
- this.getUserLogged();
+    this.getUserLogged();
     this.loadCategories();
     this.inventoryForm = this.fB.group({
       categoryId: [''],
     });
-  }
-
-  ngOnInit(): void {
-   
   }
 
   generateInventory() {
@@ -72,15 +73,14 @@ export default class InventoryComponent implements OnInit {
     }
     this.inventoryService.generateInventory(inventoryData).subscribe({
       next: (resp: any) => {
-        console.log(resp);
         Swal.fire({
           icon: 'success',
           title: 'Éxito',
           text: `Inventario ${resp.numberInventory} generado con éxito`,
-          timer: 5000,
+          timer: 3000,
           timerProgressBar: true,
         });
-
+        $('#inventoryTable').DataTable().ajax.reload(undefined, false);
       },
       error: (error) => {
         Swal.fire({
@@ -91,7 +91,6 @@ export default class InventoryComponent implements OnInit {
         });
       }
     });
-        this.loadDataTable();
   }
 
   //Metodo para obtener el usuario logueado
@@ -126,9 +125,8 @@ export default class InventoryComponent implements OnInit {
 
   loadDataTable() {
     this.dtOptions = {
-
       ajax: (dataTablesParameters: any, callback) => {
-        this.inventoryService.getAllInventory().subscribe({
+        this.inventoryService.getAllInventoryGenerated().subscribe({
           next: (resp) => {
             callback({
               data: resp.data ?? []
@@ -143,11 +141,11 @@ export default class InventoryComponent implements OnInit {
       scrollX: true,
       language: {
         emptyTable: "No hay información disponible",
-        loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
+        loadingRecords: "Cargando datos...",
         zeroRecords: "No se encontraron resultados",
-        search: "Buscar inventario:", // Cambia el texto del buscador
+        search: "Buscar:",
         lengthMenu: "",
-        info: "Inventarios totales: _TOTAL_",
+        info: "Inventarios generados: _TOTAL_",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -155,67 +153,55 @@ export default class InventoryComponent implements OnInit {
       },
       lengthMenu: [10],
       columns: [
-        { title: 'Código', data: 'numberInventory' },
-        { title: 'Categoria', data: 'category.name' },
-        { title: 'Fecha', data: 'createdAt' },
-        { title: 'Estado', data: 'status.name' },
-        { title: 'Generado por', data: 'user' },
+        { title: 'Código', data: 'numberInventory', className: 'text-sm text-gray-500' },
+        { title: 'Categoria', data: 'category.name', className: 'text-sm text-gray-500' },
+        { title: 'Fecha', data: 'createdAt', className: 'text-sm text-gray-500' },
+        { title: 'Estado', data: 'status.name', className: 'text-sm text-gray-500' },
+        { title: 'Generado por', data: 'user', className: 'text-sm text-gray-500' },
         {
-          title: '',
+          title: 'Acciones',
           data: null,
           render: (data: any, type: any, row: any) => {
             return `
             <div>
 
-                  <button class="btn-print border-green-600 w-10 hover:bg-green-400 text-sm text-green-500 hover:text-white p-2 m-1" data-order-id="${row.id}">
-                          <i class="fa-solid fa-pen-to-square"></i>
+                  <button class="btn-entry-inventory bg-green-500 hover:bg-green-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+                          <i class="fa-solid fa-pen-to-square mr-1"></i>
+                          Ingresar
                   </button>
             </div>`;
           },
-          className: 'action-column'
+          className: 'action-column text-gray-500 text-sm'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {
-        // Cast row to HTMLElement to access querySelector
         const rowElement = row as HTMLElement;
 
-        // Ensure the last cell (Actions column) is styled
         const actionCell = rowElement.querySelector('td:last-child');
         if (actionCell) {
           actionCell.setAttribute(
             'style',
             'display: flex; justify-content: center; '
           );
-
-          // Descargar
-          const downloadBtn = rowElement.querySelector('.btn-download');
-          if (downloadBtn) {
-            this.renderer.listen(downloadBtn, 'click', () => {
-              // this.downloadPdf(data.id);
-            });
-          }
         }
 
-        // Imprimir
-        const printBtn = rowElement.querySelector('.btn-print');
-        if (printBtn) {
-          this.renderer.listen(printBtn, 'click', () => {
-            // this.printOrderPDF(data.id);
+        // Ingresar
+        const entryBtn = rowElement.querySelector('.btn-entry-inventory');
+        if (entryBtn) {
+          this.renderer.listen(entryBtn, 'click', () => {
+            const inventoryId = entryBtn.getAttribute('data-order-id');
+            this.router.navigate(['/index/merchandise/entry-inventory', inventoryId]); // ruta que te lleve al otro componente
           });
         }
 
-        // Find the button in the row and attach a click listener using Renderer2
         const actionButton = rowElement.querySelector('.action-btn');
         if (actionButton) {
           this.renderer.listen(actionButton, 'click', () => {
-            console.log('Row data:', data); // Log the data for the clicked row
+            console.log('Row data:', data);
           });
         }
         return row;
       }
     };
   }
-
-
-
 }

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ReportsPdfService } from '../../../services/reports-pdf.service';
+import { ReportsPdfService } from '../../../../core/services/reports-pdf.service';
 
 @Component({
   selector: 'app-download-pdf',
