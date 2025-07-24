@@ -38,6 +38,42 @@ export default class LoginComponent {
       this.authService.login(loginData).subscribe({
         next: () => this._router.navigateByUrl('index/dashboard'),
         error: (err) => {
+          if (err.error.statusCode === 403 && err.error.errorCode === 'LOGIN_INACTIVE_USER') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Usuario inactivo',
+              text: `${err.error.message}`,
+              confirmButtonText: 'Entendido'
+            });
+          }
+
+          if (err.error.statusCode === 400 && err.error.errorCode === 'USER_INVALID') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Acceso inválido',
+              text: `${err.error.message}`,
+              confirmButtonText: 'Entendido'
+            });
+          }
+
+          if (err.error.statusCode === 401 && err.error.errorCode === 'CREDENTIALS_INCORRECT') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de autenticación',
+              text: `${err.error.message}`,
+              confirmButtonText: 'Entendido'
+            });
+          }
+
+          if (err.status === 0) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de conexión',
+              text: 'No se pudo conectar al servidor. Por favor, verifica tu conexión a Internet.',
+              confirmButtonText: 'Entendido'
+            });
+          }
+
           if (err.status === 500) {
             Swal.fire({
               icon: 'error',

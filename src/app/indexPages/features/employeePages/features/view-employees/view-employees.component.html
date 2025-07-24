@@ -6,26 +6,26 @@
 </div>
 
 <!-- Body -->
-<div class="flex flex-col p-5 border bg-white dark:bg-gray-900">
+<div class="flex flex-col p-5 bg-white dark:bg-gray-900">
   <div class="flex flex-col">
     <div class="flex justify-end mb-10">
       <button
         (click)="btnNewEmployee()"
-        class="text-sm font-semibold rounded-md bg-blue-600 pt-3 pb-3 pl-10 mr-3 pr-10 hover:bg-blue-700 text-white"
+        class="text-sm font-semibold rounded-md bg-blue-600 p-2 mr-3 hover:bg-blue-700 text-white"
       >
-        <i class="fa-solid fa-square-plus mr-1"></i> Agregar
+        <i class="fa-solid fa-square-plus mr-1"></i> Registrar colaborador
       </button>
-      <button
+      <!-- <button
         (click)="downloadExcel()"
-        class="text-sm font-semibold rounded-md pt-3 pb-3 pl-10 pr-10 mr-3 border text-green-600 hover:bg-gray-100 hover:text-green-600"
+        class="text-sm font-semibold rounded-md p-2mr-3 border text-green-600 hover:bg-gray-100 hover:text-green-600"
       >
         <i class="fa-solid fa-upload mr-1"></i> Exportar
       </button>
       <button
-        class="text-sm font-semibold rounded-md border pt-3 pb-3 pl-10 pr-10 text-red-600 hover:bg-gray-100 hover:text-red-600"
+        class="text-sm font-semibold rounded-md border p-2text-red-600 hover:bg-gray-100 hover:text-red-600"
       >
         <i class="fa-solid fa-upload mr-1"></i> PDF
-      </button>
+      </button> -->
     </div>
     <hr class="mb-5" />
     <table
@@ -38,180 +38,4 @@
 </div>
 <!-- Final del body -->
 
-<!-- Modal-->
-<app-modal
-  *ngIf="showModal"
-  [showModal]="showModal"
-  [title]="titleModal"
-  (closeModal)="toggleModal()"
->
-  <form [formGroup]="EmployeesForm" (ngSubmit)="saveEmployee()">
-    <div class="flex flex-col justify-center">
-      <div class="mb-4 mt-4" *ngIf="isEditing">
-        <div class="relative z-0 w-auto group">
-          <input
-            formControlName="codeEmployee"
-            [disabled]="isEditing"
-            type="text"
-            name="floating_codeemployee"
-            id="floating_codeemployee"
-            class="block py-2.5 px-0 w-auto text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_codeemployee"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Código de empleado</label
-          >
-        </div>
-      </div>
-      <!-- DNI -->
-      <div class="mb-4 mt-4">
-        <div class="relative z-0 w-48 group">
-          <input
-            formControlName="dni"
-            type="text"
-            name="floating_dni"
-            id="floating_dni"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_dni"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >N° Identificación</label
-          >
-        </div>
-      </div>
 
-      <!-- Nombres y apellidos -->
-      <div class="flex flex-row mt-4">
-        <div class="mb-4 mr-3">
-          <div class="relative z-0 w-auto group">
-            <input
-              formControlName="name"
-              type="text"
-              name="floating_name"
-              id="floating_name"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_name"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Nombres completos</label
-            >
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="relative z-0 w-auto group">
-            <input
-              formControlName="surname"
-              type="text"
-              name="floating_surname"
-              id="floating_surname"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_surname"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Apellidos completos</label
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- Nombres y apellidos -->
-      <div class="flex flex-row mt-4">
-        <div class="mb-4 mr-3">
-          <div class="relative z-0 w-64 group">
-            <input
-              formControlName="email"
-              type="email"
-              name="floating_email"
-              id="floating_email"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_email"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Correo Electrónico</label
-            >
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="relative z-0 w-64 group">
-            <input
-              formControlName="tlf"
-              type="tel"
-              name="floating_tlf"
-              id="floating_tlf"
-              class="block py-2.5 px-0 w-auto text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_tlf"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Teléfono de contacto</label
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- DIRECCION DOMICILIO -->
-      <div class="mb-4 mt-4">
-        <div class="relative z-0 w-auto group">
-          <input
-            formControlName="address"
-            type="text"
-            name="floating_address"
-            id="floating_address"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_dni"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Dirección domiciliaria</label
-          >
-        </div>
-      </div>
-
-      <!-- Roles -->
-      <div class="mb-4 mt-4" *ngIf="!isEditing">
-        <div class="relative z-0 w-full group">
-          <label
-            for="role"
-            class="block mb-2 text-sm font-medium text-gray-500 dark:text-white"
-            >Rol</label
-          >
-          <select
-            id="role"
-            formControlName="role"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option *ngFor="let role of roles" [value]="role.id">
-              {{ role.name }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <button
-      type="submit"
-      class="bg-colorPrimary hover:bg-blue-800 text-white px-4 py-2 rounded"
-    >
-      {{ isEditing ? "Guardar cambios" : "Guardar" }}
-    </button>
-  </form>
-</app-modal>
-<!-- Fin modal -->

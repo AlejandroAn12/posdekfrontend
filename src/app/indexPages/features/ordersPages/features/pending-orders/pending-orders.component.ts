@@ -49,7 +49,7 @@ export default class PendingOrdersComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Pedidos: _TOTAL_",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

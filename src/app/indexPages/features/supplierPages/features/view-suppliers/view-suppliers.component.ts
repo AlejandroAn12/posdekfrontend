@@ -93,7 +93,7 @@ export default class ViewSuppliersComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Proveedores: _TOTAL_",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

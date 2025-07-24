@@ -145,7 +145,7 @@ export default class InventoryComponent {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Inventarios generados: _TOTAL_",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

@@ -1,0 +1,190 @@
+<div class="bg-blue-700 p-5 text-white font-semibold">
+  <h1 class="text-xl uppercase">Credenciales de acceso</h1>
+</div>
+<div class="p-2 bg-blue-600">
+  <h2 class="text-sm font-semibold text-white">
+    {{ isUpdate ? "Actualización de credenciales" : "Añadir credenciales" }}
+  </h2>
+</div>
+<div class="flex flex-col border-gray-100 rounded mt-5">
+  <!-- *********************************************** -->
+  <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+    <div class="title">
+      <h1 class="font-medium text-xl text-gray-500">DETALLES</h1>
+    </div>
+    <!-- ************************************************* -->
+    <form [formGroup]="form">
+      <!--**********************************-->
+      <div *ngIf="isUpdate" class="flex mt-5">
+        <div class="w-full">
+          <label
+            for="input-employee"
+            class="text-gray-600 text-sm font-semibold mb-1"
+            >Colaborador</label
+          >
+          <input
+            class="rounded-md w-full border-gray-300"
+            formControlName="employee"
+            type="text"
+            id="input-employee"
+            placeholder="Ingrese un usuario para el empleado"
+            required
+          />
+        </div>
+      </div>
+      <!--**********************************-->
+      <!-- Select empleado -->
+      <div *ngIf="!isUpdate" class="flex mt-5 mb-5">
+        <div class="w-full">
+          <label
+            for="employeeId"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Colaborador</label
+          >
+          <select
+            formControlName="employeeId"
+            id="employeeId"
+            [ngClass]="{
+              'border-red-500':
+                f['employeeId'].invalid && f['employeeId'].touched
+            }"
+            class="rounded text-sm mt-1 p-2 block w-full border border-gray-300 dark:bg-gray-800"
+          >
+            <option
+              *ngIf="employees.length > 0"
+              disabled
+              class="font-semibold"
+              value=""
+            >
+              Colaborador disponible
+            </option>
+            <option
+              *ngIf="employees.length < 1"
+              disabled
+              class="font-semibold"
+              value=""
+            >
+              No hay colaboradores sin credenciales
+            </option>
+            <option *ngFor="let emp of employees" [value]="emp.id">
+              {{ emp.name }} {{ emp.surname }}
+            </option>
+          </select>
+          <div
+            *ngIf="f['employeeId'].invalid && f['employeeId'].touched"
+            class="text-red-500 text-sm"
+          >
+            Debe seleccionar al menos un colaborador.
+          </div>
+        </div>
+      </div>
+      <!--************************************************************-->
+
+      <div class="flex mt-5 mb-5">
+        <div class="w-full">
+          <label
+            for="roleId"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Cargo</label
+          >
+          <select
+            formControlName="roleId"
+            id="roleId"
+            [ngClass]="{
+              'border-red-500': f['roleId'].invalid && f['roleId'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+          >
+            <option
+              *ngIf="roles.length > 0"
+              disabled
+              class="font-semibold"
+              value=""
+            >
+              Seleccione un cargo
+            </option>
+            <option
+              *ngIf="roles.length < 1"
+              disabled
+              class="font-semibold"
+              value=""
+            >
+              No hay cargos disponibles
+            </option>
+            <option *ngFor="let role of roles" [value]="role.id">
+              {{ role.name }}
+            </option>
+          </select>
+          <div
+            *ngIf="f['roleId'].invalid && f['roleId'].touched"
+            class="text-red-500 text-sm"
+          >
+            Debe seleccionar un cargo.
+          </div>
+        </div>
+      </div>
+      <!--***************************************************-->
+      <div class="flex mt-5 mb-5">
+        <div class="w-42 mr-4">
+          <label
+            for="username"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Usuario</label
+          >
+          <input
+            formControlName="username"
+            placeholder="Nombre de usuario"
+            type="text"
+            id="username"
+            [ngClass]="{
+              'border-red-500': f['username'].invalid && f['username'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+          />
+          <div
+            *ngIf="f['username'].invalid && f['username'].touched"
+            class="text-red-500 text-sm"
+          >
+            El nombre de usuario es obligatorio.
+          </div>
+        </div>
+
+        <div class="w-42">
+          <label
+            for="password"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Contraseña</label
+          >
+          <input
+            formControlName="password"
+            placeholder="Contraseña"
+            type="password"
+            id="password"
+            [ngClass]="{
+              'border-red-500': f['password'].invalid && f['password'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+          />
+          <div
+            *ngIf="f['password'].invalid && f['password'].touched"
+            class="text-red-500 text-sm"
+          >
+            La contraseña es obligatoria.
+          </div>
+        </div>
+      </div>
+      <button
+        [disabled]="form.invalid && !isUpdate"
+        type="submit"
+        (click)="onSubmit()"
+        [ngClass]="{
+          'opacity-50 cursor-not-allowed': form.invalid && !isUpdate,
+          'opacity-100 cursor-pointer': !form.invalid || isUpdate
+        }"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md"
+      >
+        {{ isUpdate ? "Actualizar" : "Guardar" }}
+      </button>
+    </form>
+  </div>
+</div>

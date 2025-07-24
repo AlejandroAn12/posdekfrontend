@@ -12,32 +12,28 @@ export class UserService {
   private http = inject(HttpClient);
 
   //METODOS CREDENCIALES
-  getCredendentials(page: number = 1, limit: number = 10): Observable<any> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
-    return this.http.get(`${environment.API_URL}/credentials/all?`, {params})
-      .pipe(tap((res) => {}));
+  getCredendentials(): Observable<any> {
+    return this.http.get(`${environment.API_URL}/credentials/all`)
   }
 
   getEmployeesWithOutCredendentials(): Observable<any> {
     return this.http.get(`${environment.API_URL}/credentials/all-without-credentials`,)
-      .pipe(tap((res) => {}));
+      .pipe(tap((res) => { }));
   }
 
-  getCredentialID(id: string){
-    return this.http.get(`${environment.API_URL}/credential/${id}`)
+  getCredentialID(id: string) {
+    return this.http.get(`${environment.API_URL}/credentials/${id}`)
   }
 
   addCredentials(iCredentials: ICredentialsAccess): Observable<any> {
-    return this.http.post(`${environment.API_URL}/credentials/add`,iCredentials)
-    .pipe(tap((res) => {
-      return;
-    }));
+    return this.http.post(`${environment.API_URL}/credentials/add`, iCredentials)
+      .pipe(tap((res) => {
+        return;
+      }));
   }
 
 
-  updateCredential(id: string, iCredential: any){
+  updateCredential(id: string, iCredential: any) {
     return this.http.patch(`${environment.API_URL}/credentials/update/${id}`, iCredential)
   }
 

@@ -74,16 +74,26 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
 
   // Manejo de errores de respuesta
   return next(request).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if ((error.status === 401 || error.status === 403) && !isHandlingSessionExpired) {
+    catchError((err: HttpErrorResponse) => {
+      console.error('Error en la solicitud:', err);
+      if(err.status === 500){
+        Swal.fire({
+          icon: 'error',
+          title: 'Error del servidor',
+          text: 'Por favor, inténtalo de nuevo más tarde.',
+        });
+      }
+      // Si la respuesta es 401 o 403 y no se está manejando una sesión expirada
+      if ((err.status === 401 || err.status === 403) && !isHandlingSessionExpired) {
         isHandlingSessionExpired = true;
+        console.log('Sesión expirada o no autorizada, redirigiendo al login');
         authState.logOut();
         router.navigate(['/auth/login']).finally(() => {
           setTimeout(() => isHandlingSessionExpired = false, 1000);
         });
       }
 
-      return throwError(() => error);
+      return throwError(() => err);
     })
   );
 };

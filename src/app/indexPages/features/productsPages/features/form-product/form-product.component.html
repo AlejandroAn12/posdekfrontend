@@ -3,20 +3,20 @@
     <h1 class="text-2xl uppercase font-bold">Productos</h1>
   </div>
 </div>
+<div class="bg-gray-100 mb-5">
+  <h1 class="text-xl font-semibold text-white p-2 bg-blue-600">
+    {{ isUpdate ? "Actualización de Producto" : "Nuevo producto" }}
+  </h1>
+</div>
 
-<div id="card-body" class="flex flex-col rounded mt-5 border">
-  <!-- Título -->
-  <div class="p-2 bg-gray-100">
-    <h1 class="text-xl font-semibold text-white p-2 bg-blue-600 uppercase">
-      {{ isUpdate ? "ACTUALIZACION DE PRODUCTO" : "NUEVO PRODUCTO" }}
-    </h1>
-  </div>
-
+<div id="card-body" class="flex flex-col rounded mt-5">
   <!-- Formulario -->
   <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+    <!-- ****************************** -->
     <div class="title">
-      <h1 class="font-bold text-xl text-gray-500">DETALLE DEL PRODUCTO</h1>
+      <h1 class="font-medium text-xl text-gray-500">DETALLES</h1>
     </div>
+    <!-- ************************ -->
     <form [formGroup]="form">
       <!-- Primera fila -->
       <div class="flex mt-5 mb-5">
@@ -59,7 +59,7 @@
 
       <!-- Segunda fila -->
       <div class="flex mt-5 mb-5" *ngIf="isUpdate">
-        <div class="w-24 mr-4">
+        <div class="w-36 mr-4">
           <label
             for="barcode"
             class="text-sm font-semibold text-gray-500 dark:text-white"
@@ -228,7 +228,13 @@
             Cancelar
           </button>
           <button
+          [disabled]="form.invalid"
             (click)="saveProduct()"
+            [ngClass]="{
+              'bg-blue-600': form.valid,
+              'bg-gray-400': form.invalid,
+              'hover:bg-blue-700': form.valid && !isUpdate,
+            }"
             class="bg-blue-600 text-white text-sm font-semibold rounded-md pr-5 pl-5 pt-3 pb-3 w-auto hover:bg-blue-700 mr-2"
           >
             <i class="fa-solid fa-floppy-disk mr-1"></i>

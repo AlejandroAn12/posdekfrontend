@@ -29,7 +29,7 @@ export default class FormEmployeeComponent implements OnInit {
 
 
   constructor() {
-    this.EmployeesForm = this.fb.group({
+    this.form = this.fb.group({
       codeEmployee: [{ value: '', disabled: this.isDisabled }],
       name: ['', { validators: [Validators.required], updateOn: 'change' }],
       // role: [{ value: '', hidden: this.hidden }],
@@ -53,8 +53,12 @@ export default class FormEmployeeComponent implements OnInit {
     this.loadRoles();
   }
 
+  get f() {
+    return this.form.controls;
+  }
+
   //Formulario
-  EmployeesForm: FormGroup;
+  form: FormGroup;
   isDisabled: boolean = true;
   isUpdate: boolean = false;
   isEditing: boolean = false;
@@ -79,7 +83,7 @@ export default class FormEmployeeComponent implements OnInit {
   loadEmployeeData(id: string) {
     this.employeeService.getEmployeeId(id).subscribe({
       next: (response: any) => {
-        this.EmployeesForm.patchValue({
+        this.form.patchValue({
           codeEmployee: response.data.codeEmployee ?? response.data.codeEmployee, // Asegúrate de asignar solo el ID
           dni: response.data.dni,
           name: response.data.name,
@@ -98,19 +102,26 @@ export default class FormEmployeeComponent implements OnInit {
 
   saveEmployee() {
 
-    if (this.EmployeesForm.invalid) {
+    if (this.form.invalid) {
       this.alertsService.showError('Existen campos vacíos', 'Error');
       return;
     }
 
-    const employeeData = this.EmployeesForm.value;
+    const employeeData = this.form.value;
 
     if (this.isUpdate && this.employeeId) {
       // Actualizar empleado
       this.employeeService.updateEmployee(this.employeeId, employeeData).subscribe({
         next: (response: any) => {
-          this.alertsService.showSuccess(response.message, '');
-          this.router.navigate(['/index/employees/view']);
+          Swal.fire({
+            icon: 'success',
+            title: 'Datos actualizados',
+            position: 'top-end',
+            showConfirmButton: false,
+            heightAuto: true,
+            timer: 1500
+          })
+          this.router.navigate(['/index/employees']);
         },
         error: (err) => {
           this.alertsService.showError(err.error.message, err.statusText);
@@ -121,7 +132,7 @@ export default class FormEmployeeComponent implements OnInit {
       this.employeeService.registerEmployee(employeeData).subscribe({
         next: (response) => {
           this.alertsService.showSuccess(response.message, '');
-          this.EmployeesForm.reset();
+          this.form.reset();
         },
         error: (err) => {
           this.alertsService.showError(err.error.message, err.statusText);
@@ -132,6 +143,6 @@ export default class FormEmployeeComponent implements OnInit {
   }
 
   btnBack() {
-    this.router.navigate(['index/employees/view']);
+    this.router.navigate(['index/employees']);
   }
 }

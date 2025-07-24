@@ -60,7 +60,7 @@ export default class HistoryInventoryComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:", // Cambia el texto del buscador
         lengthMenu: "",
-        info: "Inventarios: _TOTAL_",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"

@@ -22,18 +22,18 @@ export default class FormSuppliersComponent {
   private typeOfDocumentService = inject(TypeOfDocumentService);
 
   //Declaración de variables
-  SupplierForm: FormGroup;
+  form: FormGroup;
   supplierId: string | null = null;
-  tyOfDocuments: any[] = [];
+  tyOfDocs: any[] = [];
 
 
   isUpdate: boolean = false;
 
 
   constructor() {
-    this.SupplierForm = this.fb.group({
-      typeofdocumentId: [null], // Debe ser un ID, no un objeto completo
-      ruc: ['', { validators: [Validators.required], updateOn: 'change' }],
+    this.form = this.fb.group({
+      typeofdocumentId: ['', [Validators.required]], // Debe ser un ID, no un objeto completo
+      ruc: ['', { validators: [Validators.required, Validators.pattern('^[0-9]{13}$')], updateOn: 'change' }],
       company_name: ['', { validators: [Validators.required], updateOn: 'change' }],
       legal_representative: ['', { validators: [Validators.required], updateOn: 'change' }],
       phone: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -63,7 +63,7 @@ export default class FormSuppliersComponent {
   loadTypeOfDocuments() {
     this.typeOfDocumentService.getTypeOfDocuments().subscribe({
       next: (response: any) => {
-        this.tyOfDocuments = response.typeOfDocuments;
+        this.tyOfDocs = response.typeOfDocuments;
       },
       error: (err) => {
         console.error(err);
@@ -75,7 +75,7 @@ export default class FormSuppliersComponent {
     this.supplierService.getSupplierId(id).subscribe({
       next: (response: any) => {
         console.log(response);
-        this.SupplierForm.patchValue({
+        this.form.patchValue({
           typeofdocumentId: response.supplier.typeofdocumentId?.id ?? response.supplier.typeofdocumentId, // Asegúrate de asignar solo el ID
           ruc: response.supplier.ruc,
           company_name: response.supplier.company_name,
@@ -95,12 +95,12 @@ export default class FormSuppliersComponent {
 
 
   saveSupplier() {
-    if (this.SupplierForm.invalid) {
+    if (this.form.invalid) {
       this.alertsService.showError('Formulario vacío', '');
       return;
     }
 
-    const supplierData = this.SupplierForm.value;
+    const supplierData = this.form.value;
 
     if (this.isUpdate && this.supplierId) {
       // Actualizar producto
@@ -129,5 +129,9 @@ export default class FormSuppliersComponent {
 
   btnBack() {
     this.router.navigate(['/index/suppliers/view']);
+  }
+
+  get f() {
+    return this.form.controls;
   }
 }

@@ -16,10 +16,13 @@ export class StoreService {
     return this.http.post(`${environment.API_URL}/store/add`, storeForm);
    }
 
+   addTaxesStore(taxesForm: any){
+    return this.http.post(`${environment.API_URL}/store/add-taxes`, taxesForm);
+    }
+
 //Obtener la informacion de la empresa
    getInformationStore(): Observable<any>{
-    return this.http.get(`${environment.API_URL}/store/information`,)
-          .pipe(tap((res) => {}));
+    return this.http.get(`${environment.API_URL}/store/information`)
    }
 
    //Actualizar informacion de la empresa

@@ -1,18 +1,18 @@
 <!-- Contenedor principal -->
 <div class="bg-blue-700 p-5 text-white font-semibold">
-  <h1 class="text-2xl uppercase">Credenciales de acceso</h1>
+  <h1 class="text-xl uppercase">Credenciales de acceso</h1>
 </div>
 
 <!-- Cuerpo -->
 <div class="flex flex-col p-5 bg-white dark:bg-gray-900">
   <div class="flex justify-end mb-10 space-x-2">
     <button
-      (click)="toggleModal()"
-      class="text-sm font-semibold rounded-md bg-blue-600 pt-3 pb-3 pl-10 pr-10 hover:bg-blue-700 text-white"
+     (click)="next()"
+      class="text-sm font-semibold rounded-md bg-blue-600 p-2 hover:bg-blue-700 text-white"
     >
-      <i class="fa-solid fa-square-plus mr-1"></i> Agregar
+      <i class="fa-solid fa-square-plus mr-1"></i> Agregar credenciales
     </button>
-    <button
+    <!-- <button
       (click)="downloadExcel()"
       class="text-sm font-semibold rounded-md pt-3 pb-3 pl-10 pr-10 mr-3 border text-green-600 hover:bg-gray-100 hover:text-green-600"
     >
@@ -22,7 +22,7 @@
       class="text-sm font-semibold rounded-md border pt-3 pb-3 pl-10 pr-10 text-red-600 hover:bg-gray-100 hover:text-red-600"
     >
       <i class="fa-solid fa-upload mr-1"></i> PDF
-    </button>
+    </button> -->
   </div>
 
   <!-- <hr class="mb-5" /> -->
@@ -35,123 +35,3 @@
   ></table>
 </div>
 
-<!-- Modal -->
-<app-modal
-  *ngIf="showModal"
-  [showModal]="showModal"
-  [title]="titleModal"
-  (closeModal)="toggleModal()"
->
-  <form [formGroup]="CredentialsForm" (ngSubmit)="saveCredential()">
-    <div class="flex flex-col space-y-4 mt-4">
-      <!-- Empleado -->
-      <ng-container *ngIf="isEditing; else selectEmpleado">
-        <div class="flex flex-col">
-          <label
-            for="input-employee"
-            class="text-gray-600 text-sm font-semibold mb-1"
-            >Nombre de usuario</label
-          >
-          <input
-            class="rounded-md border-gray-300"
-            formControlName="employee"
-            [disabled]="isEditing"
-            type="text"
-            id="input-employee"
-            placeholder="Ingrese un usuario para el empleado"
-            required
-          />
-        </div>
-      </ng-container>
-
-      <ng-template #selectEmpleado>
-        <div class="flex flex-col">
-          <label for="employeeId" class="text-sm font-medium text-gray-600 mb-1"
-            >Colaborador</label
-          >
-
-          <select
-            formControlName="employeeId"
-            id="employeeId"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option
-              class="font-semibold"
-              disabled
-              *ngIf="employees.length > 0"
-              value=""
-            >
-              Seleccione un colaborador
-            </option>
-            <option *ngIf="employees.length < 1" class="font-semibold" value="">
-              No hay colaboradores registrados
-            </option>
-            <option *ngFor="let employee of employees" [value]="employee.id">
-              {{ employee.name }} {{ employee.surname }}
-            </option>
-          </select>
-        </div>
-      </ng-template>
-
-      <!-- Rol -->
-      <div class="flex flex-col">
-        <label for="roleId" class="text-sm font-medium text-gray-600 mb-1"
-          >Rol</label
-        >
-        <select
-          id="roleId"
-          formControlName="roleId"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        >
-          <option
-            class="font-semibold"
-            disabled
-            *ngIf="roles.length > 0"
-            value=""
-          >
-            Seleccione un rol
-          </option>
-          <option *ngIf="roles.length < 1" class="font-semibold" value="">
-            No hay roles registrados
-          </option>
-          <option *ngFor="let role of roles" [value]="role.id">
-            {{ role.name }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Usuario -->
-      <div class="flex flex-col">
-        <label for="username" class="text-sm font-medium text-gray-600 mb-1"
-          >Usuario</label
-        >
-        <input
-          type="text"
-          formControlName="username"
-          id="username"
-          class="rounded border border-gray-300 text-sm"
-        />
-      </div>
-
-      <!-- Contraseña -->
-      <div *ngIf="!isEditing" class="flex flex-col">
-        <label for="password" class="text-sm font-medium text-gray-600 mb-1"
-          >Contraseña</label
-        >
-        <input
-          type="password"
-          formControlName="password"
-          id="password"
-          class="rounded border border-gray-300 text-sm"
-        />
-      </div>
-
-      <button
-        type="submit"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md"
-      >
-        {{ isEditing ? "Actualizar" : "Guardar" }}
-      </button>
-    </div>
-  </form>
-</app-modal>

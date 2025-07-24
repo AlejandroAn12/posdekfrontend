@@ -2,7 +2,7 @@ import Swal from 'sweetalert2'
 import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { CategoriesService } from '../../data-access/categories.service';
 import { ICategory } from '../../interface/icategories.interface';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
 import { Config } from 'datatables.net';
@@ -12,7 +12,7 @@ import { AlertService } from '../../../../../core/services/alerts.service';
 
 @Component({
   selector: 'app-view-categories',
-  imports: [ModalComponent, CommonModule, ReactiveFormsModule, DataTablesModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DataTablesModule, ModalComponent],
   templateUrl: './view-categories.component.html',
   styleUrl: './view-categories.component.css'
 })
@@ -24,10 +24,9 @@ export default class ViewCategoriesComponent implements OnInit {
   private renderer = inject(Renderer2);
 
   dtOptions: Config = {};
-  CategoryForm: FormGroup;
-
+  form: FormGroup;
   constructor() {
-    this.CategoryForm = this.fb.group({
+    this.form = this.fb.group({
       name: ['', { validators: [Validators.required], updateOn: 'change' }],
     });
 
@@ -39,7 +38,7 @@ export default class ViewCategoriesComponent implements OnInit {
 
   //Modal
   showModal = false;
-  titleModal: string = 'Nuevo Producto';
+  titleModal: string = 'Detalle de la categoria';
   isEditing = false;
 
   product: any = [];
@@ -67,7 +66,7 @@ export default class ViewCategoriesComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Total de registros: _TOTAL_",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -173,11 +172,11 @@ export default class ViewCategoriesComponent implements OnInit {
 
   //Añadir nueva categoria
   addCategory() {
-    if (this.CategoryForm.invalid) {
+    if (this.form.invalid) {
       this.alertsService.showError('El nombre no puede estar vacío', '');
       return;
     }
-    const newCategory = this.CategoryForm.value;
+    const newCategory = this.form.value;
     this.categoriesService.addCategory(newCategory).subscribe({
       next: (res: any) => {
         this.alertsService.showSuccess(``, `${res.message}`)
@@ -187,13 +186,13 @@ export default class ViewCategoriesComponent implements OnInit {
         this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
-    this.CategoryForm.reset();
+    this.form.reset();
     // this.showModal = false;
   }
 
   //Actualizar categoria
   updateCategory(id: string) {
-    const updatedCategory = this.CategoryForm.value;
+    const updatedCategory = this.form.value;
     this.categoriesService.updateCategory(id, updatedCategory).subscribe({
       next: (res: any) => {
         this.alertsService.showSuccess(`${res.message}`, `Información`)
@@ -221,6 +220,10 @@ export default class ViewCategoriesComponent implements OnInit {
     });
   }
 
+  createCategory(){
+
+  }
+
   //Toggle para abrir el modal
   toggleModal(category: any = null) {
     this.showModal = !this.showModal;
@@ -230,14 +233,14 @@ export default class ViewCategoriesComponent implements OnInit {
       this.titleModal = 'EDITAR CATEGORIA';
       this.selectedCategoryId = category.id;
 
-      this.CategoryForm.patchValue({
+      this.form.patchValue({
         name: category.name,
       });
     } else {
       this.isEditing = false;
       this.titleModal = 'NUEVA CATEGORIA';
       this.selectedCategoryId = null;
-      this.CategoryForm.reset();
+      this.form.reset();
     }
   }
 

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { TaxesService } from '../../../../../core/services/taxes.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-initial-settings',
@@ -19,22 +20,21 @@ export default class InitialSettingsComponent implements OnInit {
   private alertsService = inject(AlertService);
 
 
-  EnterpriseForm: FormGroup;
+  form: FormGroup;
   iTaxes: any[] = [];
-  work_taxes: boolean = false;
-  price_taxes: boolean = false;
+  workTaxes: boolean = false;
   showSelectTypeTaxes: boolean = false;
   
   constructor() {
-    this.EnterpriseForm = this.fb.group({
-      work_taxes: [false],
-      taxId: []
+    this.form = this.fb.group({
+      workTaxes: [false, [Validators.required]],
+      taxId: ['', [Validators.required]]
     });
   }
   
   ngOnInit(): void {
     this.loadTaxes();
-    this.EnterpriseForm.get('work_taxes')?.valueChanges.subscribe((isChecked: boolean) => {
+    this.form.get('workTaxes')?.valueChanges.subscribe((isChecked: boolean) => {
       this.showSelectTypeTaxes = isChecked;
     });
   }
@@ -42,37 +42,44 @@ export default class InitialSettingsComponent implements OnInit {
 
   onWorkTaxesChange(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
-    this.work_taxes = isChecked; // Actualiza el estado
+    this.workTaxes = isChecked; // Actualiza el estado
     // this.showSelectTypeTaxes = isChecked;
-    console.log('La venta tiene impuestos:', this.work_taxes); // Verifica en consola
+    console.log('La venta tiene impuestos:', this.workTaxes); // Verifica en consola
 
   }
-
-  onPriceTaxesChange(event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    this.price_taxes = isChecked; // Actualiza el estado
-    console.log('La venta tiene impuestos:', this.price_taxes); // Verifica en consola
-  }
-
   
   save() {
-    if (this.EnterpriseForm.invalid) {
-      console.log('Formulario inválido', this.EnterpriseForm.value);
+    if (this.form.invalid) {
+      console.log('Formulario inválido', this.form.value);
       this.alertsService.showInfo('Por favor, complete los campos requeridos', 'Formulario incompleto');
       return;
     }
 
-    const data = this.EnterpriseForm.value; // Se obtienen los valores actualizados
+    const data = this.form.value; // Se obtienen los valores actualizados
 
-    this.enterpriseService.addStore(data).subscribe({
+    this.enterpriseService.addTaxesStore(data).subscribe({
       next: (response: any) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Impuestos guardados correctamente',
+          timer: 3000,
+          showConfirmButton: false
+        });
+        this.loadTaxes(); // Recargar los impuestos después de guardar
       },
       error: (err) => {
-        this.alertsService.showError(err.error.message, '');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text:err.error.message || 'Error al guardar los impuestos',
+          timer: 3000,
+          showConfirmButton: false
+        });
       }
     });
 
-    this.EnterpriseForm.reset(); // Se limpia el formulario
+    this.form.reset();
   }
 
   loadTaxes() {
@@ -84,5 +91,9 @@ export default class InitialSettingsComponent implements OnInit {
         this.alertsService.showError(err.error.message, '');
       }
     })
+  }
+
+  get f() {
+    return this.form.controls;
   }
 }

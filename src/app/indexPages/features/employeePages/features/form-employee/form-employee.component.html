@@ -3,130 +3,198 @@
     <h1 class="text-2xl uppercase">Colaboradores</h1>
   </div>
 </div>
-
-<div id="card-body" class="flex flex-col rounded mt-5">
-  <!-- Título -->
-  <div class="p-2 bg-gray-100">
-    <h1 class="text-sm font-semibold text-gray-600 uppercase">
-      Información del colaborador
-    </h1>
-  </div>
-
-  <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-900 p-4 space-y-4">
-    <form [formGroup]="EmployeesForm">
-    
-      <div class="flex mt-5 mb-5" *ngIf="isUpdate">
-        <div class="w-32 mr-4">
-          <label for="codeEmployee" class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Código colaborador</label
+<div class="p-2 bg-blue-600">
+  <h1 class="text-sm font-semibold text-white dark:text-white">
+    {{ isUpdate ? "Actualización de colaborador" : "Añadir colaborador" }}
+  </h1>
+</div>
+<!--******************************************************--->
+<div class="flex flex-col border-gray-100 rounded mt-5">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+    <div class="title">
+      <h1 class="font-medium text-xl text-gray-500">DETALLES</h1>
+    </div>
+    <!-- ************************************************* -->
+    <form [formGroup]="form">
+      <!--***************************************************-->
+      <div class="flex mt-5 mb-5">
+        <div *ngIf="isUpdate" class="w-42 mr-4">
+          <label
+            for="codeEmployee"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Cod. empleado</label
           >
           <input
             formControlName="codeEmployee"
-            [disabled]="isEditing"
+            placeholder="Cod. empleado"
             type="text"
             id="codeEmployee"
-            class="rounded p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            [ngClass]="{
+              'border-red-500':
+                f['codeEmployee'].invalid && f['codeEmployee'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
         </div>
-      </div>
 
-      <div class="flex mt-5 mb-5">
-        <div class="w-64 mr-4">
-          <label for="dni" class="mb-1 text-sm font-semibold text-gray-600 dark:text-white"
-            >N° identificación</label
+        <div class="w-42">
+          <label
+            for="dni"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Doc. identificación</label
           >
           <input
             formControlName="dni"
+            placeholder="0800000000"
             type="text"
             id="dni"
-            class="rounded p-2 text-sm block w-full border border-gray-300 dark:bg-gray-800"
+            [ngClass]="{
+              'border-red-500': f['dni'].invalid && f['dni'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['dni'].invalid && f['dni'].touched"
+            class="text-red-500 text-sm"
+          >
+            El doc. dni es obligatorio.
+          </div>
         </div>
-        <div class="w-1/3 mr-4">
-          <label for="name" class="text-sm font-semibold text-gray-600 dark:text-white"
+      </div>
+      <!--**********************************-->
+      <!--***************************************************-->
+      <div class="flex mt-5 mb-5">
+        <div class="w-42 mr-4">
+          <label
+            for="name"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >Nombres completos</label
           >
           <input
             formControlName="name"
+            placeholder="Nombres completos"
             type="text"
             id="name"
-            class="rounded p-2 text-sm block w-full border border-gray-300 dark:bg-gray-800"
+            [ngClass]="{
+              'border-red-500': f['name'].invalid && f['name'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['name'].invalid && f['name'].touched"
+            class="text-red-500 text-sm"
+          >
+            Los nombres completos son obligatorios.
+          </div>
         </div>
-        <div class="w-1/3">
-          <label for="surname" class="text-sm font-semibold text-gray-600 dark:text-white"
+
+        <div class="w-42">
+          <label
+            for="surname"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >Apellidos completos</label
           >
           <input
             formControlName="surname"
+            placeholder="Apellidos completos"
             type="text"
             id="surname"
-            class="rounded p-2 block text-sm w-full border border-gray-300 dark:bg-gray-800"
+            [ngClass]="{
+              'border-red-500': f['surname'].invalid && f['surname'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['surname'].invalid && f['surname'].touched"
+            class="text-red-500 text-sm"
+          >
+            Los apellidos completos son obligatorios.
+          </div>
         </div>
       </div>
-
-      <!-- Cuarta fila - Precios -->
+      <!--**********************************-->
+      <!--***************************************************-->
       <div class="flex mt-5 mb-5">
         <div class="w-42 mr-4">
-          <label for="tlf" class="text-sm font-semibold text-gray-600 dark:text-white">
-            Teléfono de contacto
-          </label>
+          <label
+            for="tlf"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Teléfono</label
+          >
           <input
             formControlName="tlf"
+            placeholder="+593 999 999 999"
             type="tel"
             id="tlf"
-            class="rounded p-2 text-sm block w-full border border-gray-300 dark:bg-gray-800"
-            placeholder="+593 999 999 999"
+            [ngClass]="{
+              'border-red-500': f['tlf'].invalid && f['tlf'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['tlf'].invalid && f['tlf'].touched"
+            class="text-red-500 text-sm"
+          >
+            Debe registrar un número de contacto.
+          </div>
         </div>
-        <div class="w-64">
-          <label for="email" class="text-sm font-semibold text-gray-600 dark:text-white">
-            Correo electrónico
-          </label>
 
+        <div class="w-42">
+          <label
+            for="email"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Correo electrónico</label
+          >
           <input
             formControlName="email"
+            placeholder="email@example.com"
             type="email"
             id="email"
-            class="rounded p-2 text-sm block w-full border border-gray-300 dark:bg-gray-800"
-            placeholder="proveedor@email.com"
+            [ngClass]="{
+              'border-red-500': f['email'].invalid && f['email'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+          />
+          <div
+            *ngIf="f['email'].invalid && f['email'].touched"
+            class="text-red-500 text-sm"
+          >
+            Debe registrar un correo electrónico.
+          </div>
+        </div>
+      </div>
+      <!--**********************************-->
+      <!--**********************************-->
+      <div class="flex mt-5">
+        <div class="w-full">
+          <label for="address" class="text-gray-600 text-sm font-semibold mb-1"
+            >Dirección domiciliaria</label
+          >
+          <input
+            class="rounded-md w-full border-gray-300"
+            formControlName="address"
+            type="text"
+            id="address"
+            placeholder="Dirección domiciliaria"
+            required
           />
         </div>
       </div>
-
-      <!-- Quinta fila -->
-      <div class="flex mt-5 mb-5">
-        <div class="w-full mr-4">
-          <label for="address" class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Dirección domiciliaria</label
-          >
-          <textarea
-            formControlName="address"
-            class="rounded p-2 text-sm block w-full border border-gray-300 dark:bg-gray-800"
-            id="address"
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- Quinta fila -->
-      <div class="flex mt-5 mb-5">
-        <div class="flex gap-4 mt-5">
-          <button
+      <!--**********************************-->
+      <div class="mt-3">
+        <button
           (click)="btnBack()"
-          class="text-gray-500 rounded-md dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-3 pr-5 pl-5 w-auto hover:bg-gray-100"
+          class="text-gray-500 rounded-md dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-2 mr-1 w-auto hover:bg-gray-200"
         >
           Cancelar
         </button>
-          <button
-            (click)="saveEmployee()"
-            class="bg-blue-600 text-white text-sm font-semibold rounded-md pl-2 pr-2 hover:bg-blue-700"
-          >
-            <i class="fa-solid fa-floppy-disk mr-1"></i>
-            {{ isUpdate ? "Guardar cambios" : "Guardar" }}
-          </button>
-        </div>
+        <button
+          (click)="saveEmployee()"
+          class="bg-blue-600 text-white text-sm font-semibold rounded-md p-2 ml-1 hover:bg-blue-700"
+        >
+          <i class="fa-solid fa-floppy-disk mr-1"></i>
+          {{ isUpdate ? "Guardar cambios" : "Guardar" }}
+        </button>
       </div>
     </form>
   </div>

@@ -21,6 +21,7 @@ export default class EnterpriseInformationComponent {
   private fb = inject(FormBuilder);
   private id: string = '';
   ruc: string = '';
+  store : any;
 
   resultado: any = null;
   cargando: boolean = false;
@@ -108,7 +109,7 @@ export default class EnterpriseInformationComponent {
   }
 
   cargarDatosDesdeSri(data: any) {
-    if (!data || !Array.isArray(data) || data.length === 0) return;
+    if (!data || !Array.isArray(data) || length === 0) return;
 
     const contribuyente = data[0];
 
@@ -142,27 +143,28 @@ export default class EnterpriseInformationComponent {
     
     this.storeService.getInformationStore().subscribe({
       next: (res: any) => {
-        this.id = res.data.id;
+        this.store = res;
+        this.id = res.id;
         this.EnterpriseForm.patchValue({
-          numeroRuc: res.data.numeroRuc || '',
-          razonSocial: res.data.razonSocial || '',
-          actividadEconomicaPrincipal: res.data.actividadEconomicaPrincipal || '',
-          tipoContribuyente: res.data.tipoContribuyente || '',
-          regimen: res.data.regimen || '',
-          categoria: res.data.categoria || '',
-          obligadoLlevarContabilidad: res.data.obligadoLlevarContabilidad || '',
-          agenteRetencion: res.data.agenteRetencion || '',
-          contribuyenteEspecial: res.data.contribuyenteEspecial || '',
-          representantesLegales: res.data.representantesLegales || '',
-          email: res.data.email || '',
-          telefono: res.data.telefono || '',
-          address: res.data.address || ''
+          numeroRuc: res.numeroRuc || '',
+          razonSocial: res.razonSocial || '',
+          actividadEconomicaPrincipal: res.actividadEconomicaPrincipal || '',
+          tipoContribuyente: res.tipoContribuyente || '',
+          regimen: res.regimen || '',
+          categoria: res.categoria || '',
+          obligadoLlevarContabilidad: res.obligadoLlevarContabilidad || '',
+          agenteRetencion: res.agenteRetencion || '',
+          contribuyenteEspecial: res.contribuyenteEspecial || '',
+          representantesLegales: res.representantesLegales || '',
+          email: res.email || '',
+          telefono: res.telefono || '',
+          address: res.address || ''
         });
       },
       error: (err) => {
         Swal.fire({
           icon: "error",
-          title: `${err.statusText}`,
+          title: `Error`,
           text: `${err.error.message}`
         });
       }

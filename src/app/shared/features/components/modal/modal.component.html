@@ -1,26 +1,37 @@
+
 <div
-  *ngIf="showModal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75"
+  *ngIf="visible"
+  class="absolute inset-0 z-40 flex items-center justify-center bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm"
 >
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-2/6 p-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center border-b pb-3">
-      <h2 class="text-xl font-semibold dark:text-white text-gray-500">{{ title }}</h2>
-      <button (click)="close()" class=" bg-red-600 pl-2 pr-2 pb-1 pt-1 rounded-md text-white hover:bg-red-700">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
+  <div
+    [ngClass]="{
+      'animate-fade-zoom-in': !isClosing,
+      'animate-fade-zoom-out': isClosing
+    }"
+    class="bg-white dark:bg-gray-900 rounded-lg shadow-2xl w-full max-w-md p-6 border border-gray-200 dark:border-gray-700 transform transition-all duration-300"
+  >
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+      {{ title }}
+    </h2>
 
-    <!-- Dynamic Content -->
-    <div class="mt-4 p-5">
-      <ng-content>
-        
-      </ng-content>
-    </div>
+    <form (ngSubmit)="submit()">
+      <ng-content></ng-content>
 
-    <!-- Footer -->
-    <!-- <div class="mt-6 flex justify-end">
-        <button (click)="close()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Cerrar</button>
-      </div> -->
+      <div class="flex justify-end gap-3 mt-6">
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="px-4 py-2 text-sm text-gray-600 hover:cursor-pointer hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 bg-green-600 hover:cursor-pointer text-white rounded hover:bg-green-700 text-sm font-semibold"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
   </div>
 </div>

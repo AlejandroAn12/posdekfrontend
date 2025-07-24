@@ -6,161 +6,270 @@
 <!-- Card Body -->
 <div class="flex flex-col border-gray-100 rounded mt-5">
   <!-- Título del formulario -->
-  <div class="p-2 bg-gray-100">
+  <div class="p-2 bg-gray-200">
     <h2 class="text-sm font-semibold text-gray-600 uppercase">
-      Datos del proveedor
+      {{ isUpdate ? "ACTUALIZACION DE PROVEEDOR" : "NUEVO PROVEEDOR" }}
     </h2>
   </div>
+  <!-- *********************************************** -->
+  <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+    <div class="title">
+      <h1 class="font-medium text-xl text-gray-500">DETALLES</h1>
+    </div>
+    <!-- *********************** -->
 
-  <!-- Formulario -->
-  <div class="bg-white dark:bg-gray-900 p-4 space-y-6">
-    <form [formGroup]="SupplierForm">
-      <!-- Fila 1 -->
-      <div class="flex flex-wrap gap-4">
-        <div class="w-full sm:w-40 mt-5 mr-10">
+    <form [formGroup]="form">
+      <!--**********************************-->
+      <div class="flex mt-5 mb-5">
+        <div class="w-42 mr-4">
           <label
             for="typeofdocumentId"
-            class="text-sm font-semibold text-gray-600 dark:text-white mb-1"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >Tipo de documento</label
           >
           <select
             formControlName="typeofdocumentId"
             id="typeofdocumentId"
-            class="rounded-md border-gray-300 text-sm dark:bg-gray-800"
+            [ngClass]="{
+              'border-red-500':
+                f['typeofdocumentId'].invalid && f['typeofdocumentId'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           >
-            <option value="" disabled selected>Tipo de documento</option>
             <option
-              *ngFor="let typeOfDoc of tyOfDocuments"
-              [value]="typeOfDoc.id"
+              *ngIf="tyOfDocs.length > 0"
+              disabled
+              class="font-semibold"
+              value=""
             >
+              Tipos de documentos disponibles
+            </option>
+            <option
+              *ngIf="tyOfDocs.length < 1"
+              disabled
+              class="font-semibold"
+              value=""
+            >
+              No hay tipos de documentos disponibles
+            </option>
+            <option *ngFor="let typeOfDoc of tyOfDocs" [value]="typeOfDoc.id">
               {{ typeOfDoc.name }}
             </option>
           </select>
+          <div
+            *ngIf="
+              f['typeofdocumentId'].invalid && f['typeofdocumentId'].touched
+            "
+            class="text-red-500 text-sm"
+          >
+            Debe seleccionar un tipo de documento.
+          </div>
         </div>
-        <div class="w-full sm:w-64 mt-5">
+
+        <div class="w-36 mr-4">
           <label
             for="ruc"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >N° Identificación</label
           >
           <input
             formControlName="ruc"
-            id="ruc"
+            placeholder="0812345678"
             type="text"
-            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
+            id="ruc"
+            [ngClass]="{
+              'border-red-500': f['ruc'].invalid && f['ruc'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['ruc'].invalid && f['ruc'].touched"
+            class="text-red-500 text-sm"
+          >
+            El numero de identificación debe tener 13 digitos.
+          </div>
         </div>
-        <div class="flex-1 mt-5">
+      </div>
+      <!--************************************************************-->
+      <div class="flex mt-5 mb-5">
+        <div class="w-full mr-4">
           <label
             for="company_name"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >Nombre del proveedor</label
           >
           <input
             formControlName="company_name"
-            id="company_name"
+            placeholder="Ingrese el nombre del proveedor"
             type="text"
-            class="block w-full text-sm border border-gray-300 dark:bg-gray-800 rounded-md"
+            id="company_name"
+            [ngClass]="{
+              'border-red-500':
+                f['company_name'].invalid && f['company_name'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['company_name'].invalid && f['company_name'].touched"
+            class="text-red-500 text-sm"
+          >
+            El nombre del proveedor es obligatorio.
+          </div>
         </div>
-        <div class="flex-1 mt-5">
+      </div>
+      <!--**************************************-->
+      <div class="flex mt-5 mb-5">
+        <div class="w-full mr-4">
           <label
             for="legal_representative"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >Nombre de encargado</label
           >
           <input
             formControlName="legal_representative"
-            id="legal_representative"
+            placeholder="Ingrese el nombre del encargado legal"
             type="text"
-            class="block w-full text-sm border border-gray-300 dark:bg-gray-800 rounded-md"
+            id="legal_representative"
+            [ngClass]="{
+              'border-red-500':
+                f['legal_representative'].invalid &&
+                f['legal_representative'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="
+              f['legal_representative'].invalid &&
+              f['legal_representative'].touched
+            "
+            class="text-red-500 text-sm"
+          >
+            El nombre del representante es obligatorio.
+          </div>
         </div>
       </div>
-
-      <!-- Fila 2 -->
-      <div class="flex flex-wrap gap-4 mt-5">
-        <div class="w-full sm:w-40 mr-10">
+      <!--**************************************-->
+      <div class="flex mt-5 mb-5">
+        <div class="w-full mr-4">
           <label
             for="phone"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Teléfono de contacto</label
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Teléfono</label
           >
           <input
             formControlName="phone"
-            id="phone"
+            placeholder="0991234567"
             type="tel"
-            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
-            placeholder="+593 999 999 999"
+            id="phone"
+            [ngClass]="{
+              'border-red-500': f['phone'].invalid && f['phone'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['phone'].invalid && f['phone'].touched"
+            class="text-red-500 text-sm"
+          >
+            El teléfono es obligatorio.
+          </div>
         </div>
-        <div class="w-full sm:w-64">
+        <div class="w-full mr-4">
           <label
             for="email"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >Correo electrónico</label
           >
           <input
             formControlName="email"
-            id="email"
+            placeholder="Ingrese el correo electrónico"
             type="email"
-            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
-            placeholder="proveedor@mail.com"
+            id="email"
+            [ngClass]="{
+              'border-red-500': f['email'].invalid && f['email'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['email'].invalid && f['email'].touched"
+            class="text-red-500 text-sm"
+          >
+            El correo electrónico es obligatorio.
+          </div>
         </div>
       </div>
-
-      <!-- Fila 3 -->
-      <div class="flex flex-wrap gap-4 mt-5">
-        <div class="w-full sm:w-40 mr-10">
+      <!--**************************************-->
+      <div class="flex mt-5 mb-5">
+        <div class="w-full mr-4">
           <label
             for="country"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >País</label
           >
           <input
             formControlName="country"
-            id="country"
-            type="text"
-            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
             placeholder="Ecuador"
+            type="text"
+            id="country"
+            [ngClass]="{
+              'border-red-500': f['country'].invalid && f['country'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['country'].invalid && f['country'].touched"
+            class="text-red-500 text-sm"
+          >
+            El país es obligatorio.
+          </div>
         </div>
-        <div class="w-full sm:w-40">
+        <div class="w-full mr-4">
           <label
             for="city"
-            class="text-sm font-semibold text-gray-600 dark:text-white"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
             >Ciudad</label
           >
           <input
             formControlName="city"
-            id="city"
-            type="text"
-            class="rounded-md text-sm border-gray-300 dark:bg-gray-800"
             placeholder="Quito"
+            type="text"
+            id="city"
+            [ngClass]="{
+              'border-red-500': f['city'].invalid && f['city'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
           />
+          <div
+            *ngIf="f['city'].invalid && f['city'].touched"
+            class="text-red-500 text-sm"
+          >
+            La ciudad es obligatorio.
+          </div>
         </div>
       </div>
-
-      <!-- Fila 4 -->
-      <div class="flex flex-wrap gap-4 mt-5">
-        <label
-          for="address"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Dirección matriz</label
-        >
-        <textarea
-          formControlName="address"
-          id="address"
-          class="rounded text-sm block w-full border border-gray-300 dark:bg-gray-800"
-        ></textarea>
+      <!--**************************************-->
+      <div class="flex mt-5 mb-5">
+        <div class="w-full mr-4">
+          <label
+            for="address"
+            class="text-sm font-semibold text-gray-500 dark:text-white"
+            >Direccion</label
+          >
+          <textarea
+            formControlName="address"
+            placeholder="Ingrese la dirección del proveedor"
+            [ngClass]="{
+              'border-red-500': f['address'].invalid && f['address'].touched
+            }"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            id="address"
+          ></textarea>
+        </div>
       </div>
-
-      <!-- Botones -->
+      <!--***********************************-->
       <div class="flex gap-4 mt-5">
         <button
           (click)="btnBack()"
-          class="text-gray-600 font-semibold rounded-md dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm  p-3 pr-5 pl-5 w-auto hover:bg-gray-100"
+          class="text-gray-600 font-semibold rounded-md dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm p-3 pr-5 pl-5 w-auto hover:bg-gray-200"
         >
           Cancelar
         </button>

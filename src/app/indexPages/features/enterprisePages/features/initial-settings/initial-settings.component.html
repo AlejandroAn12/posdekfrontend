@@ -4,15 +4,20 @@
   </div>
 </div>
 
-
 <!-- Impuestos -->
-<div class="flex flex-col rounded border mt-5">
+<div class="flex flex-col rounded mt-5">
   <div class="p-2 bg-gray-300">
-    <h1 class="text-sm font-semibold text-gray-600 uppercase">Impuestos</h1>
+    <h1 class="text-sm font-semibold text-gray-600 uppercase">
+      Configuración de Impuestos
+    </h1>
   </div>
-  <div class="bg-white dark:bg-gray-900 p-4">
-    <form [formGroup]="EnterpriseForm" class="space-y-5">
-      <div class="grid grid-cols-3 gap-4">
+
+  <!-- Formulario -->
+  <div
+    class="max-w-xl mx-auto bg-white mt-5 p-6 shadow"
+  >
+    <form [formGroup]="form">
+      <div class="flex mt-5 mb-5">
         <div>
           <label class="text-sm font-semibold text-gray-600 dark:text-white"
             >¿Trabajas con Impuestos?</label
@@ -25,18 +30,18 @@
             >
               <small
                 >Si su opción es "NO" el impuesto por defecto que se calculará
-                el precio total de venta es sobre el 15% según lo estipulado en el Reglamento
-                Tributario.</small
+                el precio total de venta es sobre el 15% según lo estipulado en
+                el Reglamento Tributario.</small
               >
             </div>
           </div>
           <!-- Final Tooltip -->
-          <div class="flex space-x-4 mt-2">
+          <div class="flex space-x-4 mt-5">
             <label class="inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
                 class="sr-only peer"
-                formControlName="work_taxes"
+                formControlName="workTaxes"
               />
               <div
                 class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
@@ -44,34 +49,61 @@
               <span
                 class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                {{ EnterpriseForm.get("work_taxes")?.value ? "Sí" : "No" }}
+                {{ form.get("workTaxes")?.value ? "Sí" : "No" }}
               </span>
             </label>
           </div>
         </div>
+      </div>
 
-        <div *ngIf="showSelectTypeTaxes">
-          <label for="tipoImpuesto" class="text-sm font-semibold text-gray-600 dark:text-white"
-            >Tipo de impuesto</label
+      <div *ngIf="showSelectTypeTaxes">
+        <label
+          for="taxId"
+          class="text-sm font-semibold text-gray-600 dark:text-white"
+          >Impuestos</label
+        >
+        <select
+          formControlName="taxId"
+          id="taxId"
+          [ngClass]="{
+            'border-red-500': f['taxId'].invalid && f['taxId'].touched
+          }"
+          class="input-field dark:bg-gray-800 mt-1"
+        >
+          <option
+            *ngIf="iTaxes.length > 0"
+            disabled
+            class="font-semibold text-gray-500"
+            value=""
           >
-          <select formControlName="taxId" id="tipoImpuesto" class="input-field dark:bg-gray-800">
-            <option value="" disabled selected>Selecciona el impuesto</option>
-            <option *ngFor="let tax of iTaxes" [value]="tax.id">
-              {{ tax.name }} - {{ tax.rate }}{{ tax.symbol }}
-            </option>
-          </select>
+            Seleccione el impuesto
+          </option>
+          <option
+            *ngIf="iTaxes.length < 1"
+            disabled
+            class="font-semibold"
+            value=""
+          >
+            No hay valores de impuestos disponibles
+          </option>
+          <option *ngFor="let tax of iTaxes" [value]="tax.id">
+            {{ tax.name }} - {{ tax.rate }}{{ tax.symbol }}
+          </option>
+        </select>
+        <div
+          *ngIf="f['taxId'].invalid && f['taxId'].touched"
+          class="text-red-500 text-sm"
+        >
+          Debe elegir el valor de impuesto.
         </div>
       </div>
+      <button
+        *ngIf="showSelectTypeTaxes"
+        (click)="save()"
+        class="bg-blue-600 text-white mt-5 text-sm font-semibold rounded p-2 hover:bg-blue-700 flex items-center"
+      >
+        <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar
+      </button>
     </form>
   </div>
-</div>
-
-<!-- Botón de guardar -->
-<div class="flex justify-start mt-5">
-  <button
-    (click)="save()"
-    class="bg-blue-600 text-white text-sm font-semibold rounded p-2 hover:bg-blue-700 flex items-center"
-  >
-    <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar
-  </button>
 </div>

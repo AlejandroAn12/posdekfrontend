@@ -35,15 +35,6 @@ export default class InventoryEntryComponent {
         physicalQuantity: item.physicalQuantity ?? 0
       }));
     });
-
-    // this.inventoryService.getInventoryItems(this.inventoryId).subscribe((items) => {
-    //   console.log(items)
-    //   // asegurarse que cada item tenga campo editable
-    //   this.inventoryItems = items.map((item) => ({
-    //     ...item,
-    //     physicalQuantity: item.physicalQuantity ?? 0,
-    //   }));
-    // });
   }
 
   saveInventory() {

@@ -9,10 +9,10 @@
 <div class="flex flex-col p-5 border bg-white dark:bg-gray-900">
   <div class="flex justify-end mb-10">
     <button
-      (click)="toggleModal()"
-      class="bg-blue-600 text-white text-sm font-semibold rounded-md pl-10 pr-10 p-3 w-auto hover:bg-blue-700 mr-2"
+      (click)="showModal = true"
+      class="bg-blue-600 text-white text-sm font-semibold rounded-md p-2 w-auto hover:bg-blue-700 mr-2"
     >
-      <i class="fa-solid fa-square-plus mr-1"></i> Agregar
+      <i class="fa-solid fa-square-plus mr-1"></i> Agregar categoria
     </button>
   </div>
   <hr class="mb-5" />
@@ -26,40 +26,24 @@
 </div>
 <!-- Final del body -->
 
-<!-- Modal-->
 <app-modal
-  *ngIf="showModal"
-  [showModal]="showModal"
+  [visible]="showModal"
+  (close)="showModal = false"
   [title]="titleModal"
-  (closeModal)="toggleModal()"
+  (submitForm)="saveCategory()"
 >
-  <form [formGroup]="CategoryForm" (ngSubmit)="saveCategory()">
-    <div class="flex flex-col justify-center dark:bg-gray-800">
-      <div class="mb-4 dark:text-white">
-        <div class="relative z-0 w-full group">
-          <input
-            formControlName="name"
-            type="text"
-            name="floating_name"
-            id="floating_name"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-            placeholder=" "
-            required
-          />
-          <label
-            for="floating_name"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto dark:peer-focus:text-white peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >Nombre</label
-          >
-        </div>
-      </div>
+  <form [formGroup]="form">
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Nombre
+      </label>
+      <input
+        type="text"
+        formControlName="name"
+        name="level"
+        class="mt-1 block w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"
+      />
     </div>
-    <button
-      type="submit"
-      class="bg-blue-600 hover:bg-blue-700 text-white p-3 font-semibold pr-5 pl-5 rounded-md"
-    >
-      <i class="fa-solid fa-floppy-disk mr-1"></i>
-      {{ isEditing ? "Guardar cambios" : "Guardar" }}
-    </button>
   </form>
 </app-modal>
+<!-- Modal-->

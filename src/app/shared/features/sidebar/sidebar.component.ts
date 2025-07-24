@@ -41,6 +41,15 @@ export class SidebarComponent {
     },
 
     {
+      title: 'Administración',
+      iconClass: 'fa-solid fa-user-gear',
+      children: [
+        { title: 'Gestionar usuarios', iconClass: 'fa-solid fa-user-tie', route: '/index/users' },
+        { title: 'Gestionar colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees' },
+      ],
+    },
+
+    {
       title: 'Proveedores',
       iconClass: 'fa-solid fa-truck-moving',
       children: [
@@ -91,14 +100,6 @@ export class SidebarComponent {
       title: 'Ingresar mercadería',
       iconClass: 'fa-solid fa-dolly',
       route: '/index/merchandise/entry',
-    },
-    {
-      title: 'Administración',
-      iconClass: 'fa-solid fa-user-gear',
-      children: [
-        { title: 'Usuarios', iconClass: 'fa-solid fa-user-tie', route: '/index/users/credentials' },
-        { title: 'Colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees/view' },
-      ],
     },
     {
       title: 'Configuraciones',

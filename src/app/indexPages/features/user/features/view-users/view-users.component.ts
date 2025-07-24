@@ -4,26 +4,30 @@ import { ICredentialsAccess } from '../../interfaces/user.interface';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
-import { RoleService } from '../../../../../core/services/role.service';
 import { IRole } from '../../../../../core/models/role.interface';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-users',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, ModalComponent, DataTablesModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, DataTablesModule],
   templateUrl: './view-users.component.html',
   styleUrl: './view-users.component.css'
 })
 export default class ViewUsersComponent implements OnInit {
 
+  //Renderizado del datatables
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+  dtTrigger: Subject<any> = new Subject<any>();
+
   //Injeccion de Servicios
   authService = inject(UserService);
+  private router = inject(Router);
   private fb = inject(FormBuilder);
-  roleService = inject(RoleService);
   private alertsService = inject(AlertService);
   private renderer = inject(Renderer2);
   dtOptions: Config = {};
@@ -47,8 +51,6 @@ export default class ViewUsersComponent implements OnInit {
 
 
   constructor() {
-    this.loadEmployeesWOutCredentials();
-    this.loadRoles();
     this.CredentialsForm = this.fb.group({
       employee: ['', [Validators.required]],
       username: ['', [Validators.required]],
@@ -59,6 +61,23 @@ export default class ViewUsersComponent implements OnInit {
   }
   ngOnInit(): void {
     this.loadTable();
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  //Metodo para refrescar la tabla
+  refreshTable(): void {
+    if (this.dtElement) {
+      this.dtElement.dtInstance.then((dtInstance: any) => {
+        dtInstance.ajax.reload();
+      });
+    }
   }
 
   //Cargar DataTable
@@ -87,7 +106,7 @@ export default class ViewUsersComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Usuarios: _TOTAL_",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -155,7 +174,7 @@ export default class ViewUsersComponent implements OnInit {
         const btnUpdate = rowElement.querySelector('.btn-update') as HTMLInputElement;
         if (btnUpdate) {
           this.renderer.listen(btnUpdate, 'click', () => {
-            this.toggleModal(data);
+            this.editUser(data.id);
           });
         }
         return row;
@@ -169,34 +188,21 @@ export default class ViewUsersComponent implements OnInit {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          text: `${res.message}`,
+          title: `Credencial eliminada`,
           showConfirmButton: false,
           timer: 1500
         });
         this.refreshTable();
-        this.loadEmployeesWOutCredentials();
       },
       error: (err) => {
         Swal.fire({
           icon: "error",
-          title: `${err.statusText}`,
+          title: 'Error',
           text: `${err.error.message}`
         });
       },
     });
   }
-
-  loadEmployeesWOutCredentials() {
-    this.authService.getEmployeesWithOutCredendentials().subscribe({
-      next: (data) => {
-        this.employees = data.employeesFound;
-      },
-      error: (err) => {
-        return false;
-      }
-    });
-  }
-
 
   //Toggle para actualizar el estado de la credencial (ACTIVO : INACTIVO)
   onStatusChange(event: Event, credentials: any): void {
@@ -208,127 +214,26 @@ export default class ViewUsersComponent implements OnInit {
   updateProductStatus(credentials: any): void {
     this.authService.updateCredentialsStatus(credentials.id, credentials.status).subscribe({
       next: (res: any) => {
-        if(credentials.status) {
+        if (credentials.status) {
           this.alertsService.showSuccess(`Credencial activada`, `${res.message}`);
         }
         else {
-        this.alertsService.showSuccess(`Credencial inactiva`, `${res.message}`)
+          this.alertsService.showSuccess(`Credencial inactiva`, `${res.message}`)
         }
       },
       error: (error) => this.alertsService.showError(`${error.error.message}`, `${error.statusText}`),
     });
   }
 
-
-  //Guardar
-  saveCredential() {
-    if (this.isEditing && this.selectedCredentialId) {
-      this.updateCredential(this.selectedCredentialId);
-    } else {
-      this.addCredential();
-    }
-  }
-
-  //Añadir nueva credencial
-  addCredential() {
-    const newCredentials = this.CredentialsForm.value;
-    this.authService.addCredentials(newCredentials).subscribe({
-      next: (res) => {
-        this.alertsService.showSuccess(`${res.message}`, `Información`);
-        this.refreshTable();
-        this.loadEmployeesWOutCredentials();
-      },
-      error: (err) => {
-        // console.error({err});
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-      },
-    });
-    this.CredentialsForm.reset();
-    this.showModal = false;
-  }
-
-  //Actualizar categoria
-  updateCredential(id: string) {
-    const updatedCredential = this.CredentialsForm.value;
-    this.authService.updateCredential(id, updatedCredential).subscribe({
-      next: (res: any) => {
-        this.alertsService.showSuccess(`${res.message}`, `Información`);
-        this.refreshTable();
-        this.loadEmployeesWOutCredentials();
-      },
-      error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-      },
-    });
-    this.showModal = false;
-
-  }
-
-  loadRoles() {
-    this.roleService.getRoles().subscribe({
-      next: (data: any) => {
-        this.roles = data.roles;
-      },
-      error: (err) => {
-        // console.error('Error al cargar roles:', err);
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-      },
-    });
-  }
-
-
-  //Toggle para abrir el modal
-  toggleModal(credential: any = null) {
-    this.showModal = !this.showModal;
-
-    if (credential) {
-      this.isEditing = true;
-      this.titleModal = 'Actualizar credencial';
-      this.selectedCredentialId = credential.id;
-
-      this.CredentialsForm.patchValue({
-        employee: `${credential.employee.name} ${credential.employee.surname}`,
-        username: credential.username,
-        roleId: credential.role.id
-      });
-    } else {
-      this.isEditing = false;
-      this.titleModal = 'Agregar credencial';
-      this.selectedCredentialId = null;
-      this.CredentialsForm.reset();
-    }
-  }
-
-
   downloadExcel() {
     this.alertsService.showInfo('Metodo aun no implementado', 'Información')
   }
 
-  //Renderizado del datatables
-  @ViewChild(DataTableDirective, { static: false })
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-
-
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(null);
+  editUser(userId: string) {
+    this.router.navigate(['/index/users/form'], { queryParams: { form: 'update', id: userId } });
   }
 
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
+  next() {
+    this.router.navigate(['/index/users/form']);
   }
-
-  //Metodo para refrescar la tabla
-  refreshTable(): void {
-    if (this.dtElement) {
-      this.dtElement.dtInstance.then((dtInstance: any) => {
-        dtInstance.ajax.reload();
-      });
-    }
-  }
-
-  get f() {
-    return this.CredentialsForm.controls;
-  }
-
 }

@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-employees',
-  imports: [ModalComponent, ReactiveFormsModule, CommonModule, DataTablesModule],
+  imports: [ReactiveFormsModule, CommonModule, DataTablesModule],
   templateUrl: './view-employees.component.html',
   styleUrl: './view-employees.component.css'
 })
@@ -40,7 +40,7 @@ export default class ViewEmployeesComponent implements OnInit {
 
 
   //Formulario
-  EmployeesForm: FormGroup;
+  form: FormGroup;
   isDisabled: boolean = true;
 
 
@@ -51,7 +51,7 @@ export default class ViewEmployeesComponent implements OnInit {
 
 
   constructor() {
-    this.EmployeesForm = this.fb.group({
+    this.form = this.fb.group({
       codeEmployee: [{ value: '', disabled: this.isDisabled }],
       name: ['', Validators.required],
       role: [{ value: '' }],
@@ -62,10 +62,35 @@ export default class ViewEmployeesComponent implements OnInit {
       tlf: ['', Validators.required],
     });
   }
+
   ngOnInit(): void {
     this.loadTable();
     this.loadRoles();
   }
+
+  //Renderizado del datatables
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+  dtTrigger: Subject<any> = new Subject<any>();
+
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  //Metodo para refrescar la tabla
+  refreshTable(): void {
+    if (this.dtElement) {
+      this.dtElement.dtInstance.then((dtInstance: any) => {
+        dtInstance.ajax.reload();
+      });
+    }
+  }
+
 
   //Cargar DataTable
   loadTable() {
@@ -85,7 +110,7 @@ export default class ViewEmployeesComponent implements OnInit {
         zeroRecords: "No se encontraron resultados",
         search: "Buscar:",
         lengthMenu: "",
-        info: "Total de registros: _TOTAL_",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
@@ -156,7 +181,7 @@ export default class ViewEmployeesComponent implements OnInit {
         const btnUpdate = rowElement.querySelector('.btn-update') as HTMLInputElement;
         if (btnUpdate) {
           this.renderer.listen(btnUpdate, 'click', () => {
-            this.editSupplier(data.id);
+            this.editEmployee(data.id);
           });
         }
         return row;
@@ -171,7 +196,6 @@ export default class ViewEmployeesComponent implements OnInit {
         this.roles = data.roles;
       },
       error: (err) => {
-        // console.error('Error al cargar roles:', err);
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -181,70 +205,8 @@ export default class ViewEmployeesComponent implements OnInit {
     });
   }
 
-  //Guardar
-  saveEmployee() {
-    if (this.isEditing && this.selectedEmployeeId) {
-      this.updateEmployee(this.selectedEmployeeId);
-    } else {
-      this.registerEmployee();
-    }
-  }
-
-  //Añadir nueva credencial
-  registerEmployee() {
-    const newEmployee = this.EmployeesForm.value;
-    this.employeeService.registerEmployee(newEmployee).subscribe({
-      next: (res) => {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          text: `${res.message}`,
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.refreshTable();
-      },
-      error: (err) => {
-        // console.error({err});
-        Swal.fire({
-          icon: "error",
-          title: `${err.statusText}`,
-          text: `${err.error.message}`
-        });
-      },
-    });
-    this.EmployeesForm.reset();
-    this.showModal = false;
-  }
-
-  editSupplier(supplierId: string) {
-    this.router.navigate(['/index/employees/form'], { queryParams: { form: 'update', id: supplierId } });
-  }
-
-  //Actualizar categoria
-  updateEmployee(id: string) {
-    const updatedEmployee = this.EmployeesForm.value;
-    this.employeeService.updateEmployee(id, updatedEmployee).subscribe({
-      next: (res: any) => {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          text: `${res.message}`,
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.refreshTable();
-      },
-      error: (err) => {
-        // console.error(err);
-        Swal.fire({
-          icon: "error",
-          title: `${err.statusText}`,
-          text: `${err.error.message}`
-        });
-      },
-    });
-    this.showModal = false;
+  editEmployee(employeeId: string) {
+    this.router.navigate(['/index/employees/form'], { queryParams: { form: 'update', id: employeeId } });
   }
 
   deleteEmployee(id: string) {
@@ -263,38 +225,11 @@ export default class ViewEmployeesComponent implements OnInit {
       error: (err) => {
         Swal.fire({
           icon: "error",
-          title: `${err.statusText}`,
+          title: `Acción no permitida`,
           text: `${err.error.message}`
         });
       },
     });
-  }
-
-
-  //Toggle para abrir el modal
-  toggleModal(employee: any = null) {
-    this.showModal = !this.showModal;
-
-    if (employee) {
-      this.isEditing = true;
-      this.titleModal = 'Actualizar datos de Empleado';
-      this.selectedEmployeeId = employee.id;
-
-      this.EmployeesForm.patchValue({
-        codeEmployee: employee.codeEmployee,
-        name: employee.name,
-        surname: employee.surname,
-        dni: employee.dni,
-        email: employee.email,
-        tlf: employee.tlf,
-        address: employee.address
-      });
-    } else {
-      this.isEditing = false;
-      this.titleModal = 'Nuevo empleado';
-      this.selectedEmployeeId = null;
-      this.EmployeesForm.reset();
-    }
   }
 
   onStatusChange(event: Event, employee: any): void {
@@ -322,29 +257,6 @@ export default class ViewEmployeesComponent implements OnInit {
 
   downloadExcel() {
     this.alertsService.showInfo('Metodo aun no implementado', 'Información')
-  }
-
-  //Renderizado del datatables
-  @ViewChild(DataTableDirective, { static: false })
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-
-
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(null);
-  }
-
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
-  }
-
-  //Metodo para refrescar la tabla
-  refreshTable(): void {
-    if (this.dtElement) {
-      this.dtElement.dtInstance.then((dtInstance: any) => {
-        dtInstance.ajax.reload();
-      });
-    }
   }
 
   btnNewEmployee() {

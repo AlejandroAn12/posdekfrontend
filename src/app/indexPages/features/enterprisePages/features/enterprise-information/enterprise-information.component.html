@@ -1,253 +1,186 @@
-<div class="bg-blue-700 p-5">
-  <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase">Información de Tienda</h1>
-  </div>
+<div class="mb-10 max-w-4xl mx-auto bg-blue-600 p-4 rounded-md shadow-md">
+  <h1 class="text-2xl font-semibold mb-4 text-white">
+    Información de la Tienda
+  </h1>
 </div>
 
-<!-- Información de la empresa -->
-<div class="flex flex-col border rounded mt-5">
-  <div class="m-5">
-    <label class="text-sm text-green-600 font-bold dark:text-white"
-      >Habilitar Formulario</label
+<div class="max-w-4xl mx-auto mt-10 p-6 rounded-2xl">
+  <div class="flex items-center space-x-6 mb-6">
+    <img
+      class="w-24 h-24 rounded-full border-4 border-blue-600"
+      [src]="store?.avatarUrl || 'assets/img/others/default-avatar.png'"
+      alt="Avatar"
+    />
+    <div>
+      <h2 class="text-2xl font-bold text-gray-800">{{ store?.razonSocial }}</h2>
+      <p class="text-gray-500">{{ store?.email }}</p>
+      <span
+        class="text-sm font-medium inline-flex items-center px-2.5 py-0.5 rounded bg-blue-600 text-white"
+      >
+        Ruc: {{ store?.numeroRuc }}
+      </span>
+    </div>
+  </div>
+  <!-- ******************************************************** -->
+  <div class="mt-6 mb-6">
+    <label class="block text-gray-700 font-medium mb-1"
+      >Representante legal</label
     >
-    <div class="flex space-x-4 mt-2">
-      <label class="inline-flex items-center cursor-pointer">
-        <input
-          type="checkbox"
-          class="sr-only peer"
-          (change)="toggleForm($event)"
-        />
-        <div
-          class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-        ></div>
-        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-          {{ canEdit ? "Habilitado" : "No habilitado" }}
-        </span>
-      </label>
+    <input
+      type="text"
+      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+      [value]="store?.representantesLegales || 'No asignado'"
+      readonly
+    />
+  </div>
+<!-- ******************************************************** -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="block text-gray-700 font-medium mb-1"
+        >Nombre/Razón social</label
+      >
+      <input
+        type="text"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.razonSocial || 'Sin razon social'"
+        readonly
+      />
+    </div>
+    <div>
+      <label class="block text-gray-700 font-medium mb-1">RUC/NUT</label>
+      <input
+        type="text"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.numeroRuc || 'No asignado'"
+        readonly
+      />
+    </div>
+
+    <div>
+      <label class="block text-gray-700 font-medium mb-1"
+        >Correo electrónico</label
+      >
+      <input
+        type="email"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.email"
+        readonly
+      />
+    </div>
+    <div>
+      <label class="block text-gray-700 font-medium mb-1"
+        >Teléfono de contacto</label
+      >
+      <input
+        type="text"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.telefono || 'No asignado'"
+        readonly
+      />
     </div>
   </div>
-</div>
+  <!-- ******************************************************** -->
+   <div class="mt-6 mb-6">
+    <label class="block text-gray-700 font-medium mb-1"
+      >Actividad económica principal</label
+    >
+    <input
+      type="text"
+      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+      [value]="store?.actividadEconomicaPrincipal || 'No asignado'"
+      readonly
+    />
+  </div>
+  <!-- ******************************************************** -->
 
-<div *ngIf="canEdit" class="flex mt-5 p-2 space-x-2">
-  <input
-    placeholder="Ingrese el ruc.."
-    [(ngModel)]="ruc"
-    type="text"
-    class="border border-gray-300 rounded"
-  />
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="block text-gray-700 font-medium mb-1"
+        >Tipo contribuyente</label
+      >
+      <input
+        type="text"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.tipoContribuyente || 'Sin razon social'"
+        readonly
+      />
+    </div>
+    <div>
+      <label class="block text-gray-700 font-medium mb-1">Regimen</label>
+      <input
+        type="text"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.regimen || 'No asignado'"
+        readonly
+      />
+    </div>
+
+    <div>
+      <label class="block text-gray-700 font-medium mb-1"
+        >Categoria</label
+      >
+      <input
+        type="email"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.categoria"
+        readonly
+      />
+    </div>
+    <div>
+      <label class="block text-gray-700 font-medium mb-1"
+        >Obligado a llevar contabilidad</label
+      >
+      <input
+        type="text"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.obligadoLlevarContabilidad || 'No asignado'"
+        readonly
+      />
+    </div>
+    <div>
+      <label class="block text-gray-700 font-medium mb-1"
+        >Agente de retencion</label
+      >
+      <input
+        type="text"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.agenteRetencion || 'No asignado'"
+        readonly
+      />
+    </div>
+    <div>
+      <label class="block text-gray-700 font-medium mb-1"
+        >Contribuyente especial</label
+      >
+      <input
+        type="text"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        [value]="store?.contribuyenteEspecial || 'No asignado'"
+        readonly
+      />
+    </div>
+  </div>
+  <!-- ******************************************************** -->
+  <div class="mt-6 mb-6">
+    <label class="block text-gray-700 font-medium mb-1"
+      >Dirección</label
+    >
+    <input
+      type="text"
+      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+      [value]="store?.address || 'Sin Dirección asignada'"
+      readonly
+    />
+  </div>
+
   <button
-    (click)="buscarRuc()"
-    class="bg-blue-500 text-white px-4 py-2 font-semibold rounded hover:bg-blue-600"
-  >
-    Consultar
-  </button>
-
-  <div *ngIf="cargando">Consultando SRI...</div>
-
-  <!-- <div *ngIf="resultado">
-    <div *ngIf="resultado.existe; else noExiste">
-      <pre>{{ resultado.data | json }}</pre>
-    </div>
-    <ng-template #noExiste>
-      <p class="text-red-600 font-semibold">El RUC no existe en el SRI.</p>
-    </ng-template>
-  </div> -->
-</div>
-
-<div class="bg-white mt-5 border dark:bg-gray-900 p-4">
-  <form [formGroup]="EnterpriseForm" class="space-y-5">
-    <div class="grid grid-cols-6 gap-4">
-      <div>
-        <label
-          for="numeroRuc"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >RUC</label
-        >
-        <input
-          formControlName="numeroRuc"
-          type="text"
-          id="numeroRuc"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-      <div>
-        <label
-          for="razonSocial"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Razón social</label
-        >
-        <input
-          formControlName="razonSocial"
-          type="text"
-          id="razonSocial"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-    </div>
-
-    <div>
-      <label
-        for="representantesLegales"
-        class="text-sm font-semibold text-gray-600 dark:text-white"
-        >Representante legal</label
-      >
-      <input
-        formControlName="representantesLegales"
-        type="text"
-        id="representantesLegales"
-        class="rounded p-2 block w-6/12 border border-gray-300 dark:bg-gray-800"
-      />
-    </div>
-
-    <div>
-      <label
-        for="country"
-        class="text-sm font-semibold text-gray-600 dark:text-white"
-        >Actividad económica principal</label
-      >
-      <input
-        formControlName="actividadEconomicaPrincipal"
-        type="text"
-        id="actividadEconomicaPrincipal"
-        class="rounded p-2 block w-6/12 border border-gray-300 dark:bg-gray-800"
-      />
-    </div>
-
-    <div class="grid grid-cols-6 gap-4">
-      <div>
-        <label
-          for="tipoContribuyente"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Tipo contribuyente</label
-        >
-        <input
-          formControlName="tipoContribuyente"
-          type="text"
-          id="tipoContribuyente"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-      <div>
-        <label
-          for="regimen"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Régimen</label
-        >
-        <input
-          formControlName="regimen"
-          type="text"
-          id="regimen"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-      <div>
-        <label
-          for="categoria"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Categoria</label
-        >
-        <input
-          formControlName="categoria"
-          type="text"
-          id="categoria"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-    </div>
-
-    <div class="grid grid-cols-6 gap-4">
-      <div>
-        <label
-          for="obligadoLlevarContabilidad"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Obligado a llevar contabilidad</label
-        >
-        <input
-          formControlName="obligadoLlevarContabilidad"
-          type="text"
-          id="obligadoLlevarContabilidad"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-      <div>
-        <label
-          for="agenteRetencion"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Agente retención</label
-        >
-        <input
-          formControlName="agenteRetencion"
-          type="text"
-          id="agenteRetencion"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-      <div>
-        <label
-          for="contribuyenteEspecial"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Contribuyente especial</label
-        >
-        <input
-          formControlName="contribuyenteEspecial"
-          type="text"
-          id="contribuyenteEspecial"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-    </div>
-
-    <div class="grid grid-cols-6 gap-4">
-      <div>
-        <label
-          for="email"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Correo electrónico</label
-        >
-        <input
-          formControlName="email"
-          type="text"
-          id="legal_representative"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-      <div>
-        <label
-          for="telefono"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Teléfono</label
-        >
-        <input
-          formControlName="telefono"
-          type="tel"
-          id="telefono"
-          class="input-field dark:bg-gray-800"
-        />
-      </div>
-    </div>
-
-    <div>
-      <label
-        for="address"
-        class="text-sm font-semibold text-gray-600 dark:text-white"
-        >Dirección</label
-      >
-      <input
-        formControlName="address"
-        type="text"
-        id="address"
-        class="rounded p-2 block w-6/12 border border-gray-300 dark:bg-gray-800"
-      />
-    </div>
-    <button
-      *ngIf="canEdit"
+      *ngIf="!canEdit"
       (click)="onSubmit()"
       type="submit"
       class="mt-5 px-4 py-2 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700"
     >
-      Guardar
+      Guardar cambios
     </button>
-  </form>
 </div>
 
 <div class="flex flex-row justify-center mt-10">
