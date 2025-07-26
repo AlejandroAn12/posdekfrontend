@@ -225,7 +225,14 @@ export default class ViewProductsComponent implements OnInit {
         this.categories = data.categories;
       },
       error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar categorías',
+          text: `${err.error.message}`,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 5000
+        })
       },
     });
   }
@@ -237,7 +244,14 @@ export default class ViewProductsComponent implements OnInit {
         this.suppliers = data.suppliers;
       },
       error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar proveedores',
+          text: `${err.error.message}`,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 5000
+        })
       }
     })
   }
@@ -246,13 +260,13 @@ export default class ViewProductsComponent implements OnInit {
   deleteProduct(id: string) {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
+        confirmButton: "btn btn-success bg-red-600",
+        cancelButton: "btn btn-danger bg-gray-200 text-gray-500"
       },
-      buttonsStyling: false
+      buttonsStyling: true
     });
     swalWithBootstrapButtons.fire({
-      title: "Quieres eliminar este registro?",
+      title: "¿Estás seguro de eliminar este producto?",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Sí, eliminar",
@@ -263,13 +277,20 @@ export default class ViewProductsComponent implements OnInit {
         this.productService.deletedProduct(id).subscribe({
           next: (res: any) => {
             swalWithBootstrapButtons.fire({
-              title: "Eliminado",
-              text: "El registro ha sido eliminado",
-              icon: "success"
+              title: "Producto eliminado",
+              icon: "success",
+              position: 'top-end'
             });
           },
           error: (err) => {
-            this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar',
+              text: `${err.error.message}`,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 5000
+            })
           },
         });
 
@@ -297,8 +318,25 @@ export default class ViewProductsComponent implements OnInit {
 
   updateProductStatus(product: any): void {
     this.productService.updateProductStatus(product.id, product.status).subscribe({
-      next: (response: any) => this.alertsService.showSuccess(`${response.message}`, ``),
-      error: (err) => this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+      next: (response: any) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Estado actualizado',
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al actualizar estado',
+          text: `${err.error.message}`,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 5000
+        })
+      }
     });
   }
 
@@ -311,8 +349,25 @@ export default class ViewProductsComponent implements OnInit {
 
   updateProductServices(product: any): void {
     this.productService.updateProductService(product.id, product.its_service).subscribe({
-      next: (response: any) => { this.alertsService.showSuccess(`${response.message}`, ``) },
-      error: (err) => this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+      next: (response: any) => { 
+        Swal.fire({
+          icon: 'success',
+          title: 'Estado de servicio actualizado',
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000
+        });},
+      error: (err) => {
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al actualizar servicio',
+          text: `${err.error.message}`,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 5000
+        })
+      }
     });
   }
 
@@ -361,35 +416,6 @@ export default class ViewProductsComponent implements OnInit {
 
   }
 
-  toggleModal(product: any = null) {
-    console.log(product)
-    this.showModal = !this.showModal;
-
-    if (product) {
-      this.isEditing = true;
-      this.titleModal = 'Editar producto';
-      this.selectedProductId = product.id;
-
-      this.ProductForm.patchValue({
-        name: product.name,
-        code: product.code,
-        barcode: product.barcode,
-        stock: product.stock,
-        purchase_price: product.purchase_price,
-        sale_price: product.sale_price,
-        description: product.description,
-        categoryId: product.category.id,
-        supplierId: product.supplier.id
-      });
-    } else {
-      this.isEditing = false;
-      this.titleModal = 'Añadir nuevo producto';
-      this.selectedProductId = null;
-      this.ProductForm.reset();
-    }
-  }
-
-
   downloadAllProductsPdf() {
     const date = Date.now();
     this.reportProductsPdf.downloadAllProductReportPdf().subscribe({
@@ -412,8 +438,6 @@ export default class ViewProductsComponent implements OnInit {
   downloadExcel() {
     this.alertsService.showInfo('Metodo aun no implementado', 'Información')
   }
-
-
 
   //Renderizado del datatables
   @ViewChild(DataTableDirective, { static: false })
@@ -440,6 +464,4 @@ export default class ViewProductsComponent implements OnInit {
   routeToNewProduct() {
     this.router.navigateByUrl('index/products/form');
   }
-
-
 }

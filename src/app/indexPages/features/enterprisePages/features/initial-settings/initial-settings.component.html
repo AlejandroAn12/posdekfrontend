@@ -5,86 +5,66 @@
 </div>
 
 <!-- Impuestos -->
-<div class="flex flex-col rounded mt-5">
-  <div class="p-2 bg-gray-300">
-    <h1 class="text-sm font-semibold text-gray-600 uppercase">
+<div class="mt-10 max-w-3xl mx-auto bg-white dark:bg-gray-900 shadow-lg rounded-lg overflow-hidden">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-indigo-500 to-blue-600 px-6 py-4">
+    <h1 class="text-white text-lg font-semibold tracking-wide uppercase">
       Configuración de Impuestos
     </h1>
   </div>
 
-  <!-- Formulario -->
-  <div
-    class="max-w-xl mx-auto bg-white mt-5 p-6 shadow"
-  >
-    <form [formGroup]="form">
-      <div class="flex mt-5 mb-5">
-        <div>
-          <label class="text-sm font-semibold text-gray-600 dark:text-white"
-            >¿Trabajas con Impuestos?</label
-          >
-          <!-- ToolTip -->
-          <div class="relative group inline-block">
-            <i class="fa-solid fa-circle-info text-indigo-500 ml-2"></i>
+  <!-- Contenido -->
+  <div class="p-6">
+    <form [formGroup]="form" class="space-y-6">
+      <!-- Switch de impuestos -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">
+          ¿Trabajas con impuestos?
+          <!-- Tooltip -->
+          <span class="relative group inline-block ml-2">
+            <i class="fa-solid fa-circle-info text-white bg-indigo-500 rounded-full px-1"></i>
+            <span class="absolute hidden group-hover:block text-xs bg-gray-800 text-white rounded py-2 px-3 w-52 bottom-full left-1/2 transform -translate-x-1/2 mb-2 shadow-lg">
+              Si su opción es "NO", el impuesto por defecto aplicado será del 15% según el Reglamento Tributario.
+            </span>
+          </span>
+        </label>
+
+        <!-- Toggle Switch -->
+        <div class="flex items-center space-x-4">
+          <label class="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              class="sr-only peer"
+              formControlName="workTaxes"
+            />
             <div
-              class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-40 bg-gray-900 text-white text-sm px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            >
-              <small
-                >Si su opción es "NO" el impuesto por defecto que se calculará
-                el precio total de venta es sobre el 15% según lo estipulado en
-                el Reglamento Tributario.</small
-              >
-            </div>
-          </div>
-          <!-- Final Tooltip -->
-          <div class="flex space-x-4 mt-5">
-            <label class="inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                class="sr-only peer"
-                formControlName="workTaxes"
-              />
-              <div
-                class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-              ></div>
-              <span
-                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                {{ form.get("workTaxes")?.value ? "Sí" : "No" }}
-              </span>
-            </label>
-          </div>
+              class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-400 dark:bg-gray-600 rounded-full peer peer-checked:bg-indigo-600 relative after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-transform peer-checked:after:translate-x-full"
+            ></div>
+            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+              {{ form.get('workTaxes')?.value ? 'Sí' : 'No' }}
+            </span>
+          </label>
         </div>
       </div>
 
+      <!-- Select de impuestos -->
       <div *ngIf="showSelectTypeTaxes">
-        <label
-          for="taxId"
-          class="text-sm font-semibold text-gray-600 dark:text-white"
-          >Impuestos</label
-        >
+        <label for="taxId" class="block text-sm font-medium text-gray-700 dark:text-white mb-1">
+          Impuestos
+        </label>
         <select
-          formControlName="taxId"
           id="taxId"
+          formControlName="taxId"
           [ngClass]="{
             'border-red-500': f['taxId'].invalid && f['taxId'].touched
           }"
-          class="input-field dark:bg-gray-800 mt-1"
+          class="w-full px-4 py-2 border rounded-md dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500"
         >
-          <option
-            *ngIf="iTaxes.length > 0"
-            disabled
-            class="font-semibold text-gray-500"
-            value=""
-          >
+          <option *ngIf="iTaxes.length > 0" disabled value="">
             Seleccione el impuesto
           </option>
-          <option
-            *ngIf="iTaxes.length < 1"
-            disabled
-            class="font-semibold"
-            value=""
-          >
-            No hay valores de impuestos disponibles
+          <option *ngIf="iTaxes.length < 1" disabled value="">
+            No hay valores disponibles
           </option>
           <option *ngFor="let tax of iTaxes" [value]="tax.id">
             {{ tax.name }} - {{ tax.rate }}{{ tax.symbol }}
@@ -92,18 +72,23 @@
         </select>
         <div
           *ngIf="f['taxId'].invalid && f['taxId'].touched"
-          class="text-red-500 text-sm"
+          class="text-sm text-red-500 mt-1"
         >
           Debe elegir el valor de impuesto.
         </div>
       </div>
-      <button
-        *ngIf="showSelectTypeTaxes"
-        (click)="save()"
-        class="bg-blue-600 text-white mt-5 text-sm font-semibold rounded p-2 hover:bg-blue-700 flex items-center"
-      >
-        <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar
-      </button>
+
+      <!-- Botón -->
+      <div *ngIf="showSelectTypeTaxes" class="pt-4">
+        <button
+          type="button"
+          (click)="save()"
+          class="w-full sm:w-auto flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition"
+        >
+          <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar
+        </button>
+      </div>
     </form>
   </div>
 </div>
+

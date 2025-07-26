@@ -4,41 +4,53 @@
   </div>
 </div>
 
-<div class="header mt-5">
-  <h2 class="text-lg font-semibold text-gray-600">
-    Fecha de ingreso: 01/07/2025
-  </h2>
-  <h2 class="text-lg font-semibold text-gray-600">
-    Usuario responsable: Rodrigo Fernandez
-  </h2>
-  <p class="mt-5 mb-5 text-sm text-blue-500 dark:text-white font-semibold">
-    <i class="fa-solid fa-circle-info mr-1"></i>
-    Recuerde ingresar la cantidad que tiene en físico.
-  </p>
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mt-6">
+  <div class="flex items-center gap-4 mb-4">
+    <div class="bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 p-2 rounded-full">
+      <i class="fa-solid fa-calendar-days"></i>
+    </div>
+    <div>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Fecha de ingreso</p>
+      <h2 class="text-lg font-bold text-gray-800 dark:text-white">{{date}}</h2>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-4 mb-4">
+    <div class="bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300 p-2 rounded-full">
+      <i class="fa-solid fa-user"></i>
+    </div>
+    <div>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Usuario responsable</p>
+      <h2 class="text-lg font-bold text-gray-800 dark:text-white">{{user}}</h2>
+    </div>
+  </div>
+
+  <div class="flex items-center bg-blue-50 dark:bg-blue-700 text-blue-600 dark:text-white p-3 rounded-xl mt-4">
+    <i class="fa-solid fa-circle-info mr-3"></i>
+    <p class="text-sm font-medium">Recuerde ingresar la cantidad que tiene en físico.</p>
+  </div>
 </div>
 
-<!-- TABLA -->
 
-<div class="h-full w-full bg-white mt-10">
-  <div class="relative overflow-x-auto">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-white">
-      <thead
-        class="text-xs text-gray-500 uppercase bg-gray-300 dark:bg-blue-600 dark:text-white"
-      >
+<!-- TABLA -->
+<div class="w-full mt-10 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4">
+  <div class="overflow-x-auto rounded-lg">
+    <table class="min-w-full text-sm text-left text-gray-700 dark:text-white">
+      <thead class="text-xs uppercase bg-gray-100 dark:bg-blue-700 dark:text-white">
         <tr>
           <th class="px-6 py-3">Cód. de barra</th>
           <th class="px-6 py-3">Cód. interno</th>
           <th class="px-6 py-3">Producto</th>
           <th class="px-6 py-3">Stock sistema</th>
-          <th class="px-6 py-3">Stock Físico</th>
+          <th class="px-6 py-3">Stock físico</th>
         </tr>
       </thead>
       <tbody>
         <tr
           *ngFor="let item of inventoryItems"
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+          class="border-b bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
         >
-          <td class="px-6 py-4">{{ item.barcode }}</td>
+          <td class="px-6 py-4 whitespace-nowrap font-medium">{{ item.barcode }}</td>
           <td class="px-6 py-4">{{ item.code }}</td>
           <td class="px-6 py-4">{{ item.name }}</td>
           <td class="px-6 py-4">{{ item.quantity }}</td>
@@ -46,18 +58,21 @@
             <input
               type="number"
               min="0"
-              class="rounded-lg dark:bg-gray-700"
               [(ngModel)]="item.physicalQuantity"
+              class="w-24 px-2 py-1 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
             />
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <button
-    class="mt-4 px-4 py-2 bg-blue-600 font-semibold text-white rounded-md hover:bg-blue-700"
-    (click)="saveInventory()"
-  >
-    Guardar inventario
-  </button>
+
+  <div class="mt-6 text-right">
+    <button
+      class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      (click)="saveInventory()"
+    >
+      Guardar inventario
+    </button>
+  </div>
 </div>

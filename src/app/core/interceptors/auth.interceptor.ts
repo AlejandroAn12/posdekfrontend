@@ -80,9 +80,10 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
         Swal.fire({
           icon: 'error',
           title: 'Error del servidor',
-          text: 'Por favor, inténtalo de nuevo más tarde.',
+          text: 'Por el momento no se puede cargar la información, por favor inténtalo de nuevo más tarde.',
         });
       }
+      
       // Si la respuesta es 401 o 403 y no se está manejando una sesión expirada
       if ((err.status === 401 || err.status === 403) && !isHandlingSessionExpired) {
         isHandlingSessionExpired = true;

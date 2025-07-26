@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { ThemeService } from '../../../core/services/theme.service';
@@ -19,10 +19,14 @@ interface SidebarOption {
 })
 
 export class SidebarComponent {
+  @Output() toggle = new EventEmitter<void>();
+  @Output() collapsedChange = new EventEmitter<boolean>();
+  @Input() collapsed = false;
 
   authState = inject(AuthStateService);
 
   isDarkMode = false;
+  isSidebarCollapsed = false;
 
   constructor(private themeService: ThemeService) {
     this.isDarkMode = document.documentElement.classList.contains('dark');
@@ -32,6 +36,14 @@ export class SidebarComponent {
     this.themeService.toggleDarkMode();
     this.isDarkMode = !this.isDarkMode;
   }
+
+
+
+ toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    this.collapsedChange.emit(this.isSidebarCollapsed);
+  }
+
 
   sidebarOptions: SidebarOption[] = [
     {
@@ -105,9 +117,9 @@ export class SidebarComponent {
       title: 'Configuraciones',
       iconClass: 'fa-solid fa-gears',
       children: [
-        { title: 'Configuración de tienda', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
+        { title: 'Información de tienda', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
         { title: 'Configuración de impuestos', iconClass: 'fa-solid fa-circle-info', route: '/index/enterprise/settings' },
-        { title: 'Cambiar contraseña', iconClass: 'fa-solid fa-lock', route: '/index/modules/settings' },
+        { title: 'Cambiar contraseña', iconClass: 'fa-solid fa-lock', route: '/index/change-password' },
         // { title: 'Configuración de inventario', iconClass: 'fa-solid fa-boxes-stacked', route: '/index/inventory/settings' },
       ]
     }

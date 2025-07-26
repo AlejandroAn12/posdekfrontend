@@ -53,6 +53,10 @@ export default [
         loadComponent: () => import('./features/notifications/notifications.component')
       },
       {
+        path:'change-password',
+        loadComponent: () => import('../auth/features/change-password/change-password.component')
+      },
+      {
         path: '',
         redirectTo: 'dashboard', // Redirigir a 'user' por defecto
         pathMatch: 'full',

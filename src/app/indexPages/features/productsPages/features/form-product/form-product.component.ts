@@ -52,7 +52,7 @@ export default class FormProductComponent implements OnInit {
       description: ['', Validators.required],
       unitOfMeasurementId: ['', Validators.required],
       itsService: [false, Validators.required], // booleano
-      date: [new Date().toISOString(), Validators.required], // string ISO
+      date: [new Date().toISOString(), Validators.required],
     });
   }
 
@@ -129,8 +129,7 @@ export default class FormProductComponent implements OnInit {
         icon: 'error',
         title: 'Campos incompletos',
         text: 'Por favor, complete todos los campos requeridos.',
-      })
-      console.error('Formulario inválido', this.form.value);
+      });
       return;
     }
 
@@ -162,17 +161,24 @@ export default class FormProductComponent implements OnInit {
     } else {
       // Crear producto
       this.productService.addProduct(productData).subscribe({
-        next: (response) => {
+        next: () => {
           Swal.fire({
             icon: 'success',
             title: 'Producto creado',
-            text: response.message,
+            timer: 4000,
+            showConfirmButton: false
           });
           this.router.navigate(['/index/products/view']);
         },
         error: (err) => {
           console.error(err.error.message);
-          this.alertsService.showError(err.error.message, err.statusText);
+          // this.alertsService.showError(err.error.message, err.statusText);
+          Swal.fire({
+            icon: "error",
+            title: "Error al crear el producto",
+            text:"Por favor, verifique los datos ingresados, si el incoveniente persiste informe a nuestro equipo de soporte.",
+            confirmButtonText:"Entendido"
+          })
         }
       });
     }

@@ -21,6 +21,7 @@
     "angular-datatables": "^19.0.0",
     "datatables.net": "^2.2.1",
     "datatables.net-dt": "^2.2.1",
+    "date-fns": "^4.1.0",
     "flowbite": "^2.5.2",
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
