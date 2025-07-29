@@ -5,36 +5,7 @@
   class="fixed top-0 left-0 z-50 h-full bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 ease-in-out flex flex-col"
 >
   <!-- Botón de colapsar -->
-   <div class="flex items-center justify-between p-3">
-    <button
-      (click)="toggleSidebar()"
-      class="text-gray-500 dark:text-gray-300 hover:text-blue-500 focus:outline-none transition"
-    >
-      <i
-        class="fa-solid"
-        [ngClass]="isSidebarCollapsed ? 'fa-bars' : 'fa-chevron-left'"
-      ></i>
-    </button>
-    <img
-      *ngIf="!isSidebarCollapsed"
-      [src]="isDarkMode ? 'assets/img/logos_img/new_logo_mode_dark.png' : 'assets/img/new_logo.png'"
-      alt="logo"
-      class="w-36 h-auto transition-opacity duration-300"
-    />
-  </div>
-  <!-- <div class="flex items-center justify-between p-3">
-    <button
-      (click)="toggleSidebar()"
-      class="absolute mt-4 top-2 right-2 bg-transparent text-black dark:text-white hover:text-blue-500"
-    >
-      <i
-        class="fa"
-        [ngClass]="{
-          'fa-chevron-left': !isSidebarCollapsed,
-          'fa-chevron-right': isSidebarCollapsed
-        }"
-      ></i>
-    </button>
+  <div class="flex items-center justify-between p-3">
     <img
       *ngIf="!isSidebarCollapsed"
       [src]="
@@ -45,7 +16,7 @@
       alt="logo"
       class="w-36 h-auto transition-opacity duration-300"
     />
-  </div> -->
+  </div>
 
   <hr class="border-gray-300 dark:border-gray-600 mb-2" />
 
@@ -121,7 +92,7 @@
   <div class="p-3 flex flex-col gap-2">
     <button
       (click)="toggleTheme()"
-      class="flex items-center justify-center gap-2 p-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white"
+      class="flex items-center text-white justify-center gap-2 p-2 rounded bg-black dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
     >
       <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>
       <span class="font-semibold" *ngIf="!isSidebarCollapsed">
@@ -131,7 +102,7 @@
 
     <button
       (click)="logout()"
-      class="flex items-center justify-center gap-2 p-2 rounded text-white bg-red-500 hover:bg-red-600 dark:hover:bg-red-800 transition"
+      class="flex items-center justify-center gap-2 p-2 rounded text-white bg-red-600 hover:bg-red-700 dark:hover:bg-red-800 transition"
     >
       <i class="fa-solid fa-right-from-bracket"></i>
       <span *ngIf="!isSidebarCollapsed">Cerrar Sesión</span>

@@ -234,6 +234,6 @@ export default class ViewUsersComponent implements OnInit {
   }
 
   next() {
-    this.router.navigate(['/index/users/form']);
+    this.router.navigate(['/index/credentials/form']);
   }
 }

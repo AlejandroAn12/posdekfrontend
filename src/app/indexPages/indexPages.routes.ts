@@ -12,7 +12,7 @@ export default [
           import('./features/dashboard/dashboard.component')
       },
       {
-        path: 'users',
+        path: 'credentials',
         loadChildren: () =>
           import('./features/user/features/users.routes')
       },

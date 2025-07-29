@@ -19,9 +19,7 @@ interface SidebarOption {
 })
 
 export class SidebarComponent {
-  @Output() toggle = new EventEmitter<void>();
-  @Output() collapsedChange = new EventEmitter<boolean>();
-  @Input() collapsed = false;
+  
 
   authState = inject(AuthStateService);
 
@@ -39,10 +37,10 @@ export class SidebarComponent {
 
 
 
- toggleSidebar() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
-    this.collapsedChange.emit(this.isSidebarCollapsed);
-  }
+//  toggleSidebar() {
+//     this.isSidebarCollapsed = !this.isSidebarCollapsed;
+//     this.collapsedChange.emit(this.isSidebarCollapsed);
+//   }
 
 
   sidebarOptions: SidebarOption[] = [
@@ -56,7 +54,7 @@ export class SidebarComponent {
       title: 'Administración',
       iconClass: 'fa-solid fa-user-gear',
       children: [
-        { title: 'Gestionar usuarios', iconClass: 'fa-solid fa-user-tie', route: '/index/users' },
+        { title: 'Gestionar usuarios', iconClass: 'fa-solid fa-user-tie', route: '/index/credentials' },
         { title: 'Gestionar colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees' },
       ],
     },
