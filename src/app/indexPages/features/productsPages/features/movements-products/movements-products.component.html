@@ -103,7 +103,7 @@
         </tr>
       </thead>
       <tbody *ngIf="!isLoading" class="divide-y divide-gray-100">
-        <tr class="shadow-sm" *ngFor="let movimiento of movimientos">
+        <tr class="shadow-sm dark:text-gray-400" *ngFor="let movimiento of movimientos">
           <td class="px-4 py-2">{{ movimiento.product?.barcode || "N/A" }}</td>
           <td class="px-4 py-2">{{ movimiento.product?.name || "N/A" }}</td>
           <td class="px-4 py-2">{{ movimiento.Movement_type?.name }}</td>
