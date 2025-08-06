@@ -28,6 +28,10 @@ export const routes: Routes = [
         loadChildren: () => import('./indexPages/indexPages.routes')
     },
     {
+        path:'server-error',
+        loadComponent: () => import('./shared/features/server-error-page/server-error-page.component')
+    },
+    {
         path: '**',
         loadComponent: () => import('./shared/features/not-found-page/not-found-page.component')
     },

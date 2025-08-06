@@ -15,5 +15,5 @@ export default [
         path: 'pending',
         loadComponent: () =>
             import('./features/pending-orders/pending-orders.component'),
-    },
+    }
 ] as Routes;

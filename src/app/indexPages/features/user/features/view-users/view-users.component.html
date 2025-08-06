@@ -1,18 +1,19 @@
 <!-- Contenedor principal -->
-<div class="bg-blue-700 p-5 text-white font-semibold">
-  <h1 class="text-xl uppercase">Credenciales de acceso</h1>
-</div>
+<app-header
+  [title]="titleComponent"
+  [subtitle]="subtitleComponent"
+></app-header>
 
 <!-- Cuerpo -->
-<div class="flex flex-col p-5 bg-white dark:bg-gray-900">
+<div class="flex flex-col p-5 bg-white dark:bg-gray-800">
   <div class="flex justify-end mb-10 space-x-2">
     <button
-     (click)="next()"
+     (click)="routeNext()"
       class="text-sm font-semibold rounded-md bg-blue-600 p-2 hover:bg-blue-700 text-white"
     >
       <i class="fa-solid fa-square-plus mr-1"></i> Agregar credenciales
     </button>
-    <button
+    <!-- <button
       (click)="downloadExcel()"
       class="text-sm font-semibold rounded-md pt-3 pb-3 pl-10 pr-10 mr-3 border text-green-600 hover:bg-gray-100 hover:text-green-600"
     >
@@ -22,7 +23,7 @@
       class="text-sm font-semibold rounded-md border pt-3 pb-3 pl-10 pr-10 text-red-600 hover:bg-gray-100 hover:text-red-600"
     >
       <i class="fa-solid fa-upload mr-1"></i> PDF
-    </button>
+    </button> -->
   </div>
 
   <!-- <hr class="mb-5" /> -->

@@ -3,11 +3,12 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../shared/features/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { HeaderComponent } from "../shared/features/header/header.component";
 
 @Component({
   selector: 'app-indexPages',
-  imports: [RouterOutlet, SidebarComponent, CommonModule],
-   animations: [
+  imports: [RouterOutlet, SidebarComponent, CommonModule, HeaderComponent],
+  animations: [
     trigger('slideInOut', [
       transition(':enter', [
         style({ transform: 'translateX(-100%)' }),
@@ -22,10 +23,12 @@ import { trigger, transition, style, animate } from '@angular/animations';
 })
 
 export default class IndexPagesComponent {
- isSidebarVisible = true;
-isSidebarCollapsed = false;
+  isSidebarVisible = true;
+  isSidebarCollapsed = false;
 
-toggleSidebar() {
-  this.isSidebarVisible = !this.isSidebarVisible;
-}
+
+
+  toggleSidebar() {
+    this.isSidebarVisible = !this.isSidebarVisible;
+  }
 }

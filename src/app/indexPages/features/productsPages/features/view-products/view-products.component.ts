@@ -14,10 +14,11 @@ import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ProductReportService } from '../../data-access/reports.service';
 import { Router } from '@angular/router';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-view-products',
-  imports: [CommonModule, ReactiveFormsModule, DataTablesModule],
+  imports: [CommonModule, ReactiveFormsModule, DataTablesModule, HeaderComponent],
   templateUrl: './view-products.component.html',
   styleUrl: './view-products.component.css'
 })
@@ -32,6 +33,9 @@ export default class ViewProductsComponent implements OnInit {
   private supplierService = inject(SuppliersService);
   private alertsService = inject(AlertService);
   private reportProductsPdf = inject(ProductReportService);
+
+  titleComponent: string = 'Gestion de productos';
+  subtitleComponent: string = 'Listado de productos registrados';
 
   dtOptions: Config = {};
   private fb = inject(FormBuilder);
@@ -349,14 +353,15 @@ export default class ViewProductsComponent implements OnInit {
 
   updateProductServices(product: any): void {
     this.productService.updateProductService(product.id, product.its_service).subscribe({
-      next: (response: any) => { 
+      next: (response: any) => {
         Swal.fire({
           icon: 'success',
           title: 'Estado de servicio actualizado',
           position: 'top-end',
           showConfirmButton: false,
           timer: 3000
-        });},
+        });
+      },
       error: (err) => {
 
         Swal.fire({

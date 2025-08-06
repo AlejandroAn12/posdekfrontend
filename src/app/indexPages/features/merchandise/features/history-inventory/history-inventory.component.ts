@@ -6,10 +6,11 @@ import { AlertService } from '../../../../../core/services/alerts.service';
 import { InventoryService } from '../../data-access/inventory.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-history-inventory',
-  imports: [CommonModule, FormsModule, DataTablesModule],
+  imports: [CommonModule, FormsModule, DataTablesModule, HeaderComponent],
   templateUrl: './history-inventory.component.html',
   styleUrl: './history-inventory.component.css'
 })
@@ -22,6 +23,9 @@ export default class HistoryInventoryComponent implements OnInit {
   private alertsService = inject(AlertService);
   private inventoryService = inject(InventoryService);
   private renderer = inject(Renderer2);
+
+  titleComponent : string = 'Gestión de inventarios';
+  subtitleComponent : string = 'Historial de inventarios';
 
   dtOptions: Config = {};
 

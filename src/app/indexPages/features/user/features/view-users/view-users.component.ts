@@ -10,10 +10,11 @@ import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../../../../../shared/features/header/header.component';
 
 @Component({
   selector: 'app-view-users',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, DataTablesModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, DataTablesModule, HeaderComponent],
   templateUrl: './view-users.component.html',
   styleUrl: './view-users.component.css'
 })
@@ -32,8 +33,6 @@ export default class ViewUsersComponent implements OnInit {
   private renderer = inject(Renderer2);
   dtOptions: Config = {};
 
-  //Formulario
-  CredentialsForm: FormGroup;
   usersSignal = signal<ICredentialsAccess[]>([]);
   errorMessage: string = '';
 
@@ -41,6 +40,9 @@ export default class ViewUsersComponent implements OnInit {
   showModal = false;
   titleModal: string = 'Nuevo Producto';
   isEditing: boolean = false;
+
+  titleComponent: string = 'Gestión de credenciales';
+  subtitleComponent: string = 'Listado de credenciales';
 
   //
   credential: any = [];
@@ -50,15 +52,8 @@ export default class ViewUsersComponent implements OnInit {
   selectedCredentialId: string | null = null;
 
 
-  constructor() {
-    this.CredentialsForm = this.fb.group({
-      employee: ['', [Validators.required]],
-      username: ['', [Validators.required]],
-      employeeId: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-      roleId: ['', [Validators.required]],
-    });
-  }
+  constructor() {}
+
   ngOnInit(): void {
     this.loadTable();
   }
@@ -230,10 +225,10 @@ export default class ViewUsersComponent implements OnInit {
   }
 
   editUser(userId: string) {
-    this.router.navigate(['/index/users/form'], { queryParams: { form: 'update', id: userId } });
+    this.router.navigate(['/index/credentials/form'], { queryParams: { form: 'update', id: userId } });
   }
 
-  next() {
+  routeNext() {
     this.router.navigate(['/index/credentials/form']);
   }
 }

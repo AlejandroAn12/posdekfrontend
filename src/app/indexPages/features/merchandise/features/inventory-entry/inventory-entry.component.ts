@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStateService } from '../../../../../core/services/auth-state.service';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-inventory-entry',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './inventory-entry.component.html',
   styleUrl: './inventory-entry.component.css'
 })
@@ -25,6 +26,9 @@ export default class InventoryEntryComponent {
   data: any[] = [];
   date: any = '';
   user: string = '';
+
+  titleComponent : string = 'Gestión de inventarios';
+  subtitleComponent : string = 'Ingreso de inventario';
 
 
   ngOnInit() {

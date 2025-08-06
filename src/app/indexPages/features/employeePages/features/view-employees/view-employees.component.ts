@@ -3,7 +3,6 @@ import { EmployeeService } from '../../data-access/employee.service';
 import { IEmployee } from '../../interface/employee.interface';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
 import { CommonModule } from '@angular/common';
 import { RoleService } from '../../../../../core/services/role.service';
 import { IRole } from '../../../../../core/models/role.interface';
@@ -12,10 +11,11 @@ import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { Router } from '@angular/router';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-view-employees',
-  imports: [ReactiveFormsModule, CommonModule, DataTablesModule],
+  imports: [ReactiveFormsModule, CommonModule, DataTablesModule, HeaderComponent],
   templateUrl: './view-employees.component.html',
   styleUrl: './view-employees.component.css'
 })
@@ -29,6 +29,9 @@ export default class ViewEmployeesComponent implements OnInit {
   private renderer = inject(Renderer2);
   private alertsService = inject(AlertService);
   dtOptions: Config = {};
+
+  titleComponent: string = 'Gestión de colaboradores';
+  subtitleComponent: string = 'Listado de colaboradores registrados';
 
   totalEmployees: number = 0;
   employees: IEmployee[] = [];

@@ -5,10 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RoleService } from '../../../../../core/services/role.service';
 import { UserService } from '../../data-access/user.service';
 import Swal from 'sweetalert2';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-form-user',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule,],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, HeaderComponent],
   templateUrl: './form-user.component.html',
   styleUrl: './form-user.component.css'
 })
@@ -26,6 +27,10 @@ export default class FormUserComponent {
   employees: any[] = [];
   userId: string | null = null;
   isUpdate: boolean = false;
+
+  titleComponent: string = 'Gestión de credenciales';
+  subtitleComponent: string = 'Listado de credenciales';
+
 
   constructor() {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -69,9 +74,9 @@ export default class FormUserComponent {
     });
   }
 
-  loadUser(id: string){
-  this.authService.getCredentialID(id).subscribe({
-      next: (data:any) => {
+  loadUser(id: string) {
+    this.authService.getCredentialID(id).subscribe({
+      next: (data: any) => {
         this.form.patchValue({
           employee: data.employee.name + ' ' + data.employee.surname,
           username: data.username,
@@ -94,7 +99,7 @@ export default class FormUserComponent {
 
   loadEmployeesWOutCredentials() {
     this.authService.getEmployeesWithOutCredendentials().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.employees = data;
       },
       error: (err) => {
@@ -172,6 +177,10 @@ export default class FormUserComponent {
         })
       },
     });
+  }
+
+  routeBack(){
+    this.router.navigateByUrl('index/credentials')
   }
 
 }

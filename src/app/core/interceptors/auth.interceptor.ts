@@ -87,7 +87,6 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
       // Si la respuesta es 401 o 403 y no se está manejando una sesión expirada
       if ((err.status === 401 || err.status === 403) && !isHandlingSessionExpired) {
         isHandlingSessionExpired = true;
-        console.log('Sesión expirada o no autorizada, redirigiendo al login');
         authState.logOut();
         router.navigate(['/auth/login']).finally(() => {
           setTimeout(() => isHandlingSessionExpired = false, 1000);

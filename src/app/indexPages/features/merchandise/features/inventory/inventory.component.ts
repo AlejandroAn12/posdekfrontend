@@ -12,10 +12,11 @@ import { CategoriesService } from '../../../categoriesPages/data-access/categori
 import { ICategory } from '../../../categoriesPages/interface/icategories.interface';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-inventory',
-  imports: [CommonModule, FormsModule, DataTablesModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, DataTablesModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css'
 })
@@ -33,6 +34,9 @@ export default class InventoryComponent {
   userLogged: string = '';
   role: string = '';
   categories: ICategory[] = [];
+
+  titleComponent : string = 'Gestión de inventarios'
+  subtitleComponent : string = '';
 
   inventoryForm: FormGroup;
 

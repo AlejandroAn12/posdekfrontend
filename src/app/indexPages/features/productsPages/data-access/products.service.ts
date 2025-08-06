@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { Observable, tap } from 'rxjs';
@@ -55,6 +55,34 @@ export class ProductsService {
   }
 
   movementProducts() {
-    return this.http.get(`${environment.API_URL}/products/movements`);
+    return this.http.get(`${environment.API_URL}/products/movements-general`);
+  }
+
+  movementProductsUp(params: {
+    product?: string;
+    movementType?: string;
+    fromDate?: string;  // formato ISO o 'YYYY-MM-DD'
+    toDate?: string;    // formato ISO o 'YYYY-MM-DD'
+    page?: number;
+    limit?: number;
+  }) {
+    const queryParams: any = {};
+
+    if (params.product) queryParams.product = params.product;
+    if (params.movementType) queryParams.movementType = params.movementType;
+    if (params.fromDate) queryParams.fromDate = params.fromDate;
+    if (params.toDate) queryParams.toDate = params.toDate;
+    if (params.page) queryParams.page = params.page;
+    if (params.limit) queryParams.limit = params.limit;
+
+    return this.http.get<{
+      data: any[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    }>(`${environment.API_URL}/products/movements`, {
+      params: queryParams,
+    });
   }
 }

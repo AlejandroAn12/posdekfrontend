@@ -10,14 +10,18 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { Router } from '@angular/router';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-view-suppliers',
-  imports: [CommonModule, ReactiveFormsModule, DataTablesModule],
+  imports: [CommonModule, ReactiveFormsModule, DataTablesModule, HeaderComponent],
   templateUrl: './view-suppliers.component.html',
   styleUrl: './view-suppliers.component.css'
 })
 export default class ViewSuppliersComponent implements OnInit {
+
+  titleComponent: string = 'Gestión de proveedores';
+  subtitleComponent: string = 'Listado de proveedores registrados';
 
   //Renderizado
   @ViewChild(DataTableDirective, { static: false })

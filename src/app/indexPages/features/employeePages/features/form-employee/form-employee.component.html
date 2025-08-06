@@ -1,13 +1,8 @@
-<div class="bg-blue-700 p-5">
-  <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase">Colaboradores</h1>
-  </div>
-</div>
-<div class="p-2 bg-blue-600">
-  <h1 class="text-sm font-semibold text-white dark:text-white">
-    {{ isUpdate ? "Actualización de colaborador" : "Añadir colaborador" }}
-  </h1>
-</div>
+<app-header
+  [title]="titleComponent"
+  [subtitle]="subtitleComponent"
+  [isUpdate]="isUpdate"
+></app-header>
 <!--******************************************************--->
 <div class="flex flex-col border-gray-100 rounded mt-5">
   <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">

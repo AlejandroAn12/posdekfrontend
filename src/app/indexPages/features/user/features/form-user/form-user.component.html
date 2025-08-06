@@ -1,14 +1,12 @@
-<div class="bg-blue-700 p-5 text-white font-semibold">
-  <h1 class="text-xl uppercase">Credenciales de acceso</h1>
-</div>
-<div class="p-2 bg-blue-600">
-  <h2 class="text-sm font-semibold text-white">
-    {{ isUpdate ? "Actualización de credenciales" : "Añadir credenciales" }}
-  </h2>
-</div>
-<div class="flex flex-col border-gray-100 rounded mt-5">
+<app-header
+  [title]="titleComponent"
+  [subtitle]="subtitleComponent"
+  [isUpdate]="isUpdate"
+></app-header>
+
+<div class="flex flex-col bg-white dark:bg-gray-800">
   <!-- *********************************************** -->
-  <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+  <div class="max-w-xl mx-auto p-6">
     <div class="title">
       <h1 class="font-medium text-xl text-gray-500">DETALLES</h1>
     </div>
@@ -23,7 +21,7 @@
             >Colaborador</label
           >
           <input
-            class="rounded-md w-full border-gray-300"
+            class="rounded-md w-full border-gray-300 dark:text-white dark:bg-gray-700"
             formControlName="employee"
             type="text"
             id="input-employee"
@@ -48,7 +46,7 @@
               'border-red-500':
                 f['employeeId'].invalid && f['employeeId'].touched
             }"
-            class="rounded text-sm mt-1 p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm mt-1 p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           >
             <option
               *ngIf="employees.length > 0"
@@ -93,7 +91,7 @@
             [ngClass]="{
               'border-red-500': f['roleId'].invalid && f['roleId'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           >
             <option
               *ngIf="roles.length > 0"
@@ -139,7 +137,7 @@
             [ngClass]="{
               'border-red-500': f['username'].invalid && f['username'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="f['username'].invalid && f['username'].touched"
@@ -149,7 +147,7 @@
           </div>
         </div>
 
-        <div class="w-42">
+        <div *ngIf="!isUpdate" class="w-42">
           <label
             for="password"
             class="text-sm font-semibold text-gray-500 dark:text-white"
@@ -163,7 +161,7 @@
             [ngClass]="{
               'border-red-500': f['password'].invalid && f['password'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="f['password'].invalid && f['password'].touched"
@@ -173,6 +171,12 @@
           </div>
         </div>
       </div>
+      <button
+            (click)="routeBack()"
+            class="text-gray-500 rounded-md hover:bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm font-semibold p-3 pr-5 pl-5 w-auto mr-2"
+          >
+            Cancelar
+          </button>
       <button
         [disabled]="form.invalid && !isUpdate"
         type="submit"

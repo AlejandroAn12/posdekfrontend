@@ -5,10 +5,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { TypeOfDocumentService } from '../../../../../core/services/type-of-document.service';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-form-suppliers',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './form-suppliers.component.html',
   styleUrl: './form-suppliers.component.css'
 })
@@ -25,6 +26,8 @@ export default class FormSuppliersComponent {
   form: FormGroup;
   supplierId: string | null = null;
   tyOfDocs: any[] = [];
+
+  titleComponent: string = 'Gestión de Proveedores';
 
 
   isUpdate: boolean = false;

@@ -1,0 +1,162 @@
+<app-header
+  [title]="titleComponent"
+  [subtitle]="subtitleComponent"
+></app-header>
+<div class="flex bg-white dark:bg-gray-800 p-6">
+  <!-- Filtros -->
+  <form
+    [formGroup]="filtroForm"
+    (ngSubmit)="searchInvoices()"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"
+  >
+    <!-- <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
+        Producto
+      </label>
+      <div class="relative mt-1">
+        <span
+          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+        > -->
+          <!-- Ícono de lupa -->
+          <!-- <i class="fa-solid fa-magnifying-glass text-gray-500"></i> -->
+        <!-- </span>
+
+        <input
+          type="search"
+          formControlName="product"
+          placeholder="Nombre del producto"
+          class="block w-full pl-10 pr-3 border border-gray-300 dark:text-gray-400 dark:bg-gray-900 rounded p-2"
+        />
+      </div>
+    </div> -->
+
+     <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-400"
+        >Tipo de factura</label
+      >
+      <select
+        formControlName="invoiceType"
+        class="mt-1 block w-full border border-gray-300 dark:text-gray-400 rounded p-2 dark:bg-gray-900"
+      >
+        <option value="">Todos</option>
+        <option *ngFor="let type of invoiceTypes" [value]="type.id">
+            {{ type.name }}
+          </option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-400"
+        >Desde</label
+      >
+      <input
+        type="date"
+        formControlName="fromDate"
+        class="mt-1 block w-full border border-gray-300 dark:text-gray-400 dark:bg-gray-900 rounded p-2"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-400"
+        >Hasta</label
+      >
+      <input
+        type="date"
+        formControlName="toDate"
+        class="mt-1 block w-full border border-gray-300 dark:text-gray-400 dark:bg-gray-900 rounded p-2"
+      />
+    </div>
+
+    <!-- Botón alineado con los inputs -->
+    <div class="flex items-end">
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition"
+      >
+        Buscar
+      </button>
+    </div>
+  </form>
+</div>
+
+
+<!-- Resultados -->
+<div class="mt-6 bg-white dark:bg-gray-800 rounded p-4">
+  <div class="flex flex-col justify-between mb-4">
+    <h2 class="text-xl font-bold text-gray-700 dark:text-gray-400">
+      Facturas
+    </h2>
+    <span class="text-sm text-gray-400 font-semibold p-1 rounded-md">
+      {{ totalRegistros }} facturas encontradas
+    </span>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 text-sm">
+      <thead class="bg-white border-t-2 text-gray-800 dark:bg-gray-300">
+        <tr>
+          <th class="px-4 py-2 text-left">NO. Factura</th>
+          <th class="px-4 py-2 text-left">Proveedor</th>
+          <th class="px-4 py-2 text-left">Tipo</th>
+          <th class="px-4 py-2 text-left">Fecha</th>
+          <th class="px-4 py-2 text-left">Usuario</th>
+          <th class="px-4 py-2 text-left">Detalle</th>
+
+        </tr>
+      </thead>
+      <tbody *ngIf="!isLoading" class="divide-y divide-gray-100">
+        <tr class="dark:bg-gray-700 shadow-sm dark:text-gray-400" *ngFor="let invoice of invoices">
+          <td class="px-4 py-2">{{ invoice?.noFac || "N/A" }}</td>
+          <td class="px-4 py-2">{{ invoice.supplier?.company_name || "N/A" }}</td>
+          <td class="px-4 py-2">{{ invoice.invoiceType?.name }}</td>
+          <td class="px-4 py-2">
+            {{ invoice.createdAt | date : "dd/MM/yyyy HH:mm:ss" }}
+          </td>
+          <td class="px-4 py-2">
+            {{ invoice.user?.employee?.name || "N/A" }}
+            {{ invoice.user?.employee?.surname || "N/A" }}
+          </td>
+          <td class="px-4 py-2">
+            <button class="bg-green-500 pr-3 pl-3 pb-1 pt-1 rounded text-white font-semibold hover:bg-green-600">
+              <i class="fa-solid fa-file mr-1"></i>
+              Ver
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="invoices.length === 0">
+          <td colspan="6" class="text-center py-4 text-gray-500 italic">No se encontraron registros</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="6" class="text-center py-4 text-gray-500">
+            Cargando movimientos...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  <div class="mt-4 flex justify-between items-center">
+    <button
+      (click)="paginaAnterior()"
+      [disabled]="paginaActual === 1"
+      class="px-3 py-1 bg-blue-600 text-white font-semibold rounded disabled:opacity-50"
+    >
+      <i class="fa-solid fa-angle-left"></i>
+    </button>
+
+    <span class="font-semibold dark:text-gray-400"
+      >Página {{ paginaActual }} de {{ totalPaginas }}</span
+    >
+
+    <button
+      (click)="paginaSiguiente()"
+      [disabled]="paginaActual === totalPaginas"
+      class="px-3 py-1 bg-blue-600 font-semibold text-white rounded disabled:opacity-50"
+    >
+      <i class="fa-solid fa-angle-right"></i>
+    </button>
+  </div>
+</div>

@@ -17,6 +17,11 @@
   }
 }
 
+body{
+  background: #F5F7FA;
+  font-family: 'Sora', sans-serif;
+}
+
 .dataTable thead {
   background-color: #f1f1f1 !important; /* Azul */
   color: white !important; /* Texto blanco */

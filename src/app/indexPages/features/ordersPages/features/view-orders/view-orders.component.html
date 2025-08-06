@@ -1,10 +1,8 @@
 <!-- Contenedor 1 -->
-<div class="bg-blue-700 p-5">
-  <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase">Generación de orden</h1>
-  </div>
-</div>
-
+<app-header
+  [title]="titleComponent"
+  [subtitle]="subtitleComponent"
+></app-header>
 <!-- Final contenedor 1 -->
 <!-- Body Table-->
 <div
@@ -20,7 +18,7 @@
     <div class="relative mr-5">
       <label
         for="supplier"
-        class="absolute text-smx text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+        class="absolute text-smx text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
         >Proveedores</label
       >
       <select
@@ -44,13 +42,13 @@
     <div class="relative mr-5">
       <label
         for="product"
-        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
         >Productos</label
       >
       <select
         #productSelect
         id="product"
-        class="rounded-lg dark:bg-gray-800"
+        class="rounded-lg dark:bg-gray-800 dark:text-gray-400"
         (change)="addToTable(productSelect)"
       >
         <option value="" disabled selected>Selecciona un producto</option>
@@ -65,84 +63,82 @@
         </option>
       </select>
     </div>
-
-    <!-- <div class="relative mr-5">
-      <button (click)="cleanFilters()" class="bg-white p-2 border text-gray-600 font-semibold rounded">Limpiar filtros</button>
-    </div> -->
-    <!--Final Select Productos -->
   </div>
   <!-- Final de contenedores Selects -->
 
   <!-- Tabla de productos seleccionados -->
-  <div class="w-full mt-10 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4">
-  <div class="overflow-x-auto rounded-lg">
-    <table class="min-w-full text-sm text-left text-gray-700 dark:text-white">
-      <thead class="text-xs uppercase bg-blue-600 text-white dark:bg-blue-700">
-        <tr>
-          <th class="px-6 py-3 whitespace-nowrap">Código de barra</th>
-          <th class="px-6 py-3 whitespace-nowrap">Producto</th>
-          <th class="px-6 py-3 whitespace-nowrap">Precio</th>
-          <th class="px-6 py-3 whitespace-nowrap">Cantidad</th>
-          <th class="px-6 py-3 whitespace-nowrap">Subtotal</th>
-          <th class="px-6 py-3 whitespace-nowrap text-center">Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let product of selectedProducts; trackBy: trackByProductId"
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+  <div *ngIf="selectedProducts.length > 0" class="w-full mt-10 bg-white dark:bg-gray-800 rounded-xl shadow-md p-4">
+    <div class="overflow-x-auto rounded-lg">
+      <table class="min-w-full text-sm text-left text-gray-700 dark:text-white">
+        <thead
+          class="text-xs uppercase bg-blue-500 text-white dark:bg-blue-700"
         >
-          <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-            {{ product.barcode }}
-          </td>
-          <td class="px-6 py-4">{{ product.name }}</td>
-          <td class="px-6 py-4">
-            {{ product.purchase_price | currency }}
-          </td>
-          <td class="px-6 py-4">
-            <input
-              type="number"
-              min="1"
-              [(ngModel)]="product.quantity"
-              class="w-20 px-2 py-1 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
-            />
-          </td>
-          <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-            {{ product.quantity * product.purchasePrice | currency }}
-          </td>
-          <td class="px-6 py-4 text-center">
-            <button
-              (click)="removeProduct(product.id)"
-              class="px-3 py-1.5 bg-red-600 text-white text-sm font-semibold rounded-md shadow hover:bg-red-700 transition"
-            >
-              <i class="fa-solid fa-circle-minus mr-1"></i>
-              Quitar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          <tr>
+            <th class="px-6 py-3 whitespace-nowrap">Código de barra</th>
+            <th class="px-6 py-3 whitespace-nowrap">Producto</th>
+            <th class="px-6 py-3 whitespace-nowrap">Precio</th>
+            <th class="px-6 py-3 whitespace-nowrap">Cantidad</th>
+            <th class="px-6 py-3 whitespace-nowrap">Subtotal</th>
+            <th class="px-6 py-3 whitespace-nowrap text-center">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let product of selectedProducts; trackBy: trackByProductId"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+          >
+            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+              {{ product.barcode }}
+            </td>
+            <td class="px-6 py-4">{{ product.name }}</td>
+            <td class="px-6 py-4">
+              {{ product.purchase_price | currency }}
+            </td>
+            <td class="px-6 py-4">
+              <input
+                type="number"
+                min="1"
+                [(ngModel)]="product.quantity"
+                class="w-20 px-2 py-1 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
+              />
+            </td>
+            <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+              {{ product.quantity * product.purchasePrice | currency }}
+            </td>
+            <td class="px-6 py-4 text-center">
+              <button
+                (click)="removeProduct(product.id)"
+                class="px-3 py-1.5 bg-red-600 text-white text-sm font-semibold rounded-md shadow hover:bg-red-700 transition"
+              >
+                <i class="fa-solid fa-circle-minus mr-1"></i>
+                Quitar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
   <!-- Final tabla -->
 
- <!-- Sección de Total + Botón -->
-<div class="mt-6 w-full flex flex-col md:flex-row items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 rounded-xl shadow-md">
-  <p class="text-xl font-bold text-gray-700 dark:text-white">
-    Total: {{ getTotal() | currency }}
-  </p>
-
-  <button
-    *ngIf="selectedProducts.length > 0"
-    [disabled]="selectedProducts.length === 0"
-    (click)="submitOrder()"
-    class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-white font-semibold py-2 px-6 rounded-lg shadow w-full md:w-64 text-center"
+  <!-- Sección de Total + Botón -->
+  <div *ngIf="selectedProducts.length > 0"
+    class="mt-6 w-full flex flex-col md:flex-row items-center justify-between px-6 py-4 bg-white dark:bg-gray-800 rounded-xl shadow-md"
   >
-    <i class="fa-solid fa-paper-plane mr-2"></i>
-    Generar pedido
-  </button>
-</div>
+    <p class="text-xl font-bold text-gray-700 dark:text-white">
+      Total: {{ getTotal() | currency }}
+    </p>
 
+    <button
+      *ngIf="selectedProducts.length > 0"
+      [disabled]="selectedProducts.length === 0"
+      (click)="submitOrder()"
+      class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-white font-semibold py-2 px-6 rounded-lg shadow w-full md:w-64 text-center"
+    >
+      <i class="fa-solid fa-paper-plane mr-2"></i>
+      Generar pedido
+    </button>
+  </div>
 </div>
 <!-- Final Body -->

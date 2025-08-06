@@ -4,10 +4,11 @@ import { MovementTypeService } from '../../../../../core/services/movement-type.
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../../productsPages/data-access/products.service';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-adjustment',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './adjustment.component.html',
   styleUrl: './adjustment.component.css'
 })
@@ -16,7 +17,11 @@ export default class AdjustmentComponent {
   private movementTypeService = inject(MovementTypeService);
   private productService = inject(ProductsService);
   private fb = inject(FormBuilder);
+
   movementTypes: any[] = [];
+
+  titleComponent : string = 'Gestión de inventarios';
+  subtitleComponent : string = 'AJUSTE DE STOCK'
 
   constructor() {
     this.getAllMovementTypes();
@@ -68,7 +73,7 @@ export default class AdjustmentComponent {
 
     Swal.fire({
       title: "¿Estás listo para continuar?",
-      text: "La cantidad ingresada se guardará como stock actual. ¿Deseas continuar?",
+      text: "La cantidad ingresada se  sumará o restará al stock actual. ¿Deseas continuar?",
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

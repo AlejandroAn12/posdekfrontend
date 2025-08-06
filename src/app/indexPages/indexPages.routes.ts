@@ -12,6 +12,10 @@ export default [
           import('./features/dashboard/dashboard.component')
       },
       {
+        path: 'invoices',
+        loadChildren: () => import('./features/invoices/invoices.routes')
+      },
+      {
         path: 'credentials',
         loadChildren: () =>
           import('./features/user/features/users.routes')

@@ -19,7 +19,7 @@ interface SidebarOption {
 })
 
 export class SidebarComponent {
-  
+
 
   authState = inject(AuthStateService);
 
@@ -37,10 +37,10 @@ export class SidebarComponent {
 
 
 
-//  toggleSidebar() {
-//     this.isSidebarCollapsed = !this.isSidebarCollapsed;
-//     this.collapsedChange.emit(this.isSidebarCollapsed);
-//   }
+  //  toggleSidebar() {
+  //     this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  //     this.collapsedChange.emit(this.isSidebarCollapsed);
+  //   }
 
 
   sidebarOptions: SidebarOption[] = [
@@ -83,7 +83,7 @@ export class SidebarComponent {
       children: [
         { title: 'Nuevo producto', iconClass: 'fa-solid fa-box', route: '/index/products/form' },
         { title: 'Lista de productos', iconClass: 'fa-solid fa-boxes', route: '/index/products/view' },
-        { title: 'Movimiento de productos', iconClass: 'fa-solid fa-folder', route: '/index/merchandise/movements-products' },
+        { title: 'Movimiento de productos', iconClass: 'fa-solid fa-folder', route: '/index/products/movements' },
       ],
     },
     {
@@ -91,7 +91,7 @@ export class SidebarComponent {
       iconClass: 'fa-solid fa-boxes-stacked',
       children: [
         { title: 'Realizar inventario', iconClass: 'fa-solid fa-clipboard', route: '/index/merchandise/inventory' },
-        { title: 'Ajuste de inventario', iconClass: 'fa-solid fa-boxes-stacked', route: '/index/merchandise/adjustment' },
+        { title: 'Ajuste de stock', iconClass: 'fa-solid fa-boxes-stacked', route: '/index/merchandise/adjustment' },
         { title: 'Historial de inventario', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/merchandise/history-inventories' },
       ],
     },
@@ -99,11 +99,21 @@ export class SidebarComponent {
       title: 'Compras',
       iconClass: 'fa-solid fa-cart-shopping',
       children: [
-        { title: 'Ingresar orden', iconClass: 'fa-solid fa-cart-plus', route: '/index/orders/generate' },
         { title: 'Generar orden', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/generate' },
         { title: 'Ordenes pendientes', iconClass: 'fa-solid fa-clock', route: '/index/orders/pending' },
         { title: 'Historial de ordenes', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/orders/history' }
 
+      ]
+    },
+
+    {
+      title: 'Contabilidad',
+      iconClass: 'fa-solid fa-folder',
+      children: [
+        { title: 'Ver facturas', iconClass: 'fa-solid fa-file-invoice', route: '/index/invoices' },
+        { title: 'Ver notas de venta', iconClass: 'fa-solid fa-file-invoice', route: '/index/invoices' },
+        { title: 'Registro de compra', iconClass: 'fa-solid fa-cart-plus', route: '/index/invoices/purchase-invoice' },
+        
       ]
     },
     {
@@ -111,6 +121,7 @@ export class SidebarComponent {
       iconClass: 'fa-solid fa-dolly',
       route: '/index/merchandise/entry',
     },
+
     {
       title: 'Configuraciones',
       iconClass: 'fa-solid fa-gears',

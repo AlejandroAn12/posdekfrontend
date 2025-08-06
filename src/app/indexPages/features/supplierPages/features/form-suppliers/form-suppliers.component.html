@@ -1,18 +1,9 @@
-<!-- Header -->
-<div class="bg-blue-700 p-5">
-  <h1 class="text-white font-semibold text-2xl uppercase">Proveedores</h1>
-</div>
+<app-header [title]="titleComponent" [isUpdate]="isUpdate"></app-header>
 
 <!-- Card Body -->
-<div class="flex flex-col border-gray-100 rounded mt-5">
-  <!-- Título del formulario -->
-  <div class="p-2 bg-gray-200">
-    <h2 class="text-sm font-semibold text-gray-600 uppercase">
-      {{ isUpdate ? "ACTUALIZACION DE PROVEEDOR" : "NUEVO PROVEEDOR" }}
-    </h2>
-  </div>
+<div class="flex flex-col bg-white dark:bg-gray-800">
   <!-- *********************************************** -->
-  <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+  <div class="max-w-xl mx-auto p-6">
     <div class="title">
       <h1 class="font-medium text-xl text-gray-500">DETALLES</h1>
     </div>
@@ -34,7 +25,7 @@
               'border-red-500':
                 f['typeofdocumentId'].invalid && f['typeofdocumentId'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           >
             <option
               *ngIf="tyOfDocs.length > 0"
@@ -80,7 +71,7 @@
             [ngClass]="{
               'border-red-500': f['ruc'].invalid && f['ruc'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="f['ruc'].invalid && f['ruc'].touched"
@@ -107,7 +98,7 @@
               'border-red-500':
                 f['company_name'].invalid && f['company_name'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="f['company_name'].invalid && f['company_name'].touched"
@@ -135,7 +126,7 @@
                 f['legal_representative'].invalid &&
                 f['legal_representative'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="
@@ -164,7 +155,7 @@
             [ngClass]="{
               'border-red-500': f['phone'].invalid && f['phone'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="f['phone'].invalid && f['phone'].touched"
@@ -187,7 +178,7 @@
             [ngClass]="{
               'border-red-500': f['email'].invalid && f['email'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="f['email'].invalid && f['email'].touched"
@@ -213,7 +204,7 @@
             [ngClass]="{
               'border-red-500': f['country'].invalid && f['country'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="f['country'].invalid && f['country'].touched"
@@ -236,7 +227,7 @@
             [ngClass]="{
               'border-red-500': f['city'].invalid && f['city'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
           />
           <div
             *ngIf="f['city'].invalid && f['city'].touched"
@@ -260,7 +251,7 @@
             [ngClass]="{
               'border-red-500': f['address'].invalid && f['address'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:bg-gray-800"
+            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
             id="address"
           ></textarea>
         </div>

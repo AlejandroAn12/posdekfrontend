@@ -2,29 +2,30 @@
   <!-- Sidebar con animación -->
   <div
     *ngIf="isSidebarVisible"
-    class=" bg-white dark:bg-gray-800 shadow-lg h-full transition-transform duration-300 ease-in-out"
+    class="bg-white dark:bg-gray-800 shadow-lg h-full transition-transform duration-300 ease-in-out"
   >
     <app-sidebar></app-sidebar>
   </div>
 
   <!-- Contenido principal -->
   <div
-    class="transition-all duration-300 w-full min-h-screen bg-gray-50 dark:bg-gray-900 p-4"
+    class="transition-all duration-300 w-full min-h-screen dark:bg-gray-900 p-4"
     [class.ml-0]="!isSidebarVisible"
     [class.ml-64]="isSidebarVisible && !isSidebarCollapsed"
     [class.ml-16]="isSidebarVisible && isSidebarCollapsed"
   >
-    <!-- Botón para mostrar/ocultar sidebar -->
-    <button
-      class="mb-4 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
-      (click)="toggleSidebar()"
-    >
-    <i
-        class="fa-solid"
-        [ngClass]="isSidebarVisible ? 'fa-chevron-left' : 'fa-bars'"
-      ></i>
-      <!-- {{ isSidebarVisible ? 'fa-solid fa-bars' : 'Mostrar menú' }} -->
-    </button>
+    <div class="w-full rounded-t-2xl bg-red-400 flex flex-row items-center justify-between bg-gradient-to-r from-indigo-500 to-blue-600 ">
+      <!-- Botón para mostrar/ocultar sidebar -->
+      <button
+        class="px-4 py-2 m-2 text-indigo-500 bg-gray-100 rounded-full hover:text-indigo-500 transition"
+        (click)="toggleSidebar()"
+      >
+        <i
+          class="fa-solid text-sm font-bold"
+          [ngClass]="isSidebarVisible ? 'fa-chevron-left' : 'fa-bars'"
+        ></i>
+      </button>
+    </div>
 
     <router-outlet></router-outlet>
   </div>

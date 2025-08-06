@@ -29,7 +29,7 @@
       >
         <i
           [ngClass]="option.iconClass"
-          class="text-indigo-600 dark:text-white"
+          class="text-gray-500 dark:text-white"
         ></i>
         <span
           *ngIf="!isSidebarCollapsed"
@@ -47,7 +47,7 @@
           <div class="flex items-center gap-3">
             <i
               [ngClass]="option.iconClass"
-              class="text-indigo-600 dark:text-white"
+              class="text-gray-500 dark:text-white"
             ></i>
             <span
               *ngIf="!isSidebarCollapsed"
@@ -72,11 +72,11 @@
           <li *ngFor="let child of option.children">
             <a
               [routerLink]="child.route"
-              class="flex items-center gap-3 p-2 rounded-md transition hover:bg-indigo-100 dark:hover:bg-indigo-900"
+              class="flex items-center gap-3 p-2 rounded-md transition hover:bg-gray-200 dark:hover:bg-indigo-900"
             >
               <i
                 [ngClass]="child.iconClass"
-                class="text-sm text-gray-600 dark:text-white"
+                class="text-sm text-gray-500 dark:text-white"
               ></i>
               <span class="text-sm font-medium text-gray-700 dark:text-white">
                 {{ child.title }}
@@ -92,7 +92,7 @@
   <div class="p-3 flex flex-col gap-2">
     <button
       (click)="toggleTheme()"
-      class="flex items-center text-white justify-center gap-2 p-2 rounded bg-black dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
+      class="flex items-center text-yellow-400 justify-center gap-2 p-2 rounded bg-white hover:bg-gray-100 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
     >
       <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>
       <span class="font-semibold" *ngIf="!isSidebarCollapsed">

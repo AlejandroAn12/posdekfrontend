@@ -7,10 +7,11 @@ import { OrdersService } from '../../data-access/orders.service';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { Subject } from 'rxjs';
 import { OrderReportService } from '../../data-access/reports.service';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-orders-history',
-  imports: [CommonModule, FormsModule, DataTablesModule],
+  imports: [CommonModule, FormsModule, DataTablesModule, HeaderComponent],
   templateUrl: './orders-history.component.html',
   styleUrl: './orders-history.component.css'
 })
@@ -22,6 +23,9 @@ export default class OrdersHistoryComponent implements OnInit {
   private renderer = inject(Renderer2);
 
   dtOptions: Config = {};
+
+  titleComponent : string = 'Gestión de Ordenes';
+  subtitleComponent : string = 'Historial de ordenes generadas'
 
   ngOnInit(): void {
     this.loadDataTable();

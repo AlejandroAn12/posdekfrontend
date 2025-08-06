@@ -4,14 +4,18 @@ import Swal from 'sweetalert2';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-movements-products',
-  imports: [DataTablesModule],
+  imports: [DataTablesModule, HeaderComponent],
   templateUrl: './movements-products.component.html',
   styleUrl: './movements-products.component.css'
 })
 export default class MovementsProductsComponent {
+
+  titleComponent : string = 'Movimientos de producto';
+  subtitleComponent : string = ''
 
   private productService = inject(ProductsService);
 

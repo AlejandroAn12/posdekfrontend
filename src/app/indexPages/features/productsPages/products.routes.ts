@@ -9,5 +9,9 @@ export default [
     {
         path: 'form',
         loadComponent: () => import('./features/form-product/form-product.component'),
+    },
+    {
+        path: 'movements',
+        loadComponent: () => import('./features/movements-products/movements-products.component')
     }
 ] as Routes;

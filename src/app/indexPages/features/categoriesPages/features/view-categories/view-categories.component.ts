@@ -9,10 +9,11 @@ import { Config } from 'datatables.net';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { AlertService } from '../../../../../core/services/alerts.service';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-view-categories',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, DataTablesModule, ModalComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DataTablesModule, ModalComponent, HeaderComponent],
   templateUrl: './view-categories.component.html',
   styleUrl: './view-categories.component.css'
 })
@@ -25,12 +26,16 @@ export default class ViewCategoriesComponent implements OnInit {
 
   dtOptions: Config = {};
   form: FormGroup;
+
   constructor() {
     this.form = this.fb.group({
       name: ['', { validators: [Validators.required], updateOn: 'change' }],
     });
-
   }
+
+  titleComponent: string = 'Gestión de categorías';
+  subtitleComponent: string = 'Listado de categorías registradas';
+
   ngOnInit(): void {
     this.loadTable();
 

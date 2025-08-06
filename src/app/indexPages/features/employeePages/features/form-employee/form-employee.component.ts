@@ -7,10 +7,11 @@ import { IRole } from '../../../../../core/models/role.interface';
 import { RoleService } from '../../../../../core/services/role.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-form-employee',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, HeaderComponent],
   templateUrl: './form-employee.component.html',
   styleUrl: './form-employee.component.css'
 })
@@ -25,7 +26,10 @@ export default class FormEmployeeComponent implements OnInit {
 
   employeeId: string | null = null;
 
-  hidden : boolean = false;
+  hidden: boolean = false;
+
+  titleComponent: string = 'Gestión de colaboradores';
+  subtitleComponent: string = '';
 
 
   constructor() {

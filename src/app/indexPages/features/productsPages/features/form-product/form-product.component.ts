@@ -10,10 +10,11 @@ import { AlertService } from '../../../../../core/services/alerts.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnitOfMeasurementService } from '../../../../../core/services/unit-of-measurement.service';
 import Swal from 'sweetalert2';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-form-product',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './form-product.component.html',
   styleUrl: './form-product.component.css'
 })
@@ -32,6 +33,9 @@ export default class FormProductComponent implements OnInit {
   isEditing = false;
   isUpdate: boolean = false;
   productId: string | null = null;
+
+  titleComponent: string = 'Gestion de productos';
+  subtitleComponent: string = 'Listado de productos registrados';
 
 
   form: FormGroup;
@@ -151,6 +155,7 @@ export default class FormProductComponent implements OnInit {
             icon: 'success',
             title: 'Producto actualizado',
             text: response.message,
+            position:'top-right'
           });
           this.router.navigate(['/index/products/view']);
         },
@@ -176,8 +181,8 @@ export default class FormProductComponent implements OnInit {
           Swal.fire({
             icon: "error",
             title: "Error al crear el producto",
-            text:"Por favor, verifique los datos ingresados, si el incoveniente persiste informe a nuestro equipo de soporte.",
-            confirmButtonText:"Entendido"
+            text: "Por favor, verifique los datos ingresados, si el incoveniente persiste informe a nuestro equipo de soporte.",
+            confirmButtonText: "Entendido"
           })
         }
       });

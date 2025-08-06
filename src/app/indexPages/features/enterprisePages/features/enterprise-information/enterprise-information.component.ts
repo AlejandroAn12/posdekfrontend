@@ -6,10 +6,11 @@ import Swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { SriService } from '../../../../../core/services/services.sri.service';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-enterprise-information',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, HeaderComponent],
   templateUrl: './enterprise-information.component.html',
   styleUrl: './enterprise-information.component.css'
 })
@@ -22,6 +23,7 @@ export default class EnterpriseInformationComponent {
   private id: string = '';
   ruc: string = '';
   store : any;
+  titleComponent : string = 'Información de tienda';
 
   resultado: any = null;
   cargando: boolean = false;

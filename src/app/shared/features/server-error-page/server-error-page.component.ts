@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-server-error-page',
@@ -6,6 +7,11 @@ import { Component } from '@angular/core';
   templateUrl: './server-error-page.component.html',
   styleUrl: './server-error-page.component.css'
 })
-export class ServerErrorPageComponent {
+export default class ServerErrorPageComponent {
 
+  private router = inject(Router);
+
+  retry(){
+    window.location.reload();
+  }
 }

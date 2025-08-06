@@ -6,10 +6,11 @@ import { Config } from 'datatables.net';
 import { OrdersService } from '../../data-access/orders.service';
 import { Subject } from 'rxjs';
 import { AlertService } from '../../../../../core/services/alerts.service';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-pending-orders',
-  imports: [CommonModule, FormsModule, DataTablesModule],
+  imports: [CommonModule, FormsModule, DataTablesModule, HeaderComponent],
   templateUrl: './pending-orders.component.html',
   styleUrl: './pending-orders.component.css'
 })
@@ -19,12 +20,11 @@ export default class PendingOrdersComponent implements OnInit {
     this.loadDataTable();
   }
 
-
-  private renderer = inject(Renderer2);
   private ordersService = inject(OrdersService);
-  private alertsService = inject(AlertService);
   dtOptions: Config = {};
   errorMessage: string = '';
+  titleComponent : string = 'Gestión de ordenes'
+  subtitleComponent : string = 'Ordenes pendientes';
 
 
   loadDataTable() {

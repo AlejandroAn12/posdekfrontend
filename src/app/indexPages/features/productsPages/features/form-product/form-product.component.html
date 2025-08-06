@@ -1,17 +1,12 @@
-<div class="bg-blue-700 p-5">
-  <div class="text-white font-semibold">
-    <h1 class="text-2xl uppercase font-bold">Productos</h1>
-  </div>
-</div>
-<div class="bg-gray-100 mb-5">
-  <h1 class="text-xl font-semibold text-white p-2 bg-blue-600">
-    {{ isUpdate ? "Actualización de Producto" : "Nuevo producto" }}
-  </h1>
-</div>
+<app-header
+  [title]="titleComponent"
+  [subtitle]="subtitleComponent"
+  [isUpdate]="isUpdate"
+></app-header>
 
-<div id="card-body" class="flex flex-col rounded mt-5">
+<div id="card-body" class="flex flex-col bg-white dark:bg-gray-800">
   <!-- Formulario -->
-  <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl">
+  <div class="max-w-xl mx-auto p-6 rounded-2xl">
     <!-- ****************************** -->
     <div class="title">
       <h1 class="font-medium text-xl text-gray-500">DETALLES</h1>
@@ -228,7 +223,7 @@
             Cancelar
           </button>
           <button
-          [disabled]="form.invalid"
+            [disabled]="form.invalid"
             (click)="saveProduct()"
             [ngClass]="{
               'bg-blue-600': form.valid,

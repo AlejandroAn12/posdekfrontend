@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { OrdersService } from '../../data-access/orders.service';
 import Swal from 'sweetalert2';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-view-orders',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, HeaderComponent],
   templateUrl: './view-orders.component.html',
   styleUrl: './view-orders.component.css'
 })
@@ -23,6 +24,8 @@ export default class ViewOrdersComponent {
   orderItems: any[] = [];
   selectedProducts: any[] = [];
   selectedSupplierId: string = '';
+  titleComponent : string = 'Gestión de ordenes';
+  subtitleComponent: string = 'Generar orden'
 
   constructor() {
     this.loadSuppliers();
@@ -30,8 +33,8 @@ export default class ViewOrdersComponent {
 
   loadSuppliers(): void {
     this.supplierService.getAllSuppliersActive().subscribe({
-      next: (response) => {
-        this.suppliers = response.suppliers;
+      next: (res) => {
+        this.suppliers = res;
       },
       error: (err) => {
         this.alertsService.showError(err.error.message, '')
