@@ -27,8 +27,15 @@ export class AuthService {
       }));
   }
 
-  logOut(): Observable<any> {
-    return this.http.post(`${environment.API_URL}/credentials/logout`, {});
+  changePassword(data: any){
+    return this.http.patch(`${environment.API_URL}/credentials/change-password`, data)
+      .pipe(tap((res) => {
+        this._storage.set('session', JSON.stringify(res));
+      }));
   }
+
+  // logOut(): Observable<any> {
+  //   return this.http.post(`${environment.API_URL}/credentials/logout`, {});
+  // }
 
 }

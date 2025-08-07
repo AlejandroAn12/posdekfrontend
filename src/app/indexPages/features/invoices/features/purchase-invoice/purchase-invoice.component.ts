@@ -3,6 +3,8 @@ import { HeaderComponent } from "../../../../../shared/features/header/header.co
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SuppliersService } from '../../../supplierPages/data-access/suppliers.service';
+import { InvoicesService } from '../../data-access/invoices.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-purchase-invoice',
@@ -17,6 +19,7 @@ export default class PurchaseInvoiceComponent {
 
   fb = inject(FormBuilder);
   supplierService = inject(SuppliersService);
+  invoiceService = inject(InvoicesService);
 
   form: FormGroup;
   suppliers: any[] = [];
@@ -24,14 +27,19 @@ export default class PurchaseInvoiceComponent {
   selectedProducts: any[] = [];
   products: any[] = [];
   orderItems: any[] = [];
+  invoiceTypes: any[] = [];
 
 
 
   constructor() {
+    this.getInvoiceTypes();
     this.loadSuppliers();
     this.form = this.fb.group({
       supplierId: ['', [Validators.required]],
-      productId: ['', [Validators.required, Validators.pattern('^[0-9]{13}$')]],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      purchasePrice: [0, [Validators.required]],
+      // invoiceTypeId: ['', [Validators.required]],
+      productId: ['', [Validators.required]],
       noFac: [
         '',
         {
@@ -41,7 +49,8 @@ export default class PurchaseInvoiceComponent {
           ],
           updateOn: 'change'
         }
-      ]
+      ],
+      // details: this.fb.array([]) // Inicializa el array de detalles
     });
 
   }
@@ -49,7 +58,6 @@ export default class PurchaseInvoiceComponent {
   loadSuppliers() {
     this.supplierService.getAllSuppliersActive().subscribe({
       next: (res) => {
-        console.log(res);
         this.suppliers = res;
       },
       error: (err) => {
@@ -76,34 +84,17 @@ export default class PurchaseInvoiceComponent {
     });
   }
 
-  addToTable(selectElement: HTMLSelectElement): void {
-    const productId = selectElement.value;
-
-    if (!productId) {
-      console.error('El valor del producto es invalido');
-
-      return;
+  addToTable(select: HTMLSelectElement) {
+    const selectedProductId = select.value;
+    const product = this.products.find(p => p.id === selectedProductId);
+    if (product && !this.selectedProducts.find(p => p.id === product.id)) {
+      this.selectedProducts.push({
+        ...product,
+        quantity: 1,
+        purchasePrice: product.purchasePrice || 0
+      });
     }
-
-    const product = this.products.find((p) => p.id === productId);
-
-    if (!product) {
-      console.error('Producto no encontrado');
-      return;
-    }
-
-    const existingProduct = this.selectedProducts.find((p) => p.id === productId);
-    if (existingProduct) {
-      console.error('El producto ya se encuentra en la lista');
-
-      return;
-    }
-
-    // Agrega el producto a la tabla
-    this.selectedProducts.push({ ...product, quantity: 1 });
-
-    // Resetea el select
-    selectElement.value = "";
+    select.value = '';
   }
 
   onProductSelect(event: any): void {
@@ -122,11 +113,112 @@ export default class PurchaseInvoiceComponent {
     }
   }
 
+  getInvoiceTypes() {
+    this.invoiceService.getInvoiceTypes().subscribe({
+      next: (res: any) => {
+        this.invoiceTypes = res
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Error',
+          icon: 'error',
+          text: err.error.message
+        });
+      }
+    })
+  }
+
+  saveInvoice() {
+    // Validación general
+    if (this.form.invalid) {
+      console.log('Formulario inválido', this.form.value, this.selectedProducts);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Completa todos los campos requeridos y agrega al menos un producto.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    // Validar que todos los productos tengan cantidad y precio válidos
+    const invalidProducts = this.selectedProducts.filter(p => !p.quantity || !p.purchasePrice);
+    if (invalidProducts.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Todos los productos deben tener cantidad y precio válidos.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    const formValues = this.form.getRawValue();
+
+    const invoicePayload = {
+      noFac: formValues.noFac,
+      // invoiceTypeId: formValues.invoiceTypeId,
+      supplierId: formValues.supplierId,
+      details: this.selectedProducts.map((product) => ({
+        productId: product.id,
+        quantity: product.quantity,
+        purchasePrice: product.purchasePrice,
+      })),
+    };
+
+    Swal.fire({
+      title: "¿Estás listo para continuar?",
+      text: "Estás a punto de guardar una factura. ¿Deseas continuar con esta acción?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, guardar factura",
+      cancelButtonText: "No, volver atrás",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.invoiceService.createInvoice(invoicePayload).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Éxito',
+              text: 'Factura guardada correctamente.',
+              timer: 3000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+            });
+            this.form.reset();
+            this.selectedProducts = [];
+          },
+          error: (err) => {
+            console.error(err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: err.error?.message || 'No se pudo guardar la factura.',
+              timer: 3000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+            });
+          }
+        });
+      }
+    });
+
+
+  }
+
+
+
   get f() {
     return this.form.controls;
   }
 
-   trackByProductId(index: number, product: any): string {
+  trackByProductId(index: number, product: any): string {
     return product.id;
   }
 }

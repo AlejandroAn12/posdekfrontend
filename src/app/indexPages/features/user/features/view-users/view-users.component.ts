@@ -9,6 +9,7 @@ import { AlertService } from '../../../../../core/services/alerts.service';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
+import * as DataTables from 'datatables.net';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../../../../shared/features/header/header.component';
 
@@ -23,15 +24,21 @@ export default class ViewUsersComponent implements OnInit {
   //Renderizado del datatables
   @ViewChild(DataTableDirective, { static: false })
   dtElement!: DataTableDirective;
+
+  dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
+
+  uniqueRoles: string[] = [];
+  allData: any[] = []; // cache para los datos
 
   //Injeccion de Servicios
   authService = inject(UserService);
   private router = inject(Router);
-  private fb = inject(FormBuilder);
   private alertsService = inject(AlertService);
   private renderer = inject(Renderer2);
-  dtOptions: Config = {};
+  // dtOptions: Config = {};
+
+
 
   usersSignal = signal<ICredentialsAccess[]>([]);
   errorMessage: string = '';
@@ -52,7 +59,7 @@ export default class ViewUsersComponent implements OnInit {
   selectedCredentialId: string | null = null;
 
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.loadTable();
@@ -75,24 +82,43 @@ export default class ViewUsersComponent implements OnInit {
     }
   }
 
-  //Cargar DataTable
   loadTable() {
+    // Verifica si el DataTable ya fue inicializado y destrúyelo
+    if (this.dtElement && this.dtElement.dtInstance) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy(); //Destruye la tabla actual antes de recargar
+        this.initializeTable(); //Cargar nueva configuración
+      });
+    } else {
+      this.initializeTable(); // Primera vez
+    }
+  }
+
+
+  initializeTable() {
     this.dtOptions = {
-      ajax: (dataTablesParameters: any, callback) => {
+      ajax: (dataTablesParameters: any, callback: (data: object) => void) => {
         this.authService.getCredendentials().subscribe((resp: any) => {
+          this.allData = resp.credentials;
+
+          // Extraer los cargos únicos
+          this.uniqueRoles = Array.from(
+            new Set(this.allData.map((item) => item.role?.name))
+          );
+
           callback({
-            data: resp.credentials
+            data: this.allData
           });
         });
       },
       columnDefs: [
-        { width: '150px', targets: 0 }, // Código de empleado
-        { width: '120px', targets: 1 }, // Usuario
-        { width: '100px', targets: 2 }, // Rol
-        { width: '180px', targets: 3 }, // Fecha de Registro
-        { width: '200px', targets: 4 }, // Última Actualización
-        { width: '100px', targets: 5 }, // Habilitado
-        { width: '150px', targets: 6 }  // Acciones
+        { width: '150px', targets: 0 },
+        { width: '120px', targets: 1 },
+        { width: '100px', targets: 2 },
+        { width: '180px', targets: 3 },
+        { width: '200px', targets: 4 },
+        { width: '100px', targets: 5 },
+        { width: '150px', targets: 6 }
       ],
       scrollX: true,
       language: {
@@ -105,7 +131,7 @@ export default class ViewUsersComponent implements OnInit {
         paginate: {
           next: "Siguiente",
           previous: "Anterior"
-        },
+        }
       },
       lengthMenu: [10],
       columns: [
@@ -115,41 +141,31 @@ export default class ViewUsersComponent implements OnInit {
         { title: 'Fecha de registro', data: 'createdAt', className: 'text-center text-sm text-gray-500' },
         { title: 'Fecha de actualización', data: 'updatedAt', className: 'text-center text-sm text-gray-500' },
         {
-          title: 'Habilitado', data: 'status',
-          render: (data: any, type: any, row: any) => {
-            return `
-              <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
-          `;
-          },
+          title: 'Habilitado',
+          data: 'status',
+          render: (data: any) => `
+          <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
+        `,
           className: 'text-center text-sm text-gray-500'
         },
         {
           title: 'Acciones',
           data: null,
-          render: (data: any, type: any, row: any) => {
-            return `
+          render: (data: any, type: any, row: any) => `
           <div>
-
-                <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                        <i class="fa-solid fa-pen-to-square mr-1"></i>
-                        Editar
-                </button>
-
-                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                        <i class="fa-solid fa-trash mr-1"></i>
-                        Eliminar
-                </button>
-
-          </div>`;
-          },
+            <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+              <i class="fa-solid fa-pen-to-square mr-1"></i> Editar
+            </button>
+            <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
+              <i class="fa-solid fa-trash mr-1"></i> Eliminar
+            </button>
+          </div>`,
           className: 'text-center text-sm text-gray-500'
         }
       ],
-      rowCallback: (row: Node, data: any, index: number) => {
-        // Cast row to HTMLElement to access querySelector
+      rowCallback: (row: Node, data: any) => {
         const rowElement = row as HTMLElement;
 
-        //Metodo para actulizar el estado del producto
         const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
         if (checkbox) {
           this.renderer.listen(checkbox, 'change', (event) => {
@@ -157,7 +173,6 @@ export default class ViewUsersComponent implements OnInit {
           });
         }
 
-        //Eliminar
         const btnDelete = rowElement.querySelector('.btn-delete') as HTMLInputElement;
         if (btnDelete) {
           this.renderer.listen(btnDelete, 'click', () => {
@@ -165,17 +180,52 @@ export default class ViewUsersComponent implements OnInit {
           });
         }
 
-        //Actualizar
         const btnUpdate = rowElement.querySelector('.btn-update') as HTMLInputElement;
         if (btnUpdate) {
           this.renderer.listen(btnUpdate, 'click', () => {
             this.editUser(data.id);
           });
         }
+
         return row;
       }
     };
+
+    // Inicia DataTable
+    this.dtTrigger.next(null);
   }
+
+
+
+
+  filterByRole(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const role = selectElement.value;
+
+    const filteredData = role
+      ? this.allData.filter(item => item.role?.name === role)
+      : this.allData;
+
+    const table = $('#datatable').DataTable();
+    table.clear();
+    table.rows.add(filteredData);
+    table.draw();
+  }
+
+  selectedRole: string = '';
+
+  onRoleChange(role: string) {
+    const filteredData = role
+      ? this.allData.filter(item => item.role?.name === role)
+      : this.allData;
+
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.clear();
+      dtInstance.rows.add(filteredData);
+      dtInstance.draw();
+    });
+  }
+
 
   deleteCredentials(id: string) {
     this.authService.deleteCredentials(id).subscribe({

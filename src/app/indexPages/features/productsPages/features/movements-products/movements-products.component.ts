@@ -44,6 +44,7 @@ export default class MovementsProductsComponent {
 
   constructor(){
     this.getAllMovementTypes();
+    this.buscarMovimientos();
   }
 
   buscarMovimientos() {

@@ -3,12 +3,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-modal',
+  selector: 'app-modalForm',
   imports: [CommonModule, FormsModule],
-  templateUrl: './modal.component.html',
-  styleUrl: './modal.component.css'
+  templateUrl: './modalForm.component.html',
+  styleUrl: './modalForm.component.css'
 })
-export class ModalComponent {
+export class ModalFormComponent {
 
   @Input() visible = false;
   @Input() title: string = '';

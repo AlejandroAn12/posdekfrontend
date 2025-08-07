@@ -7,7 +7,7 @@ import { HeaderComponent } from "../shared/features/header/header.component";
 
 @Component({
   selector: 'app-indexPages',
-  imports: [RouterOutlet, SidebarComponent, CommonModule, HeaderComponent],
+  imports: [RouterOutlet, SidebarComponent, CommonModule],
   animations: [
     trigger('slideInOut', [
       transition(':enter', [

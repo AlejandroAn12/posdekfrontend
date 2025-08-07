@@ -98,7 +98,6 @@ export default class ViewOrdersComponent {
       })),
     };
 
-
     Swal.fire({
       title: "¿Estás listo para continuar?",
       text: "Estás a punto de generar un nuevo pedido. ¿Deseas continuar con esta acción?",

@@ -5,14 +5,18 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { TaxesService } from '../../../../../core/services/taxes.service';
 import Swal from 'sweetalert2';
+import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
 @Component({
   selector: 'app-initial-settings',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './initial-settings.component.html',
   styleUrl: './initial-settings.component.css'
 })
 export default class InitialSettingsComponent implements OnInit {
+
+  titleComponent: string = 'Configuraciones de la empresa';
+  subtitleComponent: string = 'Configura los impuestos y otras opciones iniciales para tu empresa';
 
   private fb = inject(FormBuilder);
   private enterpriseService = inject(StoreService);

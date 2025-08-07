@@ -4,20 +4,29 @@ import { CategoriesService } from '../../data-access/categories.service';
 import { ICategory } from '../../interface/icategories.interface';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ModalComponent } from '../../../../../shared/features/components/modal/modal.component';
 import { Config } from 'datatables.net';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { AlertService } from '../../../../../core/services/alerts.service';
 import { HeaderComponent } from "../../../../../shared/features/header/header.component";
+import { ModalFormComponent } from "../../../../../shared/features/components/modal-form/modalForm.component";
 
 @Component({
   selector: 'app-view-categories',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, DataTablesModule, ModalComponent, HeaderComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DataTablesModule, HeaderComponent, ModalFormComponent],
   templateUrl: './view-categories.component.html',
   styleUrl: './view-categories.component.css'
 })
 export default class ViewCategoriesComponent implements OnInit {
+
+  titleComponent: string = 'Gestión de categorías';
+  subtitleComponent: string = 'Listado de categorías registradas';
+
+  constructor() {
+    this.form = this.fb.group({
+      name: ['', { validators: [Validators.required], updateOn: 'change' }],
+    });
+  }
 
   private categoriesService = inject(CategoriesService);
   private fb = inject(FormBuilder);
@@ -27,18 +36,9 @@ export default class ViewCategoriesComponent implements OnInit {
   dtOptions: Config = {};
   form: FormGroup;
 
-  constructor() {
-    this.form = this.fb.group({
-      name: ['', { validators: [Validators.required], updateOn: 'change' }],
-    });
-  }
-
-  titleComponent: string = 'Gestión de categorías';
-  subtitleComponent: string = 'Listado de categorías registradas';
-
+ 
   ngOnInit(): void {
     this.loadTable();
-
   }
 
   //Modal
@@ -223,10 +223,6 @@ export default class ViewCategoriesComponent implements OnInit {
         this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
       },
     });
-  }
-
-  createCategory(){
-
   }
 
   //Toggle para abrir el modal

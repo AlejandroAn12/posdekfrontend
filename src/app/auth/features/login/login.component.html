@@ -1,87 +1,127 @@
-<div class="h-screen flex flex-col items-center justify-center">
+<div
+  class="min-h-screen flex flex-col items-center justify-center px-4 bg-gray-50 dark:bg-gray-900"
+>
+  <!-- Logo -->
   <img
     *ngIf="!isDarkMode"
     src="assets/img/new_logo.png"
     alt="logo"
-    class="w-64 mb-10 animate-pulse"
+    class="w-52 mb-8 animate-pulse"
   />
   <img
     *ngIf="isDarkMode"
     src="assets/img/logos_img/new_logo_mode_dark.png"
     alt="logo"
-    class="w-64 mb-10 animate-pulse"
+    class="w-52 mb-8 animate-pulse"
   />
-  <!-- <h1
-    class="text-2xl font-bold tracking-tight text-primary leading-none mb-4 text-center"
-  >
-    ¡Hola!,
-    <span class="bg-blue-600 text-white rounded-br-xl p-1">Bienvenido</span>
-  </h1> -->
-  <p class="pb-5 text-gray-400 text-sm">Inicia sesión con tus credenciales</p>
+
+  <!-- Subtítulo -->
+  <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+    Inicia sesión con tus credenciales
+  </p>
+
+  <!-- Formulario -->
   <form
     [formGroup]="loginForm"
     (ngSubmit)="onLogin()"
-    class="max-w-md w-full mx-auto"
+    class="w-full max-w-sm bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md"
   >
-    <div class="mb-4">
+    <!-- Usuario -->
+    <div class="mb-5">
       <label
         for="username"
-        class="text-sm font-semibold text-gray-600 dark:text-white"
-        >Usuario</label
+        class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
       >
+        Usuario
+      </label>
       <input
         formControlName="username"
         type="text"
         id="username"
-        class="input-field dark:bg-gray-800"
+        class="input-modern"
+        placeholder="Ingresa tu usuario"
       />
-      <div
+      <p
         *ngIf="
           loginForm.get('username')?.invalid &&
           loginForm.get('username')?.touched
         "
-        class="text-red-500 font-extralight italic text-sm"
+        class="text-xs text-red-500 mt-1"
       >
-        <i class="fa-solid fa-circle-info"></i>
-        El nombre de usuario es requerido.
-      </div>
+        <i class="fa-solid fa-circle-info mr-1"></i> El nombre de usuario es
+        requerido.
+      </p>
     </div>
 
-    <div class="mb-4">
+    <!-- Contraseña -->
+    <div class="mb-6">
       <label
         for="password"
-        class="text-sm font-semibold text-gray-600 dark:text-white"
-        >Contraseña</label
+        class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
       >
+        Contraseña
+      </label>
       <input
         formControlName="password"
         type="password"
         id="password"
-        class="input-field dark:bg-gray-800"
+        class="input-modern"
+        placeholder="Ingresa tu contraseña"
       />
-      <div
+      <p
         *ngIf="
           loginForm.get('password')?.invalid &&
           loginForm.get('password')?.touched
         "
-        class="text-red-500 font-extralight italic text-sm"
+        class="text-xs text-red-500 mt-1"
       >
-        <i class="fa-solid fa-circle-info"></i>
-        La contraseña es requerida.
-      </div>
+        <i class="fa-solid fa-circle-info mr-1"></i> La contraseña es requerida.
+      </p>
     </div>
 
+    <!-- Botón -->
+    <!-- Botón con loading -->
     <button
-      [disabled]="loginForm.invalid"
       type="submit"
+      [disabled]="isLoading"
+      class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    >
+      <ng-container *ngIf="!isLoading; else loadingTpl">
+        Iniciar sesión
+      </ng-container>
+      <ng-template #loadingTpl>
+        <div class="flex justify-center items-center gap-2">
+          <svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8z"
+            />
+          </svg>
+          Cargando...
+        </div>
+      </ng-template>
+    </button>
+    <!-- <button
+      type="submit"
+      [disabled]="loginForm.invalid"
       [ngClass]="{
         'bg-blue-600 hover:bg-blue-700': !loginForm.invalid,
         'bg-gray-300 cursor-not-allowed': loginForm.invalid
       }"
-      class="bg-blue-600 text-white text-sm font-semibold rounded-md p-3 w-full"
+      class="w-full py-2 px-4 rounded-md text-white text-sm font-semibold transition-all duration-300"
     >
-      Ingresar al sistema
-    </button>
+      Iniciar sesión
+    </button> -->
+
+    <app-footer></app-footer>
   </form>
 </div>
-<app-footer></app-footer>

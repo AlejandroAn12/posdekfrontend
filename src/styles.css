@@ -3,11 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap");
 /* @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanit:ital,wght@0,100;0,200;0,300;1,100;1,200&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sometype+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap'); */
 /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap'); */
 /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'); */
-
 
 @import "ngx-toastr/toastr-bs4-alert";
 @import "ngx-toastr/toastr";
@@ -17,45 +16,32 @@
   }
 }
 
-body{
-  background: #F5F7FA;
-  font-family: 'Sora', sans-serif;
+body {
+  background: #f5f7fa;
+  font-family: "Sora", sans-serif;
 }
 
 .dataTable thead {
-  background-color: #f1f1f1 !important; /* Azul */
+  background-color: #fff !important; /* Azul */
   color: white !important; /* Texto blanco */
 }
 
 .dataTable thead th {
-  border-bottom: 2px solid #acacac !important;
-}
-
-.card {
-  @apply w-full max-w-4xl h-auto border p-3 shadow-md;
-}
-
-.card-title {
-  @apply font-semibold text-lg;
-}
-
-.input-field {
-  @apply rounded p-2 block w-full border border-gray-300;
-}
-.radio-label {
-  @apply flex items-center space-x-2;
-}
-.radio-input {
-  @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500;
+  border-bottom: 2px solid #9c9c9c !important;
 }
 
 th {
   text-align: center !important;
   white-space: nowrap; /* Evita que los títulos se rompan en varias líneas */
 }
+
 td {
   text-align: center !important;
 }
 
-
-
+/* LOGIN STYLES */
+.input-modern {
+  @apply w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
+         bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none 
+         focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200;
+}

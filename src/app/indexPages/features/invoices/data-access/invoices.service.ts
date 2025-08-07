@@ -9,6 +9,10 @@ export class InvoicesService {
 
     private http = inject(HttpClient);
 
+    createInvoice(data: any){
+        return this.http.post(`${environment.API_URL}/invoices/create`, data);
+    }
+
     getInvoiceTypes(){
         return this.http.get(`${environment.API_URL}/invoices/types`);
     }
@@ -37,5 +41,9 @@ export class InvoicesService {
         }>(`${environment.API_URL}/invoices`, {
             params: queryParams,
         });
+    }
+
+    getInvoiceById(invoiceId: string) {
+        return this.http.get(`${environment.API_URL}/invoices/${invoiceId}`);
     }
 }
