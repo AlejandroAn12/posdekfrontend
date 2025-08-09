@@ -43,7 +43,7 @@ export default class DashboardComponent implements OnInit {
   loadTotalProducts() {
     this.productsService.getTotalProducts().subscribe({
       next: (resp: any) => {
-        this.TotalProducts = resp.total;
+        this.TotalProducts = resp;
       },
       error: (error) => {
         return EMPTY;

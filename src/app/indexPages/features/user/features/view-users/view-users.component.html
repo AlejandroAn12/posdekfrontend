@@ -13,27 +13,15 @@
     >
       <i class="fa-solid fa-square-plus mr-1"></i> Agregar credenciales
     </button>
-    <!-- <button
-      (click)="downloadExcel()"
-      class="text-sm font-semibold rounded-md pt-3 pb-3 pl-10 pr-10 mr-3 border text-green-600 hover:bg-gray-100 hover:text-green-600"
-    >
-      <i class="fa-solid fa-upload mr-1"></i> Excel
-    </button>
-    <button
-      class="text-sm font-semibold rounded-md border pt-3 pb-3 pl-10 pr-10 text-red-600 hover:bg-gray-100 hover:text-red-600"
-    >
-      <i class="fa-solid fa-upload mr-1"></i> PDF
-    </button> -->
   </div>
 
-  <!-- <hr class="mb-5" /> -->
-  <!-- <div class="mb-4">
-    <label for="roleFilter" class="block text-sm font-medium text-gray-700"
+  <div class="mb-4">
+    <label for="roleFilter" class="block text-sm font-medium text-gray-700 dark:text-gray-400"
       >Filtrar por cargo:</label
     >
     <select
       id="roleFilter"
-      class="mt-1 block w-60 border border-gray-300 rounded-md p-2 text-sm"
+      class="mt-1 block w-60 border border-gray-300 rounded-md p-2 text-sm dark:bg-gray-700 dark:text-white focus:ring focus:ring-blue-300"
       [(ngModel)]="selectedRole"
       (ngModelChange)="onRoleChange($event)"
     >
@@ -43,34 +31,12 @@
       </option>
     </select>
   </div>
+
   <table
     datatable
     [dtOptions]="dtOptions"
     [dtTrigger]="dtTrigger"
-    class="row-border hover border rounded-md whitespace-nowrap dark:text-white"
-  ></table> -->
-
-  <div class="mb-4">
-  <label for="roleFilter" class="block text-sm font-medium text-gray-700">Filtrar por cargo:</label>
-  <select
-    id="roleFilter"
-    class="mt-1 block w-60 border border-gray-300 rounded-md p-2 text-sm"
-    [(ngModel)]="selectedRole"
-    (ngModelChange)="onRoleChange($event)"
-  >
-    <option value="">Todos</option>
-    <option *ngFor="let role of uniqueRoles" [value]="role">
-      {{ role }}
-    </option>
-  </select>
-</div>
-
-<table
-  datatable
-  [dtOptions]="dtOptions"
-  [dtTrigger]="dtTrigger"
-  class="row-border hover stripe whitespace-nowrap dark:text-white"
-  #dataTable
->
-</table>
+    class="row-border hover stripe whitespace-nowrap dark:text-white"
+    #dataTable
+  ></table>
 </div>

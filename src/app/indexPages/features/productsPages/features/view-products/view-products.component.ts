@@ -428,7 +428,7 @@ export default class ViewProductsComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `reporte_productos_${date}.pdf`;
+        a.download = `${date}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

@@ -7,6 +7,8 @@ import { InventoryService } from '../../data-access/inventory.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from "../../../../../shared/features/header/header.component";
+import Swal from 'sweetalert2';
+import { InventoryReportService } from '../../../inventory/data-access/inventory-report.service';
 
 @Component({
   selector: 'app-history-inventory',
@@ -22,6 +24,7 @@ export default class HistoryInventoryComponent implements OnInit {
 
   private alertsService = inject(AlertService);
   private inventoryService = inject(InventoryService);
+  private inventoryReportService = inject(InventoryReportService);
   private renderer = inject(Renderer2);
 
   titleComponent : string = 'Gestión de inventarios';
@@ -83,12 +86,6 @@ export default class HistoryInventoryComponent implements OnInit {
           render: (data: any, type: any, row: any) => {
             return `
             <div>
-
-                  <button class="btn-print bg-green-500 hover:bg-green-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                          <i class="fa-solid fa-eye mr-1"></i>
-                          Ver documento
-                  </button>
-
                   <button class="btn-print bg-red-500 hover:bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
                           <i class="fa-solid fa-print mr-1"></i>
                           Imprimir
@@ -120,7 +117,7 @@ export default class HistoryInventoryComponent implements OnInit {
           const downloadBtn = rowElement.querySelector('.btn-download');
           if (downloadBtn) {
             this.renderer.listen(downloadBtn, 'click', () => {
-              // this.downloadPdf(data.id);
+              this.downloadPdf(data.id);
             });
           }
         }
@@ -129,7 +126,7 @@ export default class HistoryInventoryComponent implements OnInit {
         const printBtn = rowElement.querySelector('.btn-print');
         if (printBtn) {
           this.renderer.listen(printBtn, 'click', () => {
-            // this.printOrderPDF(data.id);
+            this.printPDF(data.id);
           });
         }
 
@@ -144,6 +141,57 @@ export default class HistoryInventoryComponent implements OnInit {
       }
     };
   }
+
+  downloadPdf(id: string) {
+      const date = Date.now();
+      this.inventoryReportService.downloadInventoryFinishedReportPDF(id).subscribe({
+        next: (blob: Blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${date}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        },
+        error: (err) => {
+          Swal.fire({
+            title: 'Error',
+            text: err.error.message || 'Error al descargar el PDF',
+            icon: 'error'
+          });
+        }
+      })
+    }
+  
+    printPDF(id: string) {
+      this.inventoryReportService.printInventoryFinishedPDF(id).subscribe({
+        next: (blob: Blob) => {
+          const blobUrl = URL.createObjectURL(blob);
+          const newWindow = window.open(blobUrl, '_blank');
+  
+          if (newWindow) {
+            newWindow.onload = () => {
+              newWindow.print(); // Abre la ventana de impresión automáticamente
+            };
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'No se pudo abrir la nueva ventana para imprimir.',
+              icon: 'error'
+            });
+          }
+        },
+        error: (err) => {
+          Swal.fire({
+            title: 'Error',
+            text: err.error.message || 'Error al generar el PDF',
+            icon: 'error'
+          });
+        }
+      })
+    }
 
 
   downloadExcel() {

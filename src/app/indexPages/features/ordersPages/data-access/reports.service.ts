@@ -18,7 +18,7 @@ export class OrderReportService {
       'Accept': 'application/pdf'
     });
 
-    return this.http.get(`${environment.API_URL}/orders/reports/${id}`, {
+    return this.http.get(`${environment.API_URL}/reports/orders/${id}`, {
       headers: headers,
       responseType: 'blob'
     });
@@ -31,7 +31,7 @@ export class OrderReportService {
       'Accept': 'application/pdf'
     });
 
-    return this.http.get(`${environment.API_URL}/orders/reports/${id}`, {
+    return this.http.get(`${environment.API_URL}/reports/orders/${id}`, {
       headers: headers,
       responseType: 'blob'
     });
@@ -44,7 +44,7 @@ export class OrderReportService {
       'Accept': 'application/pdf'
     });
 
-    return this.http.get(`${environment.API_URL}/orders/reports`, {
+    return this.http.get(`${environment.API_URL}/reports/orders`, {
       headers: headers,
       responseType: 'blob'
     });

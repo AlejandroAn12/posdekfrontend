@@ -93,6 +93,8 @@ export class SidebarComponent {
         { title: 'Realizar inventario', iconClass: 'fa-solid fa-clipboard', route: '/index/merchandise/inventory' },
         { title: 'Ajuste de stock', iconClass: 'fa-solid fa-boxes-stacked', route: '/index/merchandise/adjustment' },
         { title: 'Historial de inventario', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/merchandise/history-inventories' },
+        { title: 'Ajustes de stock', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/merchandise/history-inventories' },
+
       ],
     },
     {
@@ -127,7 +129,7 @@ export class SidebarComponent {
       iconClass: 'fa-solid fa-gears',
       children: [
         { title: 'Información de tienda', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
-        { title: 'Configuración de impuestos', iconClass: 'fa-solid fa-circle-info', route: '/index/enterprise/settings' },
+        { title: 'Configuración general', iconClass: 'fa-solid fa-circle-info', route: '/index/enterprise/settings' },
         { title: 'Cambiar contraseña', iconClass: 'fa-solid fa-lock', route: '/index/change-password' },
         // { title: 'Configuración de inventario', iconClass: 'fa-solid fa-boxes-stacked', route: '/index/inventory/settings' },
       ]

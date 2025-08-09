@@ -8,6 +8,7 @@ import { AlertService } from '../../../../../core/services/alerts.service';
 import { Subject } from 'rxjs';
 import { OrderReportService } from '../../data-access/reports.service';
 import { HeaderComponent } from "../../../../../shared/features/header/header.component";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-orders-history',
@@ -24,13 +25,13 @@ export default class OrdersHistoryComponent implements OnInit {
 
   dtOptions: Config = {};
 
-  titleComponent : string = 'Gestión de Ordenes';
-  subtitleComponent : string = 'Historial de ordenes generadas'
+  titleComponent: string = 'Gestión de Ordenes';
+  subtitleComponent: string = 'Historial de ordenes generadas'
 
   ngOnInit(): void {
     this.loadDataTable();
   }
-  
+
   loadDataTable() {
     this.dtOptions = {
 
@@ -74,7 +75,7 @@ export default class OrdersHistoryComponent implements OnInit {
           }, className: 'text-sm text-gray-500'
         },
         { title: 'Fecha de generación', data: 'orderDate', className: 'text-sm text-gray-500' },
-        {title: 'Estado', data: 'typeofstatus.name', className: 'text-sm text-gray-500'},
+        { title: 'Estado', data: 'typeofstatus.name', className: 'text-sm text-gray-500' },
         { title: 'Responsable', data: 'user', className: 'text-sm text-gray-500' },
 
 
@@ -166,7 +167,11 @@ export default class OrdersHistoryComponent implements OnInit {
         window.URL.revokeObjectURL(url);
       },
       error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `Error`)
+        Swal.fire({
+          title: 'Error',
+          text: err.error.message || 'Error al descargar el PDF',
+          icon: 'error'
+        });
       }
     })
   }
@@ -182,36 +187,56 @@ export default class OrdersHistoryComponent implements OnInit {
             newWindow.print(); // Abre la ventana de impresión automáticamente
           };
         } else {
-          this.alertsService.showError('No se pudo abrir la nueva ventana.', 'Error');
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo abrir la nueva ventana para imprimir.',
+            icon: 'error'
+          });
         }
       },
       error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
+        Swal.fire({
+          title: 'Error',
+          text: err.error.message || 'Error al generar el PDF',
+          icon: 'error'
+        });
       }
     })
   }
 
-  downloadAllOrders(){
+  downloadAllOrders() {
     const date = Date.now();
     this.reportsPdfService.printAllOrders().subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `reporte_ordenes_${date}.pdf`;
+        a.download = `${date}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-      }, error: (err) =>{
-        console.error({err})
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`);
-      } 
+      }, error: (err) => {
+        Swal.fire({
+          title: 'Error',
+          text: err.error.message || 'Error al descargar el PDF',
+          icon: 'error'
+        });
+      }
     })
   }
 
-  downloadExcel(){
-    this.alertsService.showInfo('Metodo aun no implementado', 'Información')
+  downloadExcel() {
+    Swal.fire({
+      title: 'Error',
+      text: 'El método de descarga de Excel aún no está implementado.',
+      icon: 'info',
+      position: 'top-end',
+      width: '30rem',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true
+    });
   }
 
 }

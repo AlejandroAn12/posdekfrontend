@@ -102,7 +102,7 @@
       </thead>
       <tbody *ngIf="!isLoading" class="divide-y divide-gray-100">
         <tr
-          class="dark:bg-gray-700 shadow-sm dark:text-gray-400"
+          class="dark:bg-gray-700 shadow-sm dark:text-white"
           *ngFor="let invoice of invoices"
         >
           <td class="px-4 py-2">{{ invoice?.noFac || "N/A" }}</td>
@@ -167,6 +167,7 @@
   </div>
 </div>
 
+<!-- MODAL -->
 <app-modal
   [visible]="showModal"
   (close)="showModal = false"

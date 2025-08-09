@@ -17,7 +17,7 @@ export class ProductReportService {
           'Accept': 'application/pdf'
         });
     
-        return this.http.get(`${environment.API_URL}/products/reports`, {
+        return this.http.get(`${environment.API_URL}/reports/products`, {
           headers: headers,
           responseType: 'blob'
         });
