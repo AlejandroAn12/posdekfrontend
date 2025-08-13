@@ -9,7 +9,7 @@ import { FooterComponent } from "../../../shared/features/footer/footer.componen
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, FooterComponent, FooterComponent],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, FooterComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -33,122 +33,75 @@ export default class LoginComponent {
     });
   }
 
-  // onLogin() {
-  //   if (this.loginForm.valid) {
-  //     const loginData: ILogin = this.loginForm.value;
-  //     this.authService.login(loginData).subscribe({
-  //       next: () => this._router.navigateByUrl('index/dashboard'),
-  //       error: (err) => {
-  //         if (err.error.statusCode === 403 && err.error.errorCode === 'LOGIN_INACTIVE_USER') {
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Usuario inactivo',
-  //             text: `${err.error.message}`,
-  //             confirmButtonText: 'Entendido'
-  //           });
-  //         }
-
-  //         if (err.error.statusCode === 400 && err.error.errorCode === 'USER_INVALID') {
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Acceso inválido',
-  //             text: `${err.error.message}`,
-  //             confirmButtonText: 'Entendido'
-  //           });
-  //         }
-
-  //         if (err.error.statusCode === 401 && err.error.errorCode === 'CREDENTIALS_INCORRECT') {
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Error de autenticación',
-  //             text: `${err.error.message}`,
-  //             confirmButtonText: 'Entendido'
-  //           });
-  //         }
-
-  //         if (err.status === 0) {
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Error de conexión',
-  //             text: 'No se pudo conectar al servidor. Por favor, verifica tu conexión a Internet.',
-  //             confirmButtonText: 'Entendido'
-  //           });
-  //         }
-
-  //         if (err.status === 500) {
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Error del servidor',
-  //             text: 'El servidor no está disponible en este momento. Por favor, inténtalo más tarde.',
-  //             confirmButtonText: 'Entendido'
-  //           });
-  //         }
-  //       },
-  //     });
-  //   }
-  //   return;
-  // }
-
   onLogin() {
-  if (this.loginForm.valid) {
-    this.isLoading = true; // Mostrar spinner
-    const loginData: ILogin = this.loginForm.value;
+    if (this.loginForm.valid) {
+      this.isLoading = true; // Mostrar spinner
+      const loginData: ILogin = this.loginForm.value;
 
-    this.authService.login(loginData).subscribe({
-      next: () => {
-        this.isLoading = false; // Ocultar spinner
-        this._router.navigateByUrl('index/dashboard');
-      },
-      error: (err) => {
-        this.isLoading = false; // Ocultar spinner en todos los casos de error
+      this.authService.login(loginData).subscribe({
+        next: () => {
+          this.isLoading = false; // Ocultar spinner
+          this._router.navigateByUrl('index/dashboard');
+        },
+        error: (err) => {
+          this.isLoading = false; // Ocultar spinner en todos los casos de error
 
-        if (err.error.statusCode === 403 && err.error.errorCode === 'LOGIN_INACTIVE_USER') {
-          Swal.fire({
-            icon: 'error',
-            title: 'Usuario inactivo',
-            text: `${err.error.message}`,
-            confirmButtonText: 'Entendido'
-          });
+          if (err.error.statusCode === 403 && err.error.errorCode === 'LOGIN_INACTIVE_USER') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Usuario inactivo',
+              text: `${err.error.message}`,
+              confirmButtonText: 'Entendido'
+            });
+          }
+
+          if (err.error.statusCode === 400 && err.error.errorCode === 'USER_INVALID') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Acceso inválido',
+              text: `${err.error.message}`,
+              confirmButtonText: 'Entendido'
+            });
+          }
+
+          if (err.error.statusCode === 401 && err.error.errorCode === 'USER_NOT_AUTHORIZED') {
+            Swal.fire({
+              icon: 'error',
+              title: 'No autorizado',
+              text: `${err.error.message}`,
+              confirmButtonText: 'Entendido'
+            });
+          }
+
+          if (err.error.statusCode === 401 && err.error.errorCode === 'CREDENTIALS_INCORRECT') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de autenticación',
+              text: `${err.error.message}`,
+              confirmButtonText: 'Entendido'
+            });
+          }
+
+          if (err.status === 0) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de conexión',
+              text: 'No se pudo conectar al servidor. Por favor, verifica tu conexión a Internet.',
+              confirmButtonText: 'Entendido'
+            });
+          }
+
+          if (err.status === 500) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error del servidor',
+              text: 'El servidor no está disponible en este momento. Por favor, inténtalo más tarde.',
+              confirmButtonText: 'Entendido'
+            });
+          }
         }
-
-        if (err.error.statusCode === 400 && err.error.errorCode === 'USER_INVALID') {
-          Swal.fire({
-            icon: 'error',
-            title: 'Acceso inválido',
-            text: `${err.error.message}`,
-            confirmButtonText: 'Entendido'
-          });
-        }
-
-        if (err.error.statusCode === 401 && err.error.errorCode === 'CREDENTIALS_INCORRECT') {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error de autenticación',
-            text: `${err.error.message}`,
-            confirmButtonText: 'Entendido'
-          });
-        }
-
-        if (err.status === 0) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error de conexión',
-            text: 'No se pudo conectar al servidor. Por favor, verifica tu conexión a Internet.',
-            confirmButtonText: 'Entendido'
-          });
-        }
-
-        if (err.status === 500) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error del servidor',
-            text: 'El servidor no está disponible en este momento. Por favor, inténtalo más tarde.',
-            confirmButtonText: 'Entendido'
-          });
-        }
-      }
-    });
+      });
+    }
   }
-}
 
 }

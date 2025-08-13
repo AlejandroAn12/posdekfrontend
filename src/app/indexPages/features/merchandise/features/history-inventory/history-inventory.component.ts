@@ -193,6 +193,34 @@ export default class HistoryInventoryComponent implements OnInit {
       })
     }
 
+    printAllPDF() {
+      this.inventoryReportService.getAllInventoriesReportPdf().subscribe({
+        next: (blob: Blob) => {
+          const blobUrl = URL.createObjectURL(blob);
+          const newWindow = window.open(blobUrl, '_blank');
+  
+          if (newWindow) {
+            newWindow.onload = () => {
+              newWindow.print(); // Abre la ventana de impresión automáticamente
+            };
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'No se pudo abrir la nueva ventana para imprimir.',
+              icon: 'error'
+            });
+          }
+        },
+        error: (err) => {
+          Swal.fire({
+            title: 'Error',
+            text: err.error.message || 'Error al generar el PDF',
+            icon: 'error'
+          });
+        }
+      })
+    }
+
 
   downloadExcel() {
     this.alertsService.showInfo('Metodo aun no implementado', 'Información')

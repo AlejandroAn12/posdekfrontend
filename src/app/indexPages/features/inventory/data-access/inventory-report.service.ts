@@ -49,4 +49,16 @@ export class InventoryReportService {
             responseType: 'blob'
         });
     }
+
+    getAllInventoriesReportPdf(): Observable<Blob> {
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Accept': 'application/pdf'
+        });
+    
+        return this.http.get(`${environment.API_URL}/reports/inventories`, {
+          headers: headers,
+          responseType: 'blob'
+        });
+      }
 }

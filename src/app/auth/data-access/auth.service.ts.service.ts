@@ -5,12 +5,6 @@ import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { StorageService } from '../../core/services/storage.service';
 
-interface Session {
-  access_token: string;
-  status: boolean;
-  id: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })

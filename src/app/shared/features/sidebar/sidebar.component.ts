@@ -109,8 +109,8 @@ export class SidebarComponent {
     },
 
     {
-      title: 'Contabilidad',
-      iconClass: 'fa-solid fa-folder',
+      title: 'Facturas',
+      iconClass: 'fa-solid fa-file-invoice',
       children: [
         { title: 'Ver facturas', iconClass: 'fa-solid fa-file-invoice', route: '/index/invoices' },
         { title: 'Ver notas de venta', iconClass: 'fa-solid fa-file-invoice', route: '/index/invoices' },
