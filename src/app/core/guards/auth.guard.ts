@@ -51,7 +51,7 @@ export const publicGuard = (): CanActivateFn => {
             const currentTime = Math.floor(Date.now() / 1000);
 
             if (decoded.exp >= currentTime) {
-                router.navigateByUrl('/index/dashboard');
+                router.navigateByUrl('/admin/dashboard');
                 return false;
             }
 

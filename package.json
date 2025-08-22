@@ -19,6 +19,8 @@
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
     "angular-datatables": "^19.0.0",
+    "apexcharts": "^5.3.3",
+    "common": "^0.2.5",
     "datatables.net": "^2.2.1",
     "datatables.net-dt": "^2.2.1",
     "date-fns": "^4.1.0",

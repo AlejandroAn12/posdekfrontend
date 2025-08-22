@@ -35,27 +35,19 @@ export class SidebarComponent {
     this.isDarkMode = !this.isDarkMode;
   }
 
-
-
-  //  toggleSidebar() {
-  //     this.isSidebarCollapsed = !this.isSidebarCollapsed;
-  //     this.collapsedChange.emit(this.isSidebarCollapsed);
-  //   }
-
-
   sidebarOptions: SidebarOption[] = [
     {
       title: 'Dashboard',
       iconClass: 'fa-brands fa-usps',
-      route: '/index/dashboard',
+      route: '/admin/dashboard',
     },
 
     {
       title: 'Administración',
       iconClass: 'fa-solid fa-user-gear',
       children: [
-        { title: 'Gestionar usuarios', iconClass: 'fa-solid fa-user-tie', route: '/index/credentials' },
-        { title: 'Gestionar colaboradores', iconClass: 'fa-solid fa-users', route: '/index/employees' },
+        { title: 'Gestionar usuarios', iconClass: 'fa-solid fa-user-tie', route: '/admin/credentials' },
+        { title: 'Gestionar colaboradores', iconClass: 'fa-solid fa-users', route: '/admin/employees' },
       ],
     },
 
@@ -63,8 +55,8 @@ export class SidebarComponent {
       title: 'Proveedores',
       iconClass: 'fa-solid fa-truck-moving',
       children: [
-        { title: 'Nuevo proveedor', iconClass: 'fa-solid fa-truck', route: '/index/suppliers/form' },
-        { title: 'Lista de proveedores', iconClass: 'fa-solid fa-truck-fast', route: '/index/suppliers/view' },
+        { title: 'Nuevo proveedor', iconClass: 'fa-solid fa-truck', route: '/admin/suppliers/form' },
+        { title: 'Lista de proveedores', iconClass: 'fa-solid fa-truck-fast', route: '/admin/suppliers/view' },
       ],
     },
 
@@ -72,8 +64,8 @@ export class SidebarComponent {
       title: 'Categorias',
       iconClass: 'fa-solid fa-tags',
       children: [
-        // { title: 'Nueva categoria', iconClass: 'fa-solid fa-tag', route: '/index/categories/form' },
-        { title: 'Lista de categorias', iconClass: 'fa-solid fa-tags', route: '/index/categories/view' },
+        // { title: 'Nueva categoria', iconClass: 'fa-solid fa-tag', route: '/admin/categories/form' },
+        { title: 'Lista de categorias', iconClass: 'fa-solid fa-tags', route: '/admin/categories/view' },
       ],
     },
 
@@ -81,19 +73,19 @@ export class SidebarComponent {
       title: 'Productos',
       iconClass: 'fa-solid fa-box',
       children: [
-        { title: 'Nuevo producto', iconClass: 'fa-solid fa-box', route: '/index/products/form' },
-        { title: 'Lista de productos', iconClass: 'fa-solid fa-boxes', route: '/index/products/view' },
-        { title: 'Movimiento de productos', iconClass: 'fa-solid fa-folder', route: '/index/products/movements' },
+        { title: 'Nuevo producto', iconClass: 'fa-solid fa-box', route: '/admin/products/form' },
+        { title: 'Lista de productos', iconClass: 'fa-solid fa-boxes', route: '/admin/products/view' },
+        { title: 'Movimiento de productos', iconClass: 'fa-solid fa-folder', route: '/admin/products/movements' },
       ],
     },
     {
       title: 'Inventario',
       iconClass: 'fa-solid fa-boxes-stacked',
       children: [
-        { title: 'Realizar inventario', iconClass: 'fa-solid fa-clipboard', route: '/index/merchandise/inventory' },
-        { title: 'Ajuste de stock', iconClass: 'fa-solid fa-boxes-stacked', route: '/index/merchandise/adjustment' },
-        { title: 'Historial de inventario', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/merchandise/history-inventories' },
-        { title: 'Ajustes de stock', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/merchandise/history-inventories' },
+        { title: 'Realizar inventario', iconClass: 'fa-solid fa-clipboard', route: '/admin/inventory/inventory' },
+        { title: 'Ajuste de stock', iconClass: 'fa-solid fa-boxes-stacked', route: '/admin/inventory/adjustment' },
+        { title: 'Historial de inventario', iconClass: 'fa-solid fa-clock-rotate-left', route: '/admin/inventory/history-inventories' },
+        { title: 'Ajustes de stock', iconClass: 'fa-solid fa-clock-rotate-left', route: '/admin/inventory/history-inventories' },
 
       ],
     },
@@ -101,9 +93,9 @@ export class SidebarComponent {
       title: 'Compras',
       iconClass: 'fa-solid fa-cart-shopping',
       children: [
-        { title: 'Generar orden', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/generate' },
-        { title: 'Ordenes pendientes', iconClass: 'fa-solid fa-clock', route: '/index/orders/pending' },
-        { title: 'Historial de ordenes', iconClass: 'fa-solid fa-clock-rotate-left', route: '/index/orders/history' }
+        { title: 'Generar orden', iconClass: 'fa-solid fa-cart-shopping', route: '/admin/orders/generate' },
+        { title: 'Ordenes pendientes', iconClass: 'fa-solid fa-clock', route: '/admin/orders/pending' },
+        { title: 'Historial de ordenes', iconClass: 'fa-solid fa-clock-rotate-left', route: '/admin/orders/history' }
 
       ]
     },
@@ -112,35 +104,27 @@ export class SidebarComponent {
       title: 'Facturas',
       iconClass: 'fa-solid fa-file-invoice',
       children: [
-        { title: 'Ver facturas', iconClass: 'fa-solid fa-file-invoice', route: '/index/invoices' },
-        { title: 'Ver notas de venta', iconClass: 'fa-solid fa-file-invoice', route: '/index/invoices' },
-        { title: 'Registro de compra', iconClass: 'fa-solid fa-cart-plus', route: '/index/invoices/purchase-invoice' },
+        { title: 'Ver facturas', iconClass: 'fa-solid fa-file-invoice', route: '/admin/invoices' },
+        { title: 'Ver notas de venta', iconClass: 'fa-solid fa-file-invoice', route: '/admin/invoices' },
+        { title: 'Registro de compra', iconClass: 'fa-solid fa-cart-plus', route: '/admin/invoices/purchase-invoice' },
         
       ]
     },
     {
       title: 'Ingresar mercadería',
       iconClass: 'fa-solid fa-dolly',
-      route: '/index/merchandise/entry',
+      route: '/admin/merchandise/entry',
     },
 
     {
       title: 'Configuraciones',
       iconClass: 'fa-solid fa-gears',
       children: [
-        { title: 'Información de tienda', iconClass: 'fa-solid fa-store', route: '/index/enterprise' },
-        { title: 'Configuración general', iconClass: 'fa-solid fa-circle-info', route: '/index/enterprise/settings' },
-        { title: 'Cambiar contraseña', iconClass: 'fa-solid fa-lock', route: '/index/change-password' },
-        // { title: 'Configuración de inventario', iconClass: 'fa-solid fa-boxes-stacked', route: '/index/inventory/settings' },
+        { title: 'Información de tienda', iconClass: 'fa-solid fa-store', route: '/admin/enterprise' },
+        { title: 'Configuración general', iconClass: 'fa-solid fa-circle-info', route: '/admin/enterprise/settings' },
+        { title: 'Cambiar contraseña', iconClass: 'fa-solid fa-lock', route: '/admin/change-password' },
       ]
     }
-    // {
-    //   title: 'Reportes',
-    //   iconClass: 'fa-solid fa-folder',
-    //   children: [
-    //     { title: 'Reporte de compras', iconClass: 'fa-solid fa-cart-shopping', route: '/index/orders/history' }
-    //   ],
-    // }
   ];
 
   // Estado para controlar el despliegue del submenú

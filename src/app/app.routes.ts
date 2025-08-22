@@ -4,7 +4,7 @@ import { privateGuard, publicGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'index/dashboard',
+        redirectTo: 'admin/dashboard',
         pathMatch: 'full',
     },
     {
@@ -23,9 +23,9 @@ export const routes: Routes = [
         loadComponent: () => import('./shared/features/components/terms/terms.component')
     },
     {
-        path: 'index',
+        path: 'admin',
         canMatch: [privateGuard()],
-        loadChildren: () => import('./indexPages/indexPages.routes')
+        loadChildren: () => import('./pages/pages.routes')
     },
     {
         path:'server-error',

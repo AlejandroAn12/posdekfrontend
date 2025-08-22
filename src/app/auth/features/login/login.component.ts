@@ -41,7 +41,7 @@ export default class LoginComponent {
       this.authService.login(loginData).subscribe({
         next: () => {
           this.isLoading = false; // Ocultar spinner
-          this._router.navigateByUrl('index/dashboard');
+          this._router.navigateByUrl('admin/dashboard');
         },
         error: (err) => {
           this.isLoading = false; // Ocultar spinner en todos los casos de error
