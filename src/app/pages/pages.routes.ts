@@ -41,7 +41,7 @@ export default [
         loadChildren: () => import('./components/categories/categories.routes')
       },
       {
-        path: 'enterprise',
+        path: 'store',
         loadChildren: () => import('./components/store/enterprise.routes')
       },
       {

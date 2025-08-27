@@ -16,6 +16,6 @@ export class DashboardService {
     }
 
     getSalesRange(start: string, end: string): Observable<any[]> {
-        return this.http.get<any[]>(`${environment.API_URL}/range?start=${start}&end=${end}`);
+        return this.http.get<any[]>(`${environment.API_URL}/sales/range?start=${start}&end=${end}`);
     }
 }

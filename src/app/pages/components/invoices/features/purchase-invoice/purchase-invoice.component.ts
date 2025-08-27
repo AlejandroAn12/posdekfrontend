@@ -38,7 +38,6 @@ export default class PurchaseInvoiceComponent {
       supplierId: ['', [Validators.required]],
       quantity: [1, [Validators.required, Validators.min(1)]],
       purchasePrice: [0, [Validators.required]],
-      // invoiceTypeId: ['', [Validators.required]],
       productId: ['', [Validators.required]],
       noFac: [
         '',
@@ -122,7 +121,9 @@ export default class PurchaseInvoiceComponent {
         Swal.fire({
           title: 'Error',
           icon: 'error',
-          text: err.error.message
+          text: err.error.message,
+          position: 'top',
+          toast: true
         });
       }
     })
@@ -131,7 +132,6 @@ export default class PurchaseInvoiceComponent {
   saveInvoice() {
     // Validación general
     if (this.form.invalid) {
-      console.log('Formulario inválido', this.form.value, this.selectedProducts);
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -139,6 +139,8 @@ export default class PurchaseInvoiceComponent {
         timer: 3000,
         timerProgressBar: true,
         showConfirmButton: false,
+        toast: true,
+        position: 'top'
       });
       return;
     }
@@ -161,7 +163,6 @@ export default class PurchaseInvoiceComponent {
 
     const invoicePayload = {
       noFac: formValues.noFac,
-      // invoiceTypeId: formValues.invoiceTypeId,
       supplierId: formValues.supplierId,
       details: this.selectedProducts.map((product) => ({
         productId: product.id,
@@ -185,17 +186,17 @@ export default class PurchaseInvoiceComponent {
           next: () => {
             Swal.fire({
               icon: 'success',
-              title: 'Éxito',
-              text: 'Factura guardada correctamente.',
+              text: 'Factura guardada correctamente',
               timer: 3000,
               timerProgressBar: true,
               showConfirmButton: false,
+              toast: true,
+              position: 'top'
             });
             this.form.reset();
             this.selectedProducts = [];
           },
           error: (err) => {
-            console.error(err);
             Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -203,6 +204,8 @@ export default class PurchaseInvoiceComponent {
               timer: 3000,
               timerProgressBar: true,
               showConfirmButton: false,
+              toast: true,
+              position: 'top'
             });
           }
         });

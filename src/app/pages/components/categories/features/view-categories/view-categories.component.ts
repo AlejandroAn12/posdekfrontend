@@ -8,19 +8,15 @@ import { Config } from 'datatables.net';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { AlertService } from '../../../../../core/services/alerts.service';
-import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 import { ModalFormComponent } from "../../../../../shared/features/components/modal-form/modalForm.component";
 
 @Component({
   selector: 'app-view-categories',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, DataTablesModule, HeaderComponent, ModalFormComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DataTablesModule, ModalFormComponent],
   templateUrl: './view-categories.component.html',
   styleUrl: './view-categories.component.css'
 })
 export default class ViewCategoriesComponent implements OnInit {
-
-  titleComponent: string = 'Gestión de categorías';
-  subtitleComponent: string = 'Listado de categorías registradas';
 
   constructor() {
     this.form = this.fb.group({
@@ -36,7 +32,7 @@ export default class ViewCategoriesComponent implements OnInit {
   dtOptions: Config = {};
   form: FormGroup;
 
- 
+
   ngOnInit(): void {
     this.loadTable();
   }
@@ -82,46 +78,52 @@ export default class ViewCategoriesComponent implements OnInit {
         // { title: 'ID', data: 'id' },
         { title: 'Nombre', data: 'name', className: 'text-sm text-gray-500' },
         {
-          title: 'Habilitado',
+          title: 'Estado',
           data: 'status',
-          render: (data: any, type: any, row: any) => {
+          render: (data: any) => {
             return `
-              <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" ${data ? 'checked' : ''}>
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
           `;
           },
-          className: 'text-center text-sm text-gray-500' // Centrar la columna
+          className: 'text-center text-sm text-gray-500'
         },
         { title: 'Fecha de registro', data: 'registration_date', className: 'text-sm text-gray-500' },
         {
-          title: 'Acciones',
+          title: 'Opciones',
           data: null,
-          render: (data: any, type: any, row: any) => {
+          render: (row: any) => {
             return `
-          <div>
-
-                <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                    <div class="flex space-x-3">
+                      <button 
+                        class="btn-update flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square"></i>
                         Editar
-                </button>
+                      </button>
 
-                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                        <i class="fa-solid fa-trash mr-1"></i>
+                      <button 
+                        class="btn-delete flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash"></i>
                         Eliminar
-                </button>
-
-          </div>`;
+                      </button>
+                    </div>
+                  `;
           },
-          className: 'action-column text-gray-500 text-sm'
+          className: 'action-column text-sm text-gray-500'
         }
       ],
       rowCallback: (row: Node, data: any, index: number) => {
         // Cast row to HTMLElement to access querySelector
         const rowElement = row as HTMLElement;
 
-        //Metodo para actulizar el estado del producto
-        const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
-        if (checkbox) {
-          this.renderer.listen(checkbox, 'change', (event) => {
+        // Método para actualizar el estado del empleado con toggle
+        const toggle = rowElement.querySelector('input[type="checkbox"]') as HTMLInputElement;
+        if (toggle) {
+          this.renderer.listen(toggle, 'change', (event) => {
             this.onStatusChange(event, data);
           });
         }
@@ -158,10 +160,40 @@ export default class ViewCategoriesComponent implements OnInit {
 
   updateCategorieStatus(categorie: any): void {
     this.categoriesService.updateCategoryStatus(categorie.id, categorie.status).subscribe({
-      next: (resp: any) => {
-        this.alertsService.showSuccess(`${resp.message}`, `Información`)
+      next: (resp) => {
+        if (resp) {
+          Swal.fire({
+            icon: "success",
+            text: 'Categoria habilitado',
+            toast: true,
+            position: 'top',
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire({
+            icon: "warning",
+            text: 'Categoria deshabilitado',
+            toast: true,
+            position: 'top',
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          });
+        }
       },
-      error: (err) => this.alertsService.showError(`${err.error.message}`, `${err.statusText}`),
+      error: (err) => {
+        Swal.fire({
+            icon: "error",
+            text: err.error.message || 'Error',
+            toast: true,
+            position: 'top',
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          });
+      }
     });
   }
 
@@ -178,7 +210,15 @@ export default class ViewCategoriesComponent implements OnInit {
   //Añadir nueva categoria
   addCategory() {
     if (this.form.invalid) {
-      this.alertsService.showError('El nombre no puede estar vacío', '');
+      Swal.fire({
+            icon: "warning",
+            text: 'Debe ingresar un nombre',
+            toast: true,
+            position: 'top',
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          });
       return;
     }
     const newCategory = this.form.value;

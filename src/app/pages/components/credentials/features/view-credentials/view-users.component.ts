@@ -15,7 +15,7 @@ import { HeaderComponent } from '../../../../../shared/features/header/header.co
 
 @Component({
   selector: 'app-view-users',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, DataTablesModule, HeaderComponent],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, DataTablesModule],
   templateUrl: './view-users.component.html',
   styleUrl: './view-users.component.css'
 })
@@ -30,6 +30,8 @@ export default class ViewUsersComponent implements OnInit {
 
   uniqueRoles: string[] = [];
   allData: any[] = []; // cache para los datos
+
+  isLoading: boolean = false;
 
   //Injeccion de Servicios
   authService = inject(UserService);
@@ -141,34 +143,50 @@ export default class ViewUsersComponent implements OnInit {
         { title: 'Fecha de registro', data: 'createdAt', className: 'text-center text-sm text-gray-500' },
         { title: 'Fecha de actualización', data: 'updatedAt', className: 'text-center text-sm text-gray-500' },
         {
-          title: 'Habilitado',
+          title: 'Estado',
           data: 'status',
-          render: (data: any) => `
-          <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
-        `,
+          render: (data: any) => {
+            return `
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" ${data ? 'checked' : ''}>
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
+          `;
+          },
           className: 'text-center text-sm text-gray-500'
         },
         {
           title: 'Acciones',
           data: null,
-          render: (data: any, type: any, row: any) => `
-          <div>
-            <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-              <i class="fa-solid fa-pen-to-square mr-1"></i> Editar
-            </button>
-            <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-              <i class="fa-solid fa-trash mr-1"></i> Eliminar
-            </button>
-          </div>`,
-          className: 'text-center text-sm text-gray-500'
+          render: (row: any) => {
+            return `
+                    <div class="flex space-x-3">
+                      <button 
+                        class="btn-update flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        Editar
+                      </button>
+
+                      <button 
+                        class="btn-delete flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash"></i>
+                        Eliminar
+                      </button>
+                    </div>
+                  `;
+          },
+          className: 'action-column text-sm text-gray-500'
         }
       ],
       rowCallback: (row: Node, data: any) => {
         const rowElement = row as HTMLElement;
 
-        const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
-        if (checkbox) {
-          this.renderer.listen(checkbox, 'change', (event) => {
+        // Método para actualizar el estado del empleado con toggle
+        const toggle = rowElement.querySelector('input[type="checkbox"]') as HTMLInputElement;
+        if (toggle) {
+          this.renderer.listen(toggle, 'change', (event) => {
             this.onStatusChange(event, data);
           });
         }
@@ -229,21 +247,27 @@ export default class ViewUsersComponent implements OnInit {
 
   deleteCredentials(id: string) {
     this.authService.deleteCredentials(id).subscribe({
-      next: (res: any) => {
+      next: () => {
         Swal.fire({
-          position: "top-end",
+          position: "top",
           icon: "success",
           title: `Credencial eliminada`,
           showConfirmButton: false,
-          timer: 1500
+          toast: true,
+          timerProgressBar: true,
+          timer: 4000
         });
         this.refreshTable();
       },
       error: (err) => {
         Swal.fire({
+          position: "top",
           icon: "error",
-          title: 'Error',
-          text: `${err.error.message}`
+          title: err.error.message || 'Error',
+          showConfirmButton: false,
+          toast: true,
+          timerProgressBar: true,
+          timer: 4000
         });
       },
     });
@@ -259,26 +283,38 @@ export default class ViewUsersComponent implements OnInit {
   updateProductStatus(credentials: any): void {
     this.authService.updateCredentialsStatus(credentials.id, credentials.status).subscribe({
       next: (res: any) => {
-        if (credentials.status) {
-          this.alertsService.showSuccess(`Credencial activada`, `${res.message}`);
+        if (res) {
+          Swal.fire({
+            position: "top",
+            icon: "success",
+            title: 'Credencial Habilitada',
+            showConfirmButton: false,
+            toast: true,
+            timerProgressBar: true,
+            timer: 4000
+          });
         }
         else {
-          this.alertsService.showSuccess(`Credencial inactiva`, `${res.message}`)
+          Swal.fire({
+            position: "top",
+            icon: "warning",
+            title: 'Credencial Inhabilitada',
+            showConfirmButton: false,
+            toast: true,
+            timerProgressBar: true,
+            timer: 4000
+          });
         }
       },
       error: (error) => this.alertsService.showError(`${error.error.message}`, `${error.statusText}`),
     });
   }
 
-  downloadExcel() {
-    this.alertsService.showInfo('Metodo aun no implementado', 'Información')
-  }
-
   editUser(userId: string) {
-    this.router.navigate(['/index/credentials/form'], { queryParams: { form: 'update', id: userId } });
+    this.router.navigate(['/admin/credentials/form'], { queryParams: { form: 'update', id: userId } });
   }
 
   routeNext() {
-    this.router.navigate(['/index/credentials/form']);
+    this.router.navigate(['/admin/credentials/form']);
   }
 }

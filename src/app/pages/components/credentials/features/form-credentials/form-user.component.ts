@@ -15,7 +15,7 @@ import { HeaderComponent } from "../../../../../shared/features/header/header.co
 })
 export default class FormUserComponent {
 
-  private activatedRoute = inject(ActivatedRoute);
+ private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private authService = inject(UserService);
@@ -27,10 +27,10 @@ export default class FormUserComponent {
   employees: any[] = [];
   userId: string | null = null;
   isUpdate: boolean = false;
+  showPassword: boolean = false; // Nueva variable para controlar la visibilidad de la contraseña
 
   titleComponent: string = 'Gestión de credenciales';
   subtitleComponent: string = 'Listado de credenciales';
-
 
   constructor() {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -55,6 +55,11 @@ export default class FormUserComponent {
 
   get f() {
     return this.form.controls;
+  }
+
+  // Método para alternar la visibilidad de la contraseña
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   loadRoles() {
@@ -116,7 +121,7 @@ export default class FormUserComponent {
     }
   }
 
-  //Añadir nueva credencial
+  // Añadir nueva credencial
   addCredential() {
     const newCredentials = this.form.value;
     if (this.form.invalid) {
@@ -152,7 +157,7 @@ export default class FormUserComponent {
     this.form.reset();
   }
 
-  //Actualizar categoria
+  // Actualizar credencial
   updateCredential(id: string) {
     const updatedCredential = this.form.value;
     this.authService.updateCredential(id, updatedCredential).subscribe({
@@ -179,8 +184,9 @@ export default class FormUserComponent {
     });
   }
 
-  routeBack(){
-    this.router.navigateByUrl('index/credentials')
+  // Método para navegar hacia atrás (si no existe, puedes agregarlo)
+  routeBack(): void {
+    this.router.navigate(['/admin/credentials']);
   }
 
 }

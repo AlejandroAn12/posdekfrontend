@@ -1,425 +1,283 @@
-<app-header
-  [title]="titleComponent"
-></app-header>
+<!-- <app-header [title]="titleComponent"></app-header> -->
 
-<div class="max-w-4xl mx-auto mt-10 p-6 rounded-2xl dark:bg-gray-800">
-  <div class="flex items-center space-x-6 mb-6">
-    <img
-      class="w-24 h-24 rounded-full border-4 border-blue-600"
-      [src]="store?.avatarUrl || 'assets/img/others/default-avatar.png'"
-      alt="Avatar"
-    />
-    <div>
-      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ store?.razonSocial }}</h2>
-      <p class="text-gray-500">{{ store?.email }}</p>
-      <span
-        class="text-sm font-medium inline-flex items-center px-2.5 py-0.5 rounded bg-blue-600 text-white"
-      >
-        Ruc: {{ store?.numeroRuc }}
-      </span>
-    </div>
-  </div>
-  <!-- ******************************************************** -->
-  <div class="mt-6 mb-6">
-    <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-      >Representante legal</label
-    >
-    <input
-      type="text"
-      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-      [value]="store?.representantesLegales || 'No asignado'"
-      readonly
-    />
-  </div>
-<!-- ******************************************************** -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-        >Nombre/Razón social</label
-      >
-      <input
-        type="text"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.razonSocial || 'Sin razon social'"
-        readonly
-      />
-    </div>
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400">RUC/NUT</label>
-      <input
-        type="text"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.numeroRuc || 'No asignado'"
-        readonly
-      />
-    </div>
-
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-        >Correo electrónico</label
-      >
-      <input
-        type="email"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.email"
-        readonly
-      />
-    </div>
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-        >Teléfono de contacto</label
-      >
-      <input
-        type="text"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.telefono || 'No asignado'"
-        readonly
-      />
-    </div>
-  </div>
-  <!-- ******************************************************** -->
-   <div class="mt-6 mb-6">
-    <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-      >Actividad económica principal</label
-    >
-    <input
-      type="text"
-      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-      [value]="store?.actividadEconomicaPrincipal || 'No asignado'"
-      readonly
-    />
-  </div>
-  <!-- ******************************************************** -->
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-        >Tipo contribuyente</label
-      >
-      <input
-        type="text"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.tipoContribuyente || 'Sin razon social'"
-        readonly
-      />
-    </div>
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400">Regimen</label>
-      <input
-        type="text"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.regimen || 'No asignado'"
-        readonly
-      />
-    </div>
-
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-        >Categoria</label
-      >
-      <input
-        type="email"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.categoria"
-        readonly
-      />
-    </div>
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-        >Obligado a llevar contabilidad</label
-      >
-      <input
-        type="text"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.obligadoLlevarContabilidad || 'No asignado'"
-        readonly
-      />
-    </div>
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-        >Agente de retencion</label
-      >
-      <input
-        type="text"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.agenteRetencion || 'No asignado'"
-        readonly
-      />
-    </div>
-    <div>
-      <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-        >Contribuyente especial</label
-      >
-      <input
-        type="text"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-        [value]="store?.contribuyenteEspecial || 'No asignado'"
-        readonly
-      />
-    </div>
-  </div>
-  <!-- ******************************************************** -->
-  <div class="mt-6 mb-6">
-    <label class="block text-gray-700 font-medium mb-1 dark:text-gray-400"
-      >Dirección</label
-    >
-    <input
-      type="text"
-      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:text-gray-400 dark:bg-gray-700"
-      [value]="store?.address || 'Sin Dirección asignada'"
-      readonly
-    />
-  </div>
-
-  <button
-      *ngIf="!canEdit"
-      (click)="onSubmit()"
-      type="submit"
-      class="mt-5 px-4 py-2 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700"
-    >
-      Guardar cambios
-    </button>
-</div>
-
-<div class="flex flex-row justify-center mt-10">
-  <!-- <div class="w-96 p-3">
-    <form [formGroup]="EnterpriseForm">
-      <div class="title flex justify-center">
-        <h1 class="uppercase text-gray-500 font-semibold">Datos de Empresa</h1>
-      </div>
-      <div class="flex flex-col mt-5 justify-center">
-        <div class="mb-4">
-          <div class="relative z-0 w-full group">
-            <input
-              formControlName="name"
-              [disabled]="isDisabled"
-              type="text"
-              name="floating_name"
-              id="floating_name"
-              class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
+<div class="bg-white dark:bg-gray-900 min-h-screen py-6 px-4 sm:px-6 lg:px-8">
+  <!-- Header con información principal -->
+  <div class="max-w-6xl mx-auto">
+    <!-- Tarjeta de información principal -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-8">
+      <div class="flex flex-col md:flex-row md:items-center gap-6">
+        <!-- Avatar -->
+        <div class="flex-shrink-0">
+          <div class="relative">
+            <img
+              class="w-24 h-24 rounded-full border-4 border-blue-500 object-cover"
+              [src]="store?.avatarUrl || 'assets/img/others/default-avatar.png'"
+              alt="Logo de la tienda"
             />
-            <label
-              for="floating_name"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Nombre de la empresa</label
+            <button 
+              *ngIf="canEdit"
+              (click)="triggerFileInput()"
+              class="absolute bottom-0 right-0 bg-blue-500 text-white p-1.5 rounded-full hover:bg-blue-600 transition-colors"
             >
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="relative z-0 w-full group">
+              <i class="fa-solid fa-camera text-xs"></i>
+            </button>
             <input
-              formControlName="company_name"
-              [disabled]="isDisabled"
-              type="text"
-              name="floating_name"
-              id="floating_name"
-              class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
+              type="file"
+              #fileInput
+              class="hidden"
+              accept="image/*"
+              (change)="onFileChange($event)"
             />
-            <label
-              for="floating_name"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Razón social</label
-            >
-          </div>
-        </div>
-        <div class="flex flex-row">
-          <div class="mb-4 mr-3">
-            <div class="relative z-0 w-full group">
-              <input
-              [disabled]="isDisabled"
-                formControlName="ruc"
-                type="text"
-                name="floating_ruc"
-                id="floating_ruc"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-                placeholder=" "
-                required
-              />
-              <label
-                for="floating_ruc"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >RUC</label
-              >
-            </div>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="relative z-0 w-full group">
-            <input
-              formControlName="legal_representative"
-              [disabled]="isDisabled"
-              type="text"
-              name="floating_name"
-              id="floating_name"
-              class="block uppercase py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_name"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Representante legal</label
-            >
-          </div>
-        </div>
-        <div class="flex flex-row">
-          <div class="mb-4 mr-3">
-            <div class="relative z-0 w-full group">
-              <input
-                formControlName="country"
-                [disabled]="isDisabled"
-                type="text"
-                name="floating_country"
-                id="floating_country"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-                placeholder=" "
-                required
-              />
-              <label
-                for="floating_country"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >País</label
-              >
-            </div>
-          </div>
-          <div class="mb-4 mr-3">
-            <div class="relative z-0 w-full group">
-              <input
-                formControlName="city"
-                [disabled]="isDisabled"
-                type="text"
-                name="floating_city"
-                id="floating_city"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-                placeholder=" "
-                required
-              />
-              <label
-                for="floating_city"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Ciudad matriz</label
-              >
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-row">
-          <div class="mb-4 mr-3">
-            <div class="relative z-0 w-full group">
-              <input
-                formControlName="phone"
-                [disabled]="isDisabled"
-                type="tel"
-                name="floating_phone"
-                id="floating_phone"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-                placeholder=" "
-                required
-              />
-              <label
-                for="floating_phone"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Teléfono contacto</label
-              >
-            </div>
-          </div>
-          <div class="mb-4">
-            <div class="relative z-0 w-full group">
-              <input
-                formControlName="email"
-                [disabled]="isDisabled"
-                type="text"
-                name="floating_email"
-                id="floating_email"
-                class="block py-2.5 px-0 w-56 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-                placeholder=" "
-                required
-              />
-              <label
-                for="floating_email"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >Correo Electrónico</label
-              >
-            </div>
           </div>
         </div>
 
-        <div class="mb-4">
-          <div class="relative z-0 w-full group">
-            <input
-              formControlName="address"
-              [disabled]="isDisabled"
-              type="text"
-              name="floating_address"
-              id="floating_address"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-colorPrimary peer flex-shrink-0"
-              placeholder=" "
-              required
-            />
-            <label
-              for="floating_address"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-colorPrimary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-colorPrimary peer-focus:dark:text-colorPrimary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Dirección matriz</label
-            >
+        <!-- Información principal -->
+        <div class="flex-1">
+          <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+            {{ store?.razonSocial || 'Sin razón social' }}
+          </h1>
+          <p class="text-gray-600 dark:text-gray-400 mb-3">
+            <i class="fa-solid fa-envelope mr-2"></i>
+            {{ store?.email || 'No especificado' }}
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+              <i class="fa-solid fa-id-card mr-1"></i>
+              RUC: {{ store?.numeroRuc || 'No asignado' }}
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+              <i class="fa-solid fa-building mr-1"></i>
+              {{ store?.tipoContribuyente || 'No especificado' }}
+            </span>
           </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="flex flex-col gap-2">
+          <button
+            *ngIf="!canEdit"
+            (click)="enableEditing()"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+          >
+            <i class="fa-solid fa-pen-to-square"></i>
+            Editar información
+          </button>
+          <button
+            *ngIf="canEdit"
+            (click)="cancelEditing()"
+            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+          >
+            Cancelar
+          </button>
         </div>
       </div>
-    </form>
-  </div> -->
-  <!-- <button
-    (click)="onSubmit()"
-    type="submit"
-    class="mt-5 px-4 py-2 bg-colorPrimary text-white rounded hover:bg-blue-700"
-    [disabled]="!isFormChanged"
-  >
-    Guardar cambios
-  </button> -->
+    </div>
 
-  <!-- FORMULARIO PARA SUBIR EL LOGO IMG -->
-  <div class="w-96 p-3">
-    <form>
-      <!-- <div class="title flex justify-center">
-        <h1 class="uppercase text-gray-500 font-semibold">Logo de Empresa</h1>
-      </div> -->
-      <div class="img border mt-5">
-        <img
-          *ngIf="EnterpriseForm.get('logoURL')?.value"
-          [src]="EnterpriseForm.get('logoURL')?.value"
-          alt="Logo de la empresa"
-          class="w-full h-full object-cover"
-        />
-        <!-- <input
-          type="file"
-          name="img-logo"
-          id="img-logo"
-          (change)="onFileChange($event)"
-          accept="image/*"
-          class="mt-2"
-        /> -->
+    <!-- Formulario de información -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-6">Información de la Empresa</h2>
+      
+      <form [formGroup]="enterpriseForm" class="space-y-6">
+        <!-- Sección 1: Información Básica -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Razón Social *
+            </label>
+            <input
+              formControlName="razonSocial"
+              [readonly]="!canEdit"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              RUC *
+            </label>
+            <div class="flex gap-2">
+              <input
+                formControlName="numeroRuc"
+                [readonly]="!canEdit"
+                type="text"
+                class="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+              />
+              <button
+                *ngIf="canEdit"
+                type="button"
+                (click)="buscarRuc()"
+                [disabled]="!enterpriseForm.get('numeroRuc')?.valid"
+                class="px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 2: Información de Contacto -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email
+            </label>
+            <input
+              formControlName="email"
+              [readonly]="!canEdit"
+              type="email"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Teléfono
+            </label>
+            <input
+              formControlName="telefono"
+              [readonly]="!canEdit"
+              type="tel"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+            />
+          </div>
+        </div>
+
+        <!-- Sección 3: Información Fiscal -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Tipo Contribuyente
+            </label>
+            <input
+              formControlName="tipoContribuyente"
+              [readonly]="!canEdit"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Régimen
+            </label>
+            <input
+              formControlName="regimen"
+              [readonly]="!canEdit"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+            />
+          </div>
+        </div>
+
+        <!-- Sección 4: Información Adicional -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Actividad Económica Principal
+            </label>
+            <input
+              formControlName="actividadEconomicaPrincipal"
+              [readonly]="!canEdit"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Representante Legal
+            </label>
+            <input
+              formControlName="representantesLegales"
+              [readonly]="!canEdit"
+              type="text"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+            />
+          </div>
+        </div>
+
+        <!-- Sección 5: Dirección -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Dirección
+          </label>
+          <input
+            formControlName="address"
+            [readonly]="!canEdit"
+            type="text"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            [ngClass]="{'bg-gray-100 dark:bg-gray-600': !canEdit}"
+          />
+        </div>
+
+        <!-- Botones de acción del formulario -->
+        <div *ngIf="canEdit" class="flex gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <button
+            type="button"
+            (click)="onSubmitUpdate()"
+            [disabled]="enterpriseForm.invalid || !isFormChanged"
+            class="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            Guardar cambios
+          </button>
+          <button
+            type="button"
+            (click)="cancelEditing()"
+            class="px-6 py-2.5 bg-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Información adicional en cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">
+            <i class="fa-solid fa-scale-balanced text-purple-600 dark:text-purple-400"></i>
+          </div>
+          <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Obligado Contabilidad</h3>
+        </div>
+        <p class="text-lg font-semibold text-gray-800 dark:text-white">
+          {{ store?.obligadoLlevarContabilidad || 'No especificado' }}
+        </p>
       </div>
 
-      <!-- Barra de progreso -->
-      <!-- <div *ngIf="isUploading" class="w-full mt-3">
-        <div class="w-full bg-gray-200 rounded h-2.5">
-          <div
-            class="bg-colorSecondary h-2.5 rounded"
-            [style.width.%]="uploadProgress"
-          ></div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="bg-orange-100 dark:bg-orange-900/30 p-2 rounded-lg">
+            <i class="fa-solid fa-hand-holding-dollar text-orange-600 dark:text-orange-400"></i>
+          </div>
+          <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Agente de Retención</h3>
         </div>
-        <p class="text-gray-500 text-sm mt-1">{{ uploadProgress }}% Subido</p>
-      </div> -->
+        <p class="text-lg font-semibold text-gray-800 dark:text-white">
+          {{ store?.agenteRetencion || 'No' }}
+        </p>
+      </div>
 
-      <!-- <button
-        (click)="uploadLogo()"
-        type="button"
-        class="mt-5 px-4 py-2 bg-colorSecondary text-white rounded hover:bg-orange-400"
-        [disabled]="isUploading"
-      >
-        Subir logo
-      </button> -->
-    </form>
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">
+            <i class="fa-solid fa-star text-red-600 dark:text-red-400"></i>
+          </div>
+          <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Contribuyente Especial</h3>
+        </div>
+        <p class="text-lg font-semibold text-gray-800 dark:text-white">
+          {{ store?.contribuyenteEspecial || 'No' }}
+        </p>
+      </div>
+    </div>
   </div>
 </div>

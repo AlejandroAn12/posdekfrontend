@@ -1,143 +1,175 @@
+import { Component, OnInit, inject, HostListener } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import { ThemeService } from '../../../core/services/theme.service';
+import { SidebarStateService } from '../../../core/services/sidebar-state.service';
+
 
 interface SidebarOption {
   title: string;
   iconClass: string;
-  route?: string; // Ruta principal
-  children?: SidebarOption[]; // Subopciones (opcional)
+  route?: string;
+  children?: SidebarOption[];
 }
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrls: ['./sidebar.component.css']
 })
+export class SidebarComponent implements OnInit {
+  // Servicios
+  private authState = inject(AuthStateService);
+  private themeService = inject(ThemeService);
+  private router = inject(Router);
+  private sidebarStateService = inject(SidebarStateService);
 
-export class SidebarComponent {
-
-
-  authState = inject(AuthStateService);
-
+  // Estados del componente
   isDarkMode = false;
   isSidebarCollapsed = false;
-
-  constructor(private themeService: ThemeService) {
-    this.isDarkMode = document.documentElement.classList.contains('dark');
-  }
-
-  toggleTheme(): void {
-    this.themeService.toggleDarkMode();
-    this.isDarkMode = !this.isDarkMode;
-  }
-
+  activeIndex: number | null = null;
+  isMobileView = false;
+  // Opciones del sidebar
   sidebarOptions: SidebarOption[] = [
     {
       title: 'Dashboard',
-      iconClass: 'fa-brands fa-usps',
+      iconClass: 'fa-solid fa-chart-pie',
       route: '/admin/dashboard',
     },
-
     {
       title: 'Administración',
       iconClass: 'fa-solid fa-user-gear',
       children: [
-        { title: 'Gestionar usuarios', iconClass: 'fa-solid fa-user-tie', route: '/admin/credentials' },
+        { title: 'Gestionar credenciales', iconClass: 'fa-solid fa-user-tie', route: '/admin/credentials' },
         { title: 'Gestionar colaboradores', iconClass: 'fa-solid fa-users', route: '/admin/employees' },
       ],
     },
-
     {
       title: 'Proveedores',
-      iconClass: 'fa-solid fa-truck-moving',
+      iconClass: 'fa-solid fa-truck',
       children: [
-        { title: 'Nuevo proveedor', iconClass: 'fa-solid fa-truck', route: '/admin/suppliers/form' },
-        { title: 'Lista de proveedores', iconClass: 'fa-solid fa-truck-fast', route: '/admin/suppliers/view' },
+        { title: 'Nuevo proveedor', iconClass: 'fa-solid fa-plus-circle', route: '/admin/suppliers/form' },
+        { title: 'Lista de proveedores', iconClass: 'fa-solid fa-list', route: '/admin/suppliers/view' },
       ],
     },
-
     {
-      title: 'Categorias',
+      title: 'Categorías',
       iconClass: 'fa-solid fa-tags',
       children: [
-        // { title: 'Nueva categoria', iconClass: 'fa-solid fa-tag', route: '/admin/categories/form' },
-        { title: 'Lista de categorias', iconClass: 'fa-solid fa-tags', route: '/admin/categories/view' },
+        { title: 'Lista de categorías', iconClass: 'fa-solid fa-list', route: '/admin/categories/view' },
       ],
     },
-
     {
       title: 'Productos',
       iconClass: 'fa-solid fa-box',
       children: [
-        { title: 'Nuevo producto', iconClass: 'fa-solid fa-box', route: '/admin/products/form' },
-        { title: 'Lista de productos', iconClass: 'fa-solid fa-boxes', route: '/admin/products/view' },
-        { title: 'Movimiento de productos', iconClass: 'fa-solid fa-folder', route: '/admin/products/movements' },
+        { title: 'Nuevo producto', iconClass: 'fa-solid fa-plus-circle', route: '/admin/products/form' },
+        { title: 'Lista de productos', iconClass: 'fa-solid fa-list', route: '/admin/products/view' },
+        { title: 'Movimiento de productos', iconClass: 'fa-solid fa-arrows-rotate', route: '/admin/products/movements' },
       ],
     },
     {
       title: 'Inventario',
       iconClass: 'fa-solid fa-boxes-stacked',
       children: [
-        { title: 'Realizar inventario', iconClass: 'fa-solid fa-clipboard', route: '/admin/inventory/inventory' },
-        { title: 'Ajuste de stock', iconClass: 'fa-solid fa-boxes-stacked', route: '/admin/inventory/adjustment' },
-        { title: 'Historial de inventario', iconClass: 'fa-solid fa-clock-rotate-left', route: '/admin/inventory/history-inventories' },
-        { title: 'Ajustes de stock', iconClass: 'fa-solid fa-clock-rotate-left', route: '/admin/inventory/history-inventories' },
-
+        { title: 'Realizar inventario', iconClass: 'fa-solid fa-clipboard-list', route: '/admin/inventory/inventory' },
+        { title: 'Ajuste de stock', iconClass: 'fa-solid fa-sliders', route: '/admin/inventory/adjustment' },
+        { title: 'Historial de inventario', iconClass: 'fa-solid fa-history', route: '/admin/inventory/history-inventories' },
       ],
     },
     {
       title: 'Compras',
       iconClass: 'fa-solid fa-cart-shopping',
       children: [
-        { title: 'Generar orden', iconClass: 'fa-solid fa-cart-shopping', route: '/admin/orders/generate' },
-        { title: 'Ordenes pendientes', iconClass: 'fa-solid fa-clock', route: '/admin/orders/pending' },
-        { title: 'Historial de ordenes', iconClass: 'fa-solid fa-clock-rotate-left', route: '/admin/orders/history' }
-
+        { title: 'Registrar compra', iconClass: 'fa-solid fa-cart-plus', route: '/admin/invoices/purchase-invoice' },
       ]
     },
-
     {
       title: 'Facturas',
       iconClass: 'fa-solid fa-file-invoice',
       children: [
-        { title: 'Ver facturas', iconClass: 'fa-solid fa-file-invoice', route: '/admin/invoices' },
-        { title: 'Ver notas de venta', iconClass: 'fa-solid fa-file-invoice', route: '/admin/invoices' },
-        { title: 'Registro de compra', iconClass: 'fa-solid fa-cart-plus', route: '/admin/invoices/purchase-invoice' },
-        
+        { title: 'Ver facturas', iconClass: 'fa-solid fa-list', route: '/admin/invoices' },
+        { title: 'Comprobantes de venta', iconClass: 'fa-solid fa-receipt', route: '/admin/invoices/sales' },
       ]
     },
     {
-      title: 'Ingresar mercadería',
+      title: 'Mercadería',
       iconClass: 'fa-solid fa-dolly',
       route: '/admin/merchandise/entry',
     },
-
     {
       title: 'Configuraciones',
       iconClass: 'fa-solid fa-gears',
       children: [
-        { title: 'Información de tienda', iconClass: 'fa-solid fa-store', route: '/admin/enterprise' },
-        { title: 'Configuración general', iconClass: 'fa-solid fa-circle-info', route: '/admin/enterprise/settings' },
+        { title: 'Información de tienda', iconClass: 'fa-solid fa-store', route: '/admin/store' },
+        { title: 'Configuración general', iconClass: 'fa-solid fa-sliders', route: '/admin/store/settings' },
         { title: 'Cambiar contraseña', iconClass: 'fa-solid fa-lock', route: '/admin/change-password' },
       ]
     }
   ];
 
-  // Estado para controlar el despliegue del submenú
-  activeIndex: number | null = null;
+  ngOnInit(): void {
+    this.checkDarkMode();
+    this.checkScreenSize();
+    
+    // Colapsar sidebar automáticamente en móviles
+    if (this.isMobileView) {
+      this.isSidebarCollapsed = true;
+      this.sidebarStateService.setCollapsedState(true);
+    }
+  }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.checkScreenSize();
+  }
+
+  // Verificar modo oscuro
+  private checkDarkMode(): void {
+    this.isDarkMode = document.documentElement.classList.contains('dark');
+  }
+
+  // Verificar tamaño de pantalla
+  private checkScreenSize(): void {
+    this.isMobileView = window.innerWidth < 1024; // lg breakpoint
+  }
+
+  // Verificar si es móvil
+  isMobile(): boolean {
+    return this.isMobileView;
+  }
+
+  // Alternar sidebar
+  toggleSidebar(): void {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    // Notificar al servicio el cambio de estado
+    this.sidebarStateService.setCollapsedState(this.isSidebarCollapsed);
+    
+    // Cerrar submenús al colapsar
+    if (this.isSidebarCollapsed) {
+      this.activeIndex = null;
+    }
+  }
+
+  // Alternar submenú
   toggleSubmenu(index: number): void {
     this.activeIndex = this.activeIndex === index ? null : index;
   }
 
-  logout() {
+  // Cerrar sesión
+  logout(): void {
     this.authState.logOut();
   }
 
-  whatsApp() { }
-
+  // Navegar y colapsar sidebar en móviles
+  navigateAndCollapse(route: string): void {
+    this.router.navigate([route]);
+    if (this.isMobileView) {
+      this.isSidebarCollapsed = true;
+      this.sidebarStateService.setCollapsedState(true);
+    }
+  }
 }

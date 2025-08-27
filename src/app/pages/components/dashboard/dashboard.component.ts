@@ -9,14 +9,16 @@ import { CommonModule } from '@angular/common';
 import { OrdersService } from '../orders/data-access/orders.service';
 import { ProductsService } from '../products/data-access/products.service';
 import { DashboardService } from './services/dashboard.service';
+import { DashboardChartComponent } from "../../../shared/features/components/dashboard-chart/dashboard-chart.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DataTablesModule, CountUpDirective, CommonModule],
+  imports: [DataTablesModule, CountUpDirective, CommonModule, DashboardChartComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export default class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+
 
   // ==============================
   // 📌 Dependencias inyectadas
@@ -36,11 +38,12 @@ export default class DashboardComponent implements OnInit, AfterViewInit, OnDest
   products: any[] = [];
 
   isLoading: boolean = false;
+  chartLoaded = false;
 
   TotalProducts: number = 0;
   TotalOrders: number = 0;
   TotalEarnings: number = 0;
-  earningssales : number = 0;
+  earningssales: number = 0;
 
   // ==============================
   //  Configuración DataTable
@@ -53,6 +56,17 @@ export default class DashboardComponent implements OnInit, AfterViewInit, OnDest
   //  Ciclo de vida
   // ==============================
   ngOnInit(): void {
+
+    // Auto avanzar el carrusel cada 5 segundos
+    setInterval(() => {
+      this.nextSlide();
+    }, 5000);
+
+    // Simular un pequeño delay para asegurar que el DOM esté listo
+    setTimeout(() => {
+      this.chartLoaded = true;
+    }, 100);
+
     this.getEarnings();
     this.earningsSales();
     this.getUserLogged();
@@ -103,11 +117,11 @@ export default class DashboardComponent implements OnInit, AfterViewInit, OnDest
   private getEarnings(): void {
     this.productsService.getEarnings().subscribe({
       next: (resp: any) => (this.TotalEarnings = resp),
-      error: () => {},
+      error: () => { },
     });
   }
 
-  private earningsSales(): void{
+  private earningsSales(): void {
     this.dashboardService.earningsSales().subscribe({
       next: (res) => {
         this.earningssales = res;
@@ -174,5 +188,42 @@ export default class DashboardComponent implements OnInit, AfterViewInit, OnDest
   // ==============================
   navigateToOrders(): void {
     this.router.navigate(['/admin/orders/history']);
+  }
+
+
+
+  // ==============================
+  //  Carrusel
+  // ==============================
+  // Variables para el carrusel
+  currentSlide = 0;
+  carouselImages = [
+    {
+      src: 'assets/img/carousel-1.jpg',
+      alt: 'Productos destacados',
+      title: 'Ofertas Especiales',
+      description: 'Descuentos en productos seleccionados'
+    },
+    {
+      src: 'assets/img/carousel-2.jpg',
+      alt: 'Nuevos productos',
+      title: 'Nuevos Ingresos',
+      description: 'Descubre nuestros últimos productos'
+    },
+    {
+      src: 'assets/banners/prueba.png',
+      alt: 'Tendencias',
+      title: 'Tendencias',
+      description: 'Lo más vendido esta temporada'
+    }
+  ];
+
+  // Métodos para navegar el carrusel
+  nextSlide(): void {
+    this.currentSlide = (this.currentSlide + 1) % this.carouselImages.length;
+  }
+
+  previousSlide(): void {
+    this.currentSlide = (this.currentSlide - 1 + this.carouselImages.length) % this.carouselImages.length;
   }
 }

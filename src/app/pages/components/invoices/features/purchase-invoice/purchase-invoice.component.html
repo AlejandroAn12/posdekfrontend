@@ -1,68 +1,37 @@
-<app-header
-  [title]="titleComponent"
-  [subtitle]="subtitleComponent"
-></app-header>
+<app-header [title]="titleComponent" [subtitle]="subtitleComponent"></app-header>
 
-<div class="bg-white dark:bg-gray-800 h-auto">
-  <div class="max-w-2xl mx-auto p-6">
-    <form [formGroup]="form" class="grid grid-cols-1 gap-6 mt-8 mb-5">
-      <!-- Tipo de factura -->
-      <!-- <div class="w-60">
-        <label
-          class="block text-sm font-medium text-gray-700 dark:text-gray-400"
-          >Tipo de factura</label
-        >
-        <select
-          formControlName="invoiceTypeId"
-          class="mt-1 block w-full border text-gray-700 border-gray-300 dark:text-white rounded p-2 dark:bg-gray-700"
-        >
-          <option *ngIf="invoiceTypes.length > 0" value="" disabled selected>
-            SELECCIONE EL TIPO
-          </option>
-          <option *ngFor="let type of invoiceTypes" [value]="type.id">
-            {{ type.name }}
-          </option>
-        </select>
-      </div> -->
+<div class="bg-white dark:bg-gray-800 min-h-screen">
+  <div class="max-w-4xl mx-auto p-4 md:p-6">
+    <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-6 mb-5">
       <!-- NO. Factura -->
-      <div class="w-60">
-        <label
-          for="noFac"
-          class="block text-sm font-medium text-gray-700 dark:text-gray-200"
-          >No. Factura</label
-        >
-        <input
-          type="text"
-          formControlName="noFac"
-          id="noFac"
-          [ngClass]="{
-            'border-red-500': f['noFac'].invalid && f['noFac'].touched
-          }"
+      <div class="md:col-span-1">
+        <label for="noFac" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          No. Factura
+        </label>
+        <input 
+          type="text" 
+          formControlName="noFac" 
+          id="noFac" 
+          [ngClass]="{'border-red-500': f['noFac'].invalid && f['noFac'].touched}"
           placeholder="002-001-123456789"
-          class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200" 
         />
-        <p
-          *ngIf="f['noFac'].invalid && f['noFac'].touched"
-          class="mt-1 text-sm text-red-500"
-        >
+        <p *ngIf="f['noFac'].invalid && f['noFac'].touched" class="mt-1 text-sm text-red-500">
           La numeración de la factura debe ser de 15 dígitos válidos.
         </p>
       </div>
+      
       <!-- Proveedor -->
-      <div>
-        <label
-          for="supplierId"
-          class="block text-sm font-medium text-gray-700 dark:text-gray-200"
-          >Proveedor</label
-        >
-        <select
-          (change)="onSupplierChange($event)"
-          formControlName="supplierId"
-          id="supplierId"
-          [ngClass]="{
-            'border-red-500': f['supplierId'].invalid && f['supplierId'].touched
-          }"
-          class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      <div class="md:col-span-1">
+        <label for="supplierId" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Proveedor
+        </label>
+        <select 
+          (change)="onSupplierChange($event)" 
+          formControlName="supplierId" 
+          id="supplierId" 
+          [ngClass]="{'border-red-500': f['supplierId'].invalid && f['supplierId'].touched}"
+          class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
         >
           <option *ngIf="suppliers.length > 0" value="" disabled selected>
             Seleccione el proveedor
@@ -74,30 +43,23 @@
             {{ type.company_name }}
           </option>
         </select>
-        <p
-          *ngIf="f['supplierId'].invalid && f['supplierId'].touched"
-          class="mt-1 text-sm text-red-500"
-        >
+        <p *ngIf="f['supplierId'].invalid && f['supplierId'].touched" class="mt-1 text-sm text-red-500">
           Debe seleccionar un proveedor válido.
         </p>
       </div>
 
       <!-- Producto -->
-      <div>
-        <label
-          for="supplierId"
-          class="block text-sm font-medium text-gray-700 dark:text-gray-200"
-          >Productos</label
-        >
-        <select
-          #productSelect
-          (change)="addToTable(productSelect)"
-          formControlName="productId"
-          id="product"
-          [ngClass]="{
-            'border-red-500': f['productId'].invalid && f['productId'].touched
-          }"
-          class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      <div class="md:col-span-2">
+        <label for="product" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Productos
+        </label>
+        <select 
+          #productSelect 
+          (change)="addToTable(productSelect)" 
+          formControlName="productId" 
+          id="product" 
+          [ngClass]="{'border-red-500': f['productId'].invalid && f['productId'].touched}"
+          class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
         >
           <option *ngIf="products.length > 0" value="" disabled selected>
             Seleccione el producto
@@ -106,67 +68,74 @@
             No se encontraron productos
           </option>
           <option *ngFor="let product of products" [value]="product.id">
-            {{ product.barcode }} - {{ product.name }}
+            {{ product.barcode }} - {{ product.name }} - <strong>Stock: ({{product.stock}})</strong>
           </option>
         </select>
       </div>
     </form>
-  </div>
-  <!-- Tabla de productos seleccionados -->
-  <div
-    *ngIf="selectedProducts.length > 0"
-    class="w-full mt-10 bg-white dark:bg-gray-800 rounded-xl p-4"
-  >
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 text-sm">
-        <thead class="bg-white border-t-2 text-gray-800 dark:bg-gray-300">
-          <tr>
-            <th class="px-6 py-3 whitespace-nowrap">Código de barra</th>
-            <th class="px-6 py-3 whitespace-nowrap">Producto</th>
-            <th class="px-6 py-3 whitespace-nowrap">Precio compra</th>
-            <th class="px-6 py-3 whitespace-nowrap">Cantidad</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let product of selectedProducts; trackBy: trackByProductId"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
-          >
-            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-              {{ product.barcode }}
-            </td>
-            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-              {{ product.name }}
-            </td>
-            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                [(ngModel)]="product.purchasePrice"
-                class="w-20 px-2 py-1 border border-blue-500 rounded-md dark:text-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
-              />
-            </td>
-            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-              <input
-                [(ngModel)]="product.quantity"
-                type="number"
-                min="1"
-                class="w-20 px-2 py-1 border border-blue-500 rounded-md dark:text-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="mt-8" *ngIf="selectedProducts.length > 0">
-      <button
-        (click)="saveInvoice()"
-        class="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 transition"
-      >
-        <i class="fa-solid fa-floppy-disk"></i>
-        Guardar factura
-      </button>
+    
+    <!-- Tabla de productos seleccionados -->
+    <div *ngIf="selectedProducts.length > 0" class="mt-6 md:mt-10 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+      <div class="overflow-x-auto rounded-lg">
+        <table class="w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+          <thead class="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+            <tr>
+              <th class="px-4 py-3 text-left font-medium whitespace-nowrap">Código de barra</th>
+              <th class="px-4 py-3 text-left font-medium whitespace-nowrap">Producto</th>
+              <th class="px-4 py-3 text-left font-medium whitespace-nowrap">Precio compra</th>
+              <th class="px-4 py-3 text-left font-medium whitespace-nowrap">Cantidad</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            <tr *ngFor="let product of selectedProducts; trackBy: trackByProductId"
+                class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+              <td class="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                {{ product.barcode }}
+              </td>
+              <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                {{ product.name }}
+              </td>
+              <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  min="0" 
+                  [(ngModel)]="product.purchasePrice"
+                  class="w-full md:w-24 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:text-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200" 
+                />
+              </td>
+              <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                <input 
+                  [(ngModel)]="product.quantity" 
+                  type="number" 
+                  min="1"
+                  class="w-full md:w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:text-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200" 
+                />
+              </td>
+              <!-- <td class="px-4 py-3 whitespace-nowrap">
+                <button 
+                  type="button" 
+                  (click)="removeProduct(product)"
+                  class="text-red-500 hover:text-red-700 transition-colors duration-200 p-1"
+                  aria-label="Eliminar producto"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="mt-6 flex justify-end">
+        <button 
+          (click)="saveInvoice()"
+          class="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md"
+        >
+          <i class="fa-solid fa-floppy-disk"></i>
+          Guardar factura
+        </button>
+      </div>
     </div>
   </div>
 </div>

@@ -131,7 +131,7 @@ export default class FormSuppliersComponent {
   }
 
   btnBack() {
-    this.router.navigate(['/index/suppliers/view']);
+    this.router.navigate(['/admin/suppliers/view']);
   }
 
   get f() {

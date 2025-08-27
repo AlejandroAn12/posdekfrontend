@@ -1,48 +1,47 @@
 <!-- Contenedor 1 -->
-<app-header
-  [title]="titleComponent"
-  [subtitle]="subtitleComponent"
-></app-header>
 
-<!-- Body -->
-<div class="flex flex-col p-5 bg-white dark:bg-gray-800">
-  <div class="flex justify-end mb-10">
-    <button
-      (click)="showModal = true"
-      class="bg-blue-600 text-white text-sm font-semibold rounded-md p-2 w-auto hover:bg-blue-700 mr-2"
-    >
-      <i class="fa-solid fa-square-plus mr-1"></i> Agregar categoria
-    </button>
-  </div>
-  <hr class="mb-5" />
-
-  <table
-    datatable
-    [dtOptions]="dtOptions"
-    [dtTrigger]="dtTrigger"
-    class="row-border hover whitespace-nowrap dark:text-white"
-  ></table>
-</div>
-<!-- Final del body -->
-
-<app-modalForm
-  [visible]="showModal"
-  (close)="showModal = false"
-  [title]="titleModal"
-  (submitForm)="saveCategory()"
->
+<app-modalForm [visible]="showModal" (close)="showModal = false" [title]="titleModal" (submitForm)="saveCategory()">
   <form [formGroup]="form">
     <div class="mb-4">
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
         Nombre
       </label>
-      <input
-        type="text"
-        formControlName="name"
-        name="level"
-        class="mt-1 block w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"
-      />
+      <input type="text" formControlName="name" name="level"
+        class="mt-1 block w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" />
     </div>
   </form>
 </app-modalForm>
 <!-- Modal-->
+
+<!-- <app-header [title]="titleComponent" [subtitle]="subtitleComponent"></app-header> -->
+
+<div class="bg-white dark:bg-gray-900 min-h-screen p-4 md:p-6">
+  <!-- Header con acciones -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 md:mb-8">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Gestión de Categorias</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Administra y visualiza todas las categorias del sistema
+      </p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-3">
+      <!-- Botón de nuevo empleado -->
+      <button (click)="showModal = true"
+        class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-colors duration-200 shadow-md">
+        <i class="fa-solid fa-user-plus"></i>
+        Registrar categoria
+      </button>
+    </div>
+  </div>
+
+  <!-- Separador visual -->
+  <div class="border-b border-gray-200 dark:border-gray-700 mb-6"></div>
+
+  <!-- Tabla de datos -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+        class="w-full divide-y divide-gray-200 dark:divide-gray-700" #dataTable></table>
+    </div>
+  </div>
+</div>

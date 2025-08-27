@@ -1,32 +1,61 @@
-<div class="flex">
+<!-- index-pages.component.html -->
+<div class="flex min-h-screen bg-gray-50 dark:bg-gray-900">
   <!-- Sidebar con animación -->
-  <div
-    *ngIf="isSidebarVisible"
-    class="bg-white dark:bg-gray-800 shadow-lg h-full transition-transform duration-300 ease-in-out"
-  >
+  <div class="fixed lg:relative z-40 h-full bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700">
     <app-sidebar></app-sidebar>
   </div>
 
   <!-- Contenido principal -->
-  <div
-    class="transition-all duration-300 w-full min-h-screen dark:bg-gray-900 p-4"
-    [class.ml-0]="!isSidebarVisible"
-    [class.ml-64]="isSidebarVisible && !isSidebarCollapsed"
-    [class.ml-16]="isSidebarVisible && isSidebarCollapsed"
-  >
-    <div class="w-full rounded-t-2xl bg-red-400 flex flex-row items-center justify-between bg-gradient-to-r from-indigo-500 to-blue-600 ">
-      <!-- Botón para mostrar/ocultar sidebar -->
-      <button
-        class="px-4 py-2 m-2 text-indigo-500 bg-gray-100 rounded-full hover:text-indigo-500 transition"
-        (click)="toggleSidebar()"
-      >
-        <i
-          class="fa-solid text-sm font-bold"
-          [ngClass]="isSidebarVisible ? 'fa-chevron-left' : 'fa-bars'"
-        ></i>
-      </button>
-    </div>
+  <div class="flex-1 transition-all duration-300 min-h-screen"
+       [class.lg:ml-64]="!isSidebarCollapsed"
+       [class.lg:ml-20]="isSidebarCollapsed">
+    
+    <!-- Header -->
+    <header class="sticky top-0 z-20 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between px-4 py-3">
+        <!-- Fecha y hora actual -->
+        <div class="flex items-center gap-4">
+          <div class="hidden sm:flex items-center gap-2 text-gray-600 dark:text-gray-300">
+            <i class="fa-solid fa-calendar-day text-blue-500"></i>
+            <span class="font-medium">{{ today | date:'fullDate' }}</span>
+          </div>
+          <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+            <i class="fa-solid fa-clock text-green-500"></i>
+            <span class="font-medium">{{ today | date:'shortTime' }}</span>
+          </div>
+        </div>
 
-    <router-outlet></router-outlet>
+        <!-- Botón de tema -->
+        <button (click)="toggleTheme()" 
+                class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
+                [title]="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+          <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+            <i class="fa-solid text-lg transition-all duration-300"
+               [ngClass]="{
+                 'fa-sun text-yellow-500 group-hover:text-yellow-600': !isDarkMode,
+                 'fa-moon text-indigo-400 group-hover:text-indigo-300': isDarkMode
+               }"></i>
+            <span class="hidden md:inline font-medium">
+              {{ isDarkMode ? "Modo oscuro" : "Modo claro" }}
+            </span>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Área de contenido -->
+    <main class="p-4 md:p-6">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
+      <div class="px-4 py-3 text-center">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          © 2024 POSdek Cloud. Todos los derechos reservados. 
+          <span class="hidden sm:inline">v2.1.0</span>
+        </p>
+      </div>
+    </footer>
   </div>
 </div>

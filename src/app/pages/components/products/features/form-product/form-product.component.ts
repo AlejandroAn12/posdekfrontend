@@ -82,7 +82,14 @@ export default class FormProductComponent implements OnInit {
         this.categories = data.categories;
       },
       error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+        Swal.fire({
+          icon: "error",
+          text: err.error.message || 'Error',
+          toast: true,
+          timer: 4000,
+          position: 'top',
+          showConfirmButton: false
+        });
       },
     });
   }
@@ -93,7 +100,14 @@ export default class FormProductComponent implements OnInit {
         this.unitsOfMeasurement = resp.data;
       },
       error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+        Swal.fire({
+          icon: "error",
+          text: err.error.message || 'Error',
+          toast: true,
+          timer: 4000,
+          position: 'top',
+          showConfirmButton: false
+        });
       }
     });
   }
@@ -101,7 +115,7 @@ export default class FormProductComponent implements OnInit {
   loadProductData(id: string) {
     this.productService.getProductId(id).subscribe({
       next: (product: any) => {
-        console.log(product);
+
         this.form.patchValue({
           ...product,
           supplierId: product.supplier.id ? product.supplier.id.toString() : '',
@@ -110,7 +124,14 @@ export default class FormProductComponent implements OnInit {
         });
       },
       error: (err) => {
-        this.alertsService.showError('Error', 'No se pudo cargar el producto');
+        Swal.fire({
+          icon: "error",
+          text: err.error.message || 'Error',
+          toast: true,
+          timer: 4000,
+          position: 'top',
+          showConfirmButton: false
+        });
       }
     });
   }
@@ -122,7 +143,14 @@ export default class FormProductComponent implements OnInit {
         this.suppliers = data.suppliers;
       },
       error: (err) => {
-        this.alertsService.showError(`${err.error.message}`, `${err.statusText}`)
+        Swal.fire({
+          icon: "error",
+          text: err.error.message || 'Error',
+          toast: true,
+          timer: 4000,
+          position: 'top',
+          showConfirmButton: false
+        });
       }
     })
   }
@@ -130,9 +158,12 @@ export default class FormProductComponent implements OnInit {
   saveProduct() {
     if (this.form.invalid) {
       Swal.fire({
-        icon: 'error',
-        title: 'Campos incompletos',
-        text: 'Por favor, complete todos los campos requeridos.',
+        icon: "warning",
+        text: 'Formulario incompleto',
+        toast: true,
+        timer: 4000,
+        position: 'top',
+        showConfirmButton: false
       });
       return;
     }
@@ -152,15 +183,26 @@ export default class FormProductComponent implements OnInit {
       this.productService.updateProduct(this.productId, productData).subscribe({
         next: (response: any) => {
           Swal.fire({
-            icon: 'success',
-            title: 'Producto actualizado',
-            text: response.message,
-            position:'top-right'
+            icon: "success",
+            text: response.message || 'Información actualizada',
+            toast: true,
+            timer: 4000,
+            timerProgressBar: true,
+            position: 'top',
+            showConfirmButton: false
           });
-          this.router.navigate(['/index/products/view']);
+          this.router.navigate(['/admin/products/view']);
         },
         error: (err) => {
-          this.alertsService.showError(err.error.message, err.statusText);
+          Swal.fire({
+            icon: "error",
+            text: err.error.message || 'Error',
+            toast: true,
+            timer: 4000,
+            timerProgressBar: true,
+            position: 'top',
+            showConfirmButton: false
+          });
         }
       });
     } else {
@@ -168,29 +210,35 @@ export default class FormProductComponent implements OnInit {
       this.productService.addProduct(productData).subscribe({
         next: () => {
           Swal.fire({
-            icon: 'success',
-            title: 'Producto creado',
+            icon: "success",
+            text: 'Producto ingresado correctamente',
+            toast: true,
             timer: 4000,
+            timerProgressBar: true,
+            position: 'top',
             showConfirmButton: false
           });
-          this.router.navigate(['/index/products/view']);
+          this.router.navigate(['/admin/products/view']);
         },
         error: (err) => {
           console.error(err.error.message);
           // this.alertsService.showError(err.error.message, err.statusText);
           Swal.fire({
             icon: "error",
-            title: "Error al crear el producto",
-            text: "Por favor, verifique los datos ingresados, si el incoveniente persiste informe a nuestro equipo de soporte.",
-            confirmButtonText: "Entendido"
-          })
+            text: err.error.message || 'Error al ingresar el producto',
+            toast: true,
+            timer: 4000,
+            timerProgressBar: true,
+            position: 'top',
+            showConfirmButton: false
+          });
         }
       });
     }
   }
 
   btnBack() {
-    this.router.navigate(['/index/products/view']);
+    this.router.navigate(['/admin/products/view']);
   }
 
   get f() {

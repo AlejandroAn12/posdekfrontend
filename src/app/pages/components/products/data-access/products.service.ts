@@ -11,6 +11,9 @@ export class ProductsService {
 
   private http = inject(HttpClient);
 
+  getProductByBarcode(barcode : string){
+    return this.http.get(`${environment.API_URL}/products/all/${barcode}`);
+  }
   addProduct(iProduct: IProduct): Observable<any> {
     return this.http.post(`${environment.API_URL}/products/add`, iProduct)
       .pipe(tap((res) => {

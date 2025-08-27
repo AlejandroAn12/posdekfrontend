@@ -1,275 +1,201 @@
 <app-header [title]="titleComponent" [isUpdate]="isUpdate"></app-header>
 
-<!-- Card Body -->
-<div class="flex flex-col bg-white dark:bg-gray-800">
-  <!-- *********************************************** -->
-  <div class="max-w-xl mx-auto p-6">
-    <div class="title">
-      <h1 class="font-medium text-xl text-gray-500">DETALLES</h1>
+<div class="bg-white dark:bg-gray-900 min-h-screen py-6 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl mx-auto">
+    <!-- Encabezado de sección -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Detalles del Proveedor</h1>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Complete la información requerida para {{ isUpdate ? 'actualizar'
+        : 'registrar' }} el proveedor</p>
     </div>
-    <!-- *********************** -->
 
-    <form [formGroup]="form">
-      <!--**********************************-->
-      <div class="flex mt-5 mb-5">
-        <div class="w-42 mr-4">
-          <label
-            for="typeofdocumentId"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >Tipo de documento</label
-          >
-          <select
-            formControlName="typeofdocumentId"
-            id="typeofdocumentId"
-            [ngClass]="{
-              'border-red-500':
-                f['typeofdocumentId'].invalid && f['typeofdocumentId'].touched
-            }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-          >
-            <option
-              *ngIf="tyOfDocs.length > 0"
-              disabled
-              class="font-semibold"
-              value=""
-            >
-              Tipos de documentos disponibles
-            </option>
-            <option
-              *ngIf="tyOfDocs.length < 1"
-              disabled
-              class="font-semibold"
-              value=""
-            >
-              No hay tipos de documentos disponibles
-            </option>
-            <option *ngFor="let typeOfDoc of tyOfDocs" [value]="typeOfDoc.id">
-              {{ typeOfDoc.name }}
-            </option>
-          </select>
-          <div
-            *ngIf="
-              f['typeofdocumentId'].invalid && f['typeofdocumentId'].touched
-            "
-            class="text-red-500 text-sm"
-          >
+    <!-- Formulario -->
+    <form [formGroup]="form" class="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
+      <!-- Fila: Tipo de documento y N° Identificación -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Tipo de documento -->
+        <div class="space-y-2">
+          <label for="typeofdocumentId" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Tipo de documento *
+          </label>
+          <div class="relative">
+            <select formControlName="typeofdocumentId" id="typeofdocumentId" [ngClass]="{
+                'border-red-500': f['typeofdocumentId'].invalid && f['typeofdocumentId'].touched,
+                'border-green-500': f['typeofdocumentId'].valid && f['typeofdocumentId'].touched
+              }"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg appearance-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500">
+              <option *ngIf="tyOfDocs.length > 0" disabled value="">
+                Seleccione tipo de documento
+              </option>
+              <option *ngIf="tyOfDocs.length < 1" disabled value="">
+                No hay tipos de documentos disponibles
+              </option>
+              <option *ngFor="let typeOfDoc of tyOfDocs" [value]="typeOfDoc.id">
+                {{ typeOfDoc.name }}
+              </option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+              <i class="fa-solid fa-chevron-down text-sm"></i>
+            </div>
+          </div>
+          <div *ngIf="f['typeofdocumentId'].invalid && f['typeofdocumentId'].touched"
+            class="text-red-500 text-sm flex items-center mt-1">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i>
             Debe seleccionar un tipo de documento.
           </div>
         </div>
 
-        <div class="w-36 mr-4">
-          <label
-            for="ruc"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >N° Identificación</label
-          >
-          <input
-            formControlName="ruc"
-            placeholder="0812345678"
-            type="text"
-            id="ruc"
-            [ngClass]="{
-              'border-red-500': f['ruc'].invalid && f['ruc'].touched
+        <!-- N° Identificación -->
+        <div class="space-y-2">
+          <label for="ruc" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            N° Identificación *
+          </label>
+          <input formControlName="ruc" placeholder="0812345678" type="text" id="ruc" [ngClass]="{
+              'border-red-500': f['ruc'].invalid && f['ruc'].touched,
+              'border-green-500': f['ruc'].valid && f['ruc'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-          />
-          <div
-            *ngIf="f['ruc'].invalid && f['ruc'].touched"
-            class="text-red-500 text-sm"
-          >
-            El numero de identificación debe tener 13 digitos.
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
+          <div *ngIf="f['ruc'].invalid && f['ruc'].touched" class="text-red-500 text-sm flex items-center mt-1">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i>
+            El número de identificación debe tener 13 dígitos.
           </div>
         </div>
       </div>
-      <!--************************************************************-->
-      <div class="flex mt-5 mb-5">
-        <div class="w-full mr-4">
-          <label
-            for="company_name"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >Nombre del proveedor</label
-          >
-          <input
-            formControlName="company_name"
-            placeholder="Ingrese el nombre del proveedor"
-            type="text"
-            id="company_name"
-            [ngClass]="{
-              'border-red-500':
-                f['company_name'].invalid && f['company_name'].touched
-            }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-          />
-          <div
-            *ngIf="f['company_name'].invalid && f['company_name'].touched"
-            class="text-red-500 text-sm"
-          >
-            El nombre del proveedor es obligatorio.
-          </div>
+
+      <!-- Nombre del proveedor -->
+      <div class="space-y-2">
+        <label for="company_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Nombre del proveedor *
+        </label>
+        <input formControlName="company_name" placeholder="Ingrese el nombre del proveedor" type="text"
+          id="company_name" [ngClass]="{
+            'border-red-500': f['company_name'].invalid && f['company_name'].touched,
+            'border-green-500': f['company_name'].valid && f['company_name'].touched
+          }"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
+        <div *ngIf="f['company_name'].invalid && f['company_name'].touched"
+          class="text-red-500 text-sm flex items-center mt-1">
+          <i class="fa-solid fa-circle-exclamation mr-1"></i>
+          El nombre del proveedor es obligatorio.
         </div>
       </div>
-      <!--**************************************-->
-      <div class="flex mt-5 mb-5">
-        <div class="w-full mr-4">
-          <label
-            for="legal_representative"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >Nombre de encargado</label
-          >
-          <input
-            formControlName="legal_representative"
-            placeholder="Ingrese el nombre del encargado legal"
-            type="text"
-            id="legal_representative"
-            [ngClass]="{
-              'border-red-500':
-                f['legal_representative'].invalid &&
-                f['legal_representative'].touched
-            }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-          />
-          <div
-            *ngIf="
-              f['legal_representative'].invalid &&
-              f['legal_representative'].touched
-            "
-            class="text-red-500 text-sm"
-          >
-            El nombre del representante es obligatorio.
-          </div>
+
+      <!-- Nombre del encargado -->
+      <div class="space-y-2">
+        <label for="legal_representative" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Nombre del encargado *
+        </label>
+        <input formControlName="legal_representative" placeholder="Ingrese el nombre del encargado legal" type="text"
+          id="legal_representative" [ngClass]="{
+            'border-red-500': f['legal_representative'].invalid && f['legal_representative'].touched,
+            'border-green-500': f['legal_representative'].valid && f['legal_representative'].touched
+          }"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
+        <div *ngIf="f['legal_representative'].invalid && f['legal_representative'].touched"
+          class="text-red-500 text-sm flex items-center mt-1">
+          <i class="fa-solid fa-circle-exclamation mr-1"></i>
+          El nombre del representante es obligatorio.
         </div>
       </div>
-      <!--**************************************-->
-      <div class="flex mt-5 mb-5">
-        <div class="w-full mr-4">
-          <label
-            for="phone"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >Teléfono</label
-          >
-          <input
-            formControlName="phone"
-            placeholder="0991234567"
-            type="tel"
-            id="phone"
-            [ngClass]="{
-              'border-red-500': f['phone'].invalid && f['phone'].touched
+
+      <!-- Fila: Teléfono y Correo electrónico -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Teléfono -->
+        <div class="space-y-2">
+          <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Teléfono *
+          </label>
+          <input formControlName="phone" placeholder="0991234567" type="tel" id="phone" [ngClass]="{
+              'border-red-500': f['phone'].invalid && f['phone'].touched,
+              'border-green-500': f['phone'].valid && f['phone'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-          />
-          <div
-            *ngIf="f['phone'].invalid && f['phone'].touched"
-            class="text-red-500 text-sm"
-          >
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
+          <div *ngIf="f['phone'].invalid && f['phone'].touched" class="text-red-500 text-sm flex items-center mt-1">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i>
             El teléfono es obligatorio.
           </div>
         </div>
-        <div class="w-full mr-4">
-          <label
-            for="email"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >Correo electrónico</label
-          >
-          <input
-            formControlName="email"
-            placeholder="Ingrese el correo electrónico"
-            type="email"
-            id="email"
-            [ngClass]="{
-              'border-red-500': f['email'].invalid && f['email'].touched
+
+        <!-- Correo electrónico -->
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Correo electrónico *
+          </label>
+          <input formControlName="email" placeholder="proveedor@ejemplo.com" type="email" id="email" [ngClass]="{
+              'border-red-500': f['email'].invalid && f['email'].touched,
+              'border-green-500': f['email'].valid && f['email'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-          />
-          <div
-            *ngIf="f['email'].invalid && f['email'].touched"
-            class="text-red-500 text-sm"
-          >
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
+          <div *ngIf="f['email'].invalid && f['email'].touched" class="text-red-500 text-sm flex items-center mt-1">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i>
             El correo electrónico es obligatorio.
           </div>
         </div>
       </div>
-      <!--**************************************-->
-      <div class="flex mt-5 mb-5">
-        <div class="w-full mr-4">
-          <label
-            for="country"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >País</label
-          >
-          <input
-            formControlName="country"
-            placeholder="Ecuador"
-            type="text"
-            id="country"
-            [ngClass]="{
-              'border-red-500': f['country'].invalid && f['country'].touched
+
+      <!-- Fila: País y Ciudad -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- País -->
+        <div class="space-y-2">
+          <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            País *
+          </label>
+          <input formControlName="country" placeholder="Ecuador" type="text" id="country" [ngClass]="{
+              'border-red-500': f['country'].invalid && f['country'].touched,
+              'border-green-500': f['country'].valid && f['country'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-          />
-          <div
-            *ngIf="f['country'].invalid && f['country'].touched"
-            class="text-red-500 text-sm"
-          >
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
+          <div *ngIf="f['country'].invalid && f['country'].touched" class="text-red-500 text-sm flex items-center mt-1">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i>
             El país es obligatorio.
           </div>
         </div>
-        <div class="w-full mr-4">
-          <label
-            for="city"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >Ciudad</label
-          >
-          <input
-            formControlName="city"
-            placeholder="Quito"
-            type="text"
-            id="city"
-            [ngClass]="{
-              'border-red-500': f['city'].invalid && f['city'].touched
+
+        <!-- Ciudad -->
+        <div class="space-y-2">
+          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Ciudad *
+          </label>
+          <input formControlName="city" placeholder="Quito" type="text" id="city" [ngClass]="{
+              'border-red-500': f['city'].invalid && f['city'].touched,
+              'border-green-500': f['city'].valid && f['city'].touched
             }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-          />
-          <div
-            *ngIf="f['city'].invalid && f['city'].touched"
-            class="text-red-500 text-sm"
-          >
-            La ciudad es obligatorio.
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
+          <div *ngIf="f['city'].invalid && f['city'].touched" class="text-red-500 text-sm flex items-center mt-1">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i>
+            La ciudad es obligatoria.
           </div>
         </div>
       </div>
-      <!--**************************************-->
-      <div class="flex mt-5 mb-5">
-        <div class="w-full mr-4">
-          <label
-            for="address"
-            class="text-sm font-semibold text-gray-500 dark:text-white"
-            >Direccion</label
-          >
-          <textarea
-            formControlName="address"
-            placeholder="Ingrese la dirección del proveedor"
-            [ngClass]="{
-              'border-red-500': f['address'].invalid && f['address'].touched
-            }"
-            class="rounded text-sm p-2 block w-full border border-gray-300 dark:text-white dark:bg-gray-800"
-            id="address"
-          ></textarea>
-        </div>
+
+      <!-- Dirección -->
+      <div class="space-y-2">
+        <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Dirección
+        </label>
+        <textarea formControlName="address" placeholder="Ingrese la dirección completa del proveedor" id="address"
+          rows="3" [ngClass]="{
+            'border-red-500': f['address'].invalid && f['address'].touched,
+            'border-green-500': f['address'].valid && f['address'].touched
+          }"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 resize-none"></textarea>
       </div>
-      <!--***********************************-->
-      <div class="flex gap-4 mt-5">
-        <button
-          (click)="btnBack()"
-          class="text-gray-600 font-semibold rounded-md dark:text-white dark:bg-gray-600 dark:hover:bg-gray-400 text-sm p-3 pr-5 pl-5 w-auto hover:bg-gray-200"
-        >
+
+      <!-- Botones de acción -->
+      <div
+        class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <button type="button" (click)="btnBack()"
+          class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors duration-200 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600">
           Cancelar
         </button>
-        <button
-          (click)="saveSupplier()"
-          class="bg-blue-600 text-white text-sm font-semibold rounded-md p-3 pr-5 pl-5 hover:bg-blue-700"
-        >
-          <i class="fa-solid fa-floppy-disk mr-1"></i>
-          {{ isUpdate ? "Guardar cambios" : "Añadir" }}
+        <button type="submit" (click)="saveSupplier()" [disabled]="form.invalid" [ngClass]="{
+            'opacity-70 cursor-not-allowed': form.invalid,
+            'hover:bg-blue-700 cursor-pointer': form.valid
+          }"
+          class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-blue-300 focus:outline-none transition-colors duration-200 flex items-center gap-2">
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ isUpdate ? "Guardar cambios" : "Añadir proveedor" }}
         </button>
       </div>
     </form>

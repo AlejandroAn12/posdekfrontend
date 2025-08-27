@@ -21,7 +21,6 @@ export default class FormEmployeeComponent implements OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private employeeService = inject(EmployeeService);
-  private alertsService = inject(AlertService);
   private roleService = inject(RoleService);
 
   employeeId: string | null = null;
@@ -74,11 +73,13 @@ export default class FormEmployeeComponent implements OnInit {
         this.roles = data.roles;
       },
       error: (err) => {
-        // console.error('Error al cargar roles:', err);
         Swal.fire({
           icon: "error",
-          title: "Oops...",
-          text: `${err.error.message}`
+          text: err.error.message || 'Error',
+          toast: true,
+          timer: 4000,
+          position: 'top',
+          showConfirmButton: false
         });
       },
     });
@@ -99,7 +100,14 @@ export default class FormEmployeeComponent implements OnInit {
         });
       },
       error: (err) => {
-        this.alertsService.showError(err.error.message, err.statusText);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err.error.message || 'Error obteniendo los roles',
+          toast: true,
+          position: 'top',
+          showConfirmButton: false
+        });
       }
     });
   }
@@ -107,7 +115,14 @@ export default class FormEmployeeComponent implements OnInit {
   saveEmployee() {
 
     if (this.form.invalid) {
-      this.alertsService.showError('Existen campos vacíos', 'Error');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: 'Existen campos vacíos',
+        toast: true,
+        position: 'top',
+        showConfirmButton: false
+      });
       return;
     }
 
@@ -116,30 +131,52 @@ export default class FormEmployeeComponent implements OnInit {
     if (this.isUpdate && this.employeeId) {
       // Actualizar empleado
       this.employeeService.updateEmployee(this.employeeId, employeeData).subscribe({
-        next: (response: any) => {
+        next: () => {
           Swal.fire({
             icon: 'success',
-            title: 'Datos actualizados',
-            position: 'top-end',
+            title: 'Información actualizada',
+            position: 'top',
             showConfirmButton: false,
-            heightAuto: true,
+            toast: true,
+            timerProgressBar: true,
             timer: 1500
           })
-          this.router.navigate(['/index/employees']);
+          this.router.navigate(['/admin/employees']);
         },
         error: (err) => {
-          this.alertsService.showError(err.error.message, err.statusText);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: err.error.message || 'Error obteniendo los roles',
+            toast: true,
+            position: 'top',
+            showConfirmButton: false
+          });
         }
       });
     } else {
       // Registrar empleado
       this.employeeService.registerEmployee(employeeData).subscribe({
         next: (response) => {
-          this.alertsService.showSuccess(response.message, '');
+          Swal.fire({
+            icon: "success",
+            title: "Oops...",
+            text: response.message || 'Colaborador registrado',
+            toast: true,
+            position: 'top',
+            showConfirmButton: false
+          });
           this.form.reset();
         },
         error: (err) => {
-          this.alertsService.showError(err.error.message, err.statusText);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: err.error.message || 'Error obteniendo los roles',
+            toast: true,
+            position: 'top',
+            showConfirmButton: false
+          });
         }
       });
     }
@@ -147,6 +184,6 @@ export default class FormEmployeeComponent implements OnInit {
   }
 
   btnBack() {
-    this.router.navigate(['index/employees']);
+    this.router.navigate(['admin/employees']);
   }
 }

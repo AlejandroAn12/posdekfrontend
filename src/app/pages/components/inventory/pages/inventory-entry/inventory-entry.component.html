@@ -1,77 +1,248 @@
-<app-header
-  [title]="titleComponent"
-  [subtitle]="subtitleComponent"
-></app-header>
+<app-header [title]="titleComponent" [subtitle]="subtitleComponent"></app-header>
 
-<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mt-6">
-  <div class="flex items-center gap-4 mb-4">
-    <div class="bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 p-2 rounded-full">
-      <i class="fa-solid fa-calendar-days"></i>
+<div class="bg-white dark:bg-gray-900 min-h-screen p-4 md:p-6">
+  <!-- Información del Inventario -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <!-- Card: Fecha de Ingreso -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div class="flex items-center gap-4">
+        <div class="bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 p-3 rounded-full">
+          <i class="fa-solid fa-calendar-days text-xl"></i>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Fecha de ingreso</p>
+          <h2 class="text-lg font-bold text-gray-800 dark:text-white">{{ date }}</h2>
+        </div>
+      </div>
     </div>
-    <div>
-      <p class="text-sm text-gray-500 dark:text-gray-400">Fecha de ingreso</p>
-      <h2 class="text-lg font-bold text-gray-800 dark:text-white">{{date}}</h2>
+
+    <!-- Card: Usuario Responsable -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div class="flex items-center gap-4">
+        <div class="bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 p-3 rounded-full">
+          <i class="fa-solid fa-user text-xl"></i>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Usuario responsable</p>
+          <h2 class="text-lg font-bold text-gray-800 dark:text-white">{{ user }}</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">{{ role }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="flex items-center gap-4 mb-4">
-    <div class="bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300 p-2 rounded-full">
-      <i class="fa-solid fa-user"></i>
-    </div>
-    <div>
-      <p class="text-sm text-gray-500 dark:text-gray-400">Usuario responsable</p>
-      <h2 class="text-lg font-bold text-gray-800 dark:text-white">{{user}}</h2>
+  <!-- Alerta Informativa -->
+  <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-8">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <i class="fa-solid fa-circle-info text-blue-500 dark:text-blue-400 text-xl mt-1"></i>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1">
+          Instrucciones importantes
+        </h3>
+        <p class="text-sm text-blue-700 dark:text-blue-400">
+          Recuerde ingresar la cantidad física real de cada producto. Compare el stock del sistema con el conteo físico y registre las diferencias.
+        </p>
+      </div>
     </div>
   </div>
 
-  <div class="flex items-center bg-blue-50 dark:bg-blue-700 text-blue-600 dark:text-white p-3 rounded-xl mt-4">
-    <i class="fa-solid fa-circle-info mr-3"></i>
-    <p class="text-sm font-medium">Recuerde ingresar la cantidad que tiene en físico.</p>
+  <!-- Resumen del Inventario -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Total Productos</p>
+          <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ inventoryItems.length }}</p>
+        </div>
+        <div class="bg-gray-100 dark:bg-gray-700 p-2 rounded-lg">
+          <i class="fa-solid fa-boxes-stacked text-gray-600 dark:text-gray-300"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Stock Sistema</p>
+          <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ totalSystemStock }}</p>
+        </div>
+        <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+          <i class="fa-solid fa-database text-blue-600 dark:text-blue-400"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Stock Físico</p>
+          <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ totalPhysicalStock }}</p>
+        </div>
+        <div class="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg">
+          <i class="fa-solid fa-clipboard-check text-green-600 dark:text-green-400"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Diferencia</p>
+          <p class="text-2xl font-bold" [ngClass]="{
+            'text-green-600 dark:text-green-400': totalDifference > 0,
+            'text-red-600 dark:text-red-400': totalDifference < 0,
+            'text-gray-800 dark:text-white': totalDifference === 0
+          }">
+            {{ totalDifference }}
+          </p>
+        </div>
+        <div class="bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-lg">
+          <i class="fa-solid fa-scale-balanced text-yellow-600 dark:text-yellow-400"></i>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
+  <!-- Tabla de Productos -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+    <!-- Header de la Tabla -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-2 sm:mb-0">
+        Detalle de Productos
+      </h2>
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Buscar producto..."
+            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            (input)="filterProducts($event)"
+          >
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+    </div>
 
-<!-- TABLA -->
-<div class="w-full mt-10 bg-white dark:bg-gray-900 rounded-xl shadow-md p-4">
-  <div class="overflow-x-auto rounded-lg">
-    <table class="min-w-full text-sm text-left text-gray-700 dark:text-white">
-      <thead class="text-xs uppercase bg-gray-100 dark:bg-blue-700 dark:text-white">
-        <tr>
-          <th class="px-6 py-3">Cód. de barra</th>
-          <th class="px-6 py-3">Cód. interno</th>
-          <th class="px-6 py-3">Producto</th>
-          <th class="px-6 py-3">Stock sistema</th>
-          <th class="px-6 py-3">Stock físico</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let item of inventoryItems"
-          class="border-b bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+    <!-- Tabla -->
+    <div class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Cód. Barras
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Cód. Interno
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Producto
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Stock Sistema
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Stock Físico
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Diferencia
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+          <!-- Estado de carga -->
+          <tr *ngIf="isLoading">
+            <td colspan="6" class="px-6 py-8 text-center">
+              <div class="flex items-center justify-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                <span class="ml-3 text-gray-500 dark:text-gray-400">Cargando productos...</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Productos -->
+          <tr 
+            *ngFor="let item of filteredItems" 
+            class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            [ngClass]="getRowClass(item)"
+          >
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-800 dark:text-gray-200">
+              {{ item.barcode }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+              {{ item.code }}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+              {{ item.name }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-gray-200">
+              {{ item.quantity }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <input
+                type="number"
+                min="0"
+                [(ngModel)]="item.physicalQuantity"
+                (input)="updateTotals()"
+                class="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              />
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                    [ngClass]="{
+                      'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400': getDifference(item) > 0,
+                      'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400': getDifference(item) < 0,
+                      'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': getDifference(item) === 0
+                    }">
+                {{ getDifference(item) }}
+              </span>
+            </td>
+          </tr>
+          
+          <!-- Estado vacío -->
+          <tr *ngIf="!isLoading && filteredItems.length === 0">
+            <td colspan="6" class="px-6 py-8 text-center">
+              <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+                <i class="fa-solid fa-inbox text-4xl mb-3"></i>
+                <p class="text-lg font-medium">No se encontraron productos</p>
+                <p class="text-sm">No hay productos para mostrar en el inventario</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer de la Tabla -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 border-t border-gray-200 dark:border-gray-700">
+      <div class="text-sm text-gray-600 dark:text-gray-400 mb-4 sm:mb-0">
+        Mostrando {{ filteredItems.length }} de {{ inventoryItems.length }} productos
+      </div>
+      <div class="flex gap-3">
+        <button
+          (click)="goBack()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 transition-colors duration-200 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
         >
-          <td class="px-6 py-4 whitespace-nowrap font-medium">{{ item.barcode }}</td>
-          <td class="px-6 py-4">{{ item.code }}</td>
-          <td class="px-6 py-4">{{ item.name }}</td>
-          <td class="px-6 py-4">{{ item.quantity }}</td>
-          <td class="px-6 py-4">
-            <input
-              type="number"
-              min="0"
-              [(ngModel)]="item.physicalQuantity"
-              class="w-24 px-2 py-1 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="mt-6 text-right">
-    <button
-      class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      (click)="saveInventory()"
-    >
-      Guardar inventario
-    </button>
+          <i class="fa-solid fa-arrow-left mr-2"></i>
+          Volver
+        </button>
+        <button
+          (click)="resetAllQuantities()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 transition-colors duration-200 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+        >
+          <i class="fa-solid fa-rotate-left mr-2"></i>
+          Reiniciar
+        </button>
+        <button
+          (click)="saveInventory()"
+          [disabled]="isSaving || isLoading"
+          class="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+          <i class="fa-solid" [ngClass]="{'fa-floppy-disk': !isSaving, 'fa-spinner fa-spin': isSaving}"></i>
+          {{ isSaving ? 'Guardando...' : 'Guardar Inventario' }}
+        </button>
+      </div>
+    </div>
   </div>
 </div>

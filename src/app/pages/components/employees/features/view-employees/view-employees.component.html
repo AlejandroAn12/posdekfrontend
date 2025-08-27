@@ -1,40 +1,43 @@
-<!-- Contenedor 1 -->
-<app-header
-  [title]="titleComponent"
-  [subtitle]="subtitleComponent"
-></app-header>
+<!-- <app-header [title]="titleComponent" [subtitle]="subtitleComponent"></app-header> -->
 
-<!-- Body -->
-<div class="flex flex-col p-5 bg-white dark:bg-gray-900">
-  <div class="flex flex-col">
-    <div class="flex justify-end mb-10">
+<div class="bg-white dark:bg-gray-900 min-h-screen p-4 md:p-6">
+  <!-- Header con acciones -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 md:mb-8">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Gestión de Colaboradores</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Administra y visualiza todos los colaboradores del sistema</p>
+    </div>
+    
+    <div class="flex flex-col sm:flex-row gap-3">
+      <!-- Botón de actualizar -->
+      <button
+        (click)="refreshData()"
+        [disabled]="isLoading"
+        class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 transition-colors duration-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700"
+      >
+        <i class="fa-solid fa-rotate" [class.fa-spin]="isLoading"></i>
+        {{ isLoading ? 'Actualizando...' : 'Actualizar' }}
+      </button>
+
+      <!-- Botón de nuevo empleado -->
       <button
         (click)="btnNewEmployee()"
-        class="text-sm font-semibold rounded-md bg-blue-600 p-2 mr-3 hover:bg-blue-700 text-white"
+        class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-colors duration-200 shadow-md"
       >
-        <i class="fa-solid fa-square-plus mr-1"></i> Registrar colaborador
+        <i class="fa-solid fa-user-plus"></i>
+        Registrar colaborador
       </button>
-      <!-- <button
-        (click)="downloadExcel()"
-        class="text-sm font-semibold rounded-md p-2mr-3 border text-green-600 hover:bg-gray-100 hover:text-green-600"
-      >
-        <i class="fa-solid fa-upload mr-1"></i> Exportar
-      </button>
-      <button
-        class="text-sm font-semibold rounded-md border p-2text-red-600 hover:bg-gray-100 hover:text-red-600"
-      >
-        <i class="fa-solid fa-upload mr-1"></i> PDF
-      </button> -->
     </div>
-    <hr class="mb-5" />
-    <table
-      datatable
-      [dtOptions]="dtOptions"
-      [dtTrigger]="dtTrigger"
-      class="row-border hover whitespace-nowrap dark:text-white"
-    ></table>
+  </div>
+<!-- Separador visual -->
+  <div class="border-b border-gray-200 dark:border-gray-700 mb-6"></div>
+
+  <div class="flex flex-col items-center bg-white dark:bg-gray-900">
+    <!-- Tabla de datos -->
+    <div class="bg-white max-w-screen-xl justify-center dark:bg-gray-800 p-4">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+        class="dataTable stripe hover row-border w-full text-sm text-gray-600" #dataTable>
+      </table>
+    </div>
   </div>
 </div>
-<!-- Final del body -->
-
-

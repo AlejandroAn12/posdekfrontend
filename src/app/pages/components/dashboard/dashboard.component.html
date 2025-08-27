@@ -1,184 +1,215 @@
-<!--Inicio del Header -->
-<div class="bg-gradient-to-r from-indigo-500 to-blue-600 p-5">
-  <div class="flex flex-col sm:flex-row items-center sm:items-start">
-    <div class="p-2">
-      <img
-        loading="lazy"
-        class="w-20 h-20 p-1 rounded-full ring-2 bg-white dark:bg-white"
-        src="assets/img/profile.jpeg"
-        alt="Bordered avatar"
-      />
+<!-- Header del Dashboard -->
+<header class="bg-white dark:bg-gray-800 p-5 border-b border-gray-200 dark:border-gray-700">
+  <div class="flex flex-col sm:flex-row items-center gap-4">
+    <div class="flex-shrink-0">
+      <img loading="lazy" class="w-20 h-20 p-1 rounded-full ring-2 ring-blue-500 bg-white dark:bg-gray-800 object-cover" 
+           src="assets/img/profile.jpeg" alt="Avatar del usuario" />
     </div>
-    <div class="p-1 text-center sm:text-left">
-      <h2 class="text-white font-semibold mt-1.5 text-2xl">
+    <div class="text-center sm:text-left">
+      <h2 class="text-gray-800 dark:text-white font-semibold text-2xl">
         Hola, {{ userLogged }}
       </h2>
-      <p class="text-white font-medium text-sm">{{ role }}</p>
+      <p class="text-gray-600 dark:text-gray-300 font-medium text-sm mt-1">{{ role }}</p>
     </div>
   </div>
-</div>
-<!--Final del Header -->
+</header>
 
-<div class="bg-white dark:bg-gray-700">
-  <!-- Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-5">
-    <!-- Card: Productos registrados -->
-    <div
-      class="bg-white dark:bg-gray-800 dark:hover:shadow-lg rounded-2xl border p-6 hover:shadow-lg transition-all"
-    >
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
-        PRODUCTOS
-      </h2>
-      <div class="flex items-center justify-between flex-wrap">
-        <p
-          class="text-4xl font-bold text-gray-800 dark:text-white"
-          [appCountUp]="TotalProducts"
-          [duration]="1000"
-          [formatCurrency]="false"
-        ></p>
-        <i
-          class="fa-solid fa-boxes-stacked text-4xl text-gray-400 dark:text-gray-300"
-        ></i>
+<!-- Contenido Principal -->
+<main class="bg-gray-50 dark:bg-gray-900 min-h-screen p-4 md:p-6">
+  <!-- Cards de Métricas -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+    <!-- Card: Productos -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6 border-l-4 border-blue-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+            PRODUCTOS
+          </h3>
+          <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2" 
+             [appCountUp]="TotalProducts" [duration]="1000" [formatCurrency]="false">
+          </p>
+        </div>
+        <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+          <i class="fa-solid fa-boxes-stacked text-2xl text-blue-600 dark:text-blue-400"></i>
+        </div>
       </div>
     </div>
 
-    <!-- Card: Pedidos realizados -->
-    <div
-      class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
-    >
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
-        ORDENES DE COMPRAS
-      </h2>
-      <div class="flex items-center justify-between flex-wrap">
-        <p
-          class="text-4xl font-bold text-gray-800 dark:text-white"
-          [appCountUp]="TotalOrders"
-          [duration]="1000"
-          [formatCurrency]="false"
-        ></p>
-        <i
-          class="fa-solid fa-cart-flatbed text-4xl text-gray-400 dark:text-gray-300"
-        ></i>
+    <!-- Card: Órdenes de Compra -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6 border-l-4 border-green-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+            ÓRDENES DE COMPRA
+          </h3>
+          <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2" 
+             [appCountUp]="TotalOrders" [duration]="1000" [formatCurrency]="false">
+          </p>
+        </div>
+        <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+          <i class="fa-solid fa-cart-flatbed text-2xl text-green-600 dark:text-green-400"></i>
+        </div>
       </div>
     </div>
 
-    <!-- Card: Tu Suscripción -->
-    <div
-      class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
-    >
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
-        VENTAS DEL DIA
-      </h2>
-      <div class="flex items-center justify-between flex-wrap">
-        <p
-          class="text-4xl font-bold text-green-500 dark:text-white"
-          [appCountUp]="earningssales"
-          [duration]="1500"
-          [useSuffix]="true"
-          [formatCurrency]="true"
-          currency="CLP"
-          locale="es-CL"
-        ></p>
-        <i
-          class="fa-solid fa-coins text-4xl text-yellow-400 dark:text-gray-300"
-        ></i>
+    <!-- Card: Ventas Diarias -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6 border-l-4 border-purple-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+            VENTAS DIARIAS
+          </h3>
+          <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2" 
+             [appCountUp]="earningssales" [duration]="1500" [useSuffix]="true" 
+             [formatCurrency]="true" currency="CLP" locale="es-CL">
+          </p>
+        </div>
+        <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+          <i class="fa-solid fa-coins text-2xl text-purple-600 dark:text-purple-400"></i>
+        </div>
       </div>
     </div>
 
-    <!-- Card: Ganancias -->
-    <div
-      class="bg-white dark:bg-gray-800 rounded-2xl border p-6 hover:shadow-lg transition-all"
-    >
-      <h2 class="text-sm text-gray-500 dark:text-gray-300 font-bold mb-1">
-        UTILIDAD ESTIMADA
-      </h2>
-      <div class="flex items-center justify-between flex-wrap">
-        <p
-          class="text-4xl font-bold text-green-500 dark:text-white"
-          [appCountUp]="TotalEarnings"
-          [duration]="1500"
-          [useSuffix]="true"
-          [formatCurrency]="true"
-          currency="CLP"
-          locale="es-CL"
-        ></p>
-        <i
-          class="fa-solid fa-coins text-4xl text-yellow-400 dark:text-gray-300"
-        ></i>
+    <!-- Card: Utilidad Estimada -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6 border-l-4 border-amber-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+            UTILIDAD ESTIMADA
+          </h3>
+          <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2" 
+             [appCountUp]="TotalEarnings" [duration]="1500" [useSuffix]="true" 
+             [formatCurrency]="true" currency="CLP" locale="es-CL">
+          </p>
+        </div>
+        <div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+          <i class="fa-solid fa-chart-line text-2xl text-amber-600 dark:text-amber-400"></i>
+        </div>
       </div>
     </div>
   </div>
-  <!-- Fin de las Cards -->
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
-    <!-- Porductos sin stock -->
-    <div class="mt-6 bg-white dark:bg-gray-800 border rounded p-4">
-      <div class="flex flex-col justify-between mb-4">
-        <h2 class="text-xl font-bold text-gray-700 dark:text-gray-400">
-          Productos sin stock
-        </h2>
-        <span class="text-sm text-gray-400 font-semibold p-1 rounded-md">
-          {{ products.length }} productos encontrados
-        </span>
+  <!-- Gráfico y Contenido Inferior -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Gráfico (ocupa 2/3 en pantallas grandes) -->
+    <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Estadísticas de Ventas</h3>
+      <div class="w-full" *ngIf="chartLoaded">
+        <app-dashboard-chart></app-dashboard-chart>
       </div>
-
-      <!-- Contenedor con scroll vertical -->
-      <div class="max-h-60 overflow-y-auto border rounded">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-          <thead
-            class="bg-white border-t-2 text-gray-800 dark:bg-gray-300 sticky top-0 z-10"
-          >
-            <tr>
-              <th class="px-4 py-2 text-left"></th>
-              <th class="px-4 py-2 text-left">Cód. barra</th>
-              <th class="px-4 py-2 text-left">Cód. interno</th>
-              <th class="px-4 py-2 text-left">Producto</th>
-              <th class="px-4 py-2 text-left">Stock actual</th>
-            </tr>
-          </thead>
-
-          <tbody *ngIf="!isLoading" class="divide-y divide-gray-100">
-            <tr
-              class="dark:bg-gray-700 dark:text-white"
-              *ngFor="let product of products"
-            >
-              <td class="px-4 py-2 text-red-600 font-bold bg-yellow-200">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-              </td>
-              <td class="px-4 py-2">{{ product?.barcode || "N/A" }}</td>
-              <td class="px-4 py-2">{{ product?.code || "N/A" }}</td>
-              <td class="px-4 py-2">{{ product?.name }}</td>
-              <td class="px-4 py-2 text-red-500 font-bold">
-                {{ product?.stock }}
-              </td>
-            </tr>
-            <tr *ngIf="products.length === 0">
-              <td colspan="6" class="text-center py-4 text-gray-500 italic">
-                No se encontraron registros
-              </td>
-            </tr>
-          </tbody>
-
-          <tbody *ngIf="isLoading">
-            <tr>
-              <td colspan="6" class="text-center py-4 text-gray-500">
-                Cargando información...
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div *ngIf="!chartLoaded" class="flex items-center justify-center h-64">
+        <div class="animate-pulse text-gray-500 dark:text-gray-400">
+          <i class="fa-solid fa-chart-simple text-4xl mb-2"></i>
+          <p>Cargando gráfico...</p>
+        </div>
       </div>
     </div>
 
-    <div class="mt-6 bg-white dark:bg-gray-800 border rounded p-4">
-      <div class="flex flex-col justify-between mb-4">
-        <h2 class="text-xl font-bold text-gray-700 dark:text-gray-400">
-          Ventas del día
-        </h2>
-      </div>
-      <div class="flex items-center">
-        <p class="text-4xl font-bold text-green-500">$1150.36</p>
+    <!-- Carrusel (ocupa 1/3 en pantallas grandes) -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Destacados</h3>
+      <div class="relative rounded-lg overflow-hidden">
+        <div class="relative h-64 overflow-hidden rounded-lg">
+          <!-- Imágenes del carrusel -->
+          <div *ngFor="let image of carouselImages; let i = index" 
+               [class.hidden]="currentSlide !== i"
+               class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+               [class.opacity-0]="currentSlide !== i"
+               [class.opacity-100]="currentSlide === i">
+            <img [src]="image.src" class="w-full h-full object-cover" [alt]="image.alt">
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+              <h4 class="text-white font-semibold">{{ image.title }}</h4>
+              <p class="text-white/80 text-sm">{{ image.description }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Controles del carrusel -->
+        <button type="button" (click)="previousSlide()"
+                class="absolute top-1/2 left-4 z-10 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 rounded-full p-2 hover:bg-white dark:hover:bg-gray-700 transition-colors">
+          <i class="fa-solid fa-chevron-left text-gray-800 dark:text-white"></i>
+        </button>
+        <button type="button" (click)="nextSlide()"
+                class="absolute top-1/2 right-4 z-10 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 rounded-full p-2 hover:bg-white dark:hover:bg-gray-700 transition-colors">
+          <i class="fa-solid fa-chevron-right text-gray-800 dark:text-white"></i>
+        </button>
+        
+        <!-- Indicadores -->
+        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          <div *ngFor="let image of carouselImages; let i = index"
+               [class]="'w-2 h-2 rounded-full transition-all ' + (currentSlide === i ? 'bg-white' : 'bg-white/50')">
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Productos sin Stock -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2 sm:mb-0">
+        Productos sin Stock
+      </h3>
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+        <i class="fa-solid fa-exclamation-circle mr-1"></i>
+        {{ products.length }} productos encontrados
+      </span>
+    </div>
+
+    <div class="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Alerta
+            </th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Cód. Barra
+            </th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Cód. Interno
+            </th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Producto
+            </th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Stock Actual
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+          <tr *ngFor="let product of products" class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <td class="px-4 py-4 whitespace-nowrap">
+              <div class="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30">
+                <i class="fa-solid fa-triangle-exclamation text-yellow-600 dark:text-yellow-400"></i>
+              </div>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+              {{ product?.barcode || "N/A" }}
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+              {{ product?.code || "N/A" }}
+            </td>
+            <td class="px-4 py-4 text-sm text-gray-800 dark:text-gray-200">
+              {{ product?.name }}
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm font-semibold text-red-600 dark:text-red-400">
+              {{ product?.stock }}
+            </td>
+          </tr>
+          <tr *ngIf="products.length === 0">
+            <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+              <i class="fa-solid fa-check-circle text-2xl mb-2 text-green-500"></i>
+              <p>¡Excelente! Todos los productos tienen stock disponible.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="isLoading" class="flex items-center justify-center py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      <span class="ml-3 text-gray-500 dark:text-gray-400">Cargando información...</span>
+    </div>
+  </div>
+</main>

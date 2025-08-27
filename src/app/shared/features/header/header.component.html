@@ -1,22 +1,18 @@
-<div
-  class="w-full flex-col bg-gradient-to-r from-indigo-500 to-blue-600 flex items-center justify-between px-4 py-2"
->
+<div class="w-full flex-col bg-white dark:bg-gray-900 flex items-center justify-between px-4 py-2">
   <div class="p-5">
-    <div class="text-white font-semibold">
+    <div class="text-gray-600 dark:text-white font-semibold">
       <h1 class="text-2xl uppercase font-bold">{{ title }}</h1>
     </div>
   </div>
 
   <div class="mb-2">
-    <h1
-      class="text-xl font-extralight text-white p-2"
-    >
+    <h1 class="text-xl font-extralight text-gray-600 dark:text-white p-2">
       {{
-        isUpdate !== undefined
-          ? isUpdate
-            ? "Actualización de datos"
-            : "Registro de datos"
-          : subtitle
+      isUpdate !== undefined
+      ? isUpdate
+      ? ""
+      : ""
+      : subtitle
       }}
     </h1>
   </div>

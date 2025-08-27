@@ -1,130 +1,230 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { StoreService } from '../../data-access/enterprise.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
-import { AlertService } from '../../../../../core/services/alerts.service';
 import { SriService } from '../../../../../core/services/services.sri.service';
-import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 
+// Interfaces
+interface Store {
+  id: string;
+  razonSocial: string;
+  numeroRuc: string;
+  email: string;
+  telefono: string;
+  address: string;
+  tipoContribuyente: string;
+  regimen: string;
+  categoria: string;
+  obligadoLlevarContabilidad: string;
+  agenteRetencion: string;
+  contribuyenteEspecial: string;
+  representantesLegales: string;
+  actividadEconomicaPrincipal: string;
+  avatarUrl?: string;
+}
 @Component({
   selector: 'app-enterprise-information',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, HeaderComponent],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './enterprise-information.component.html',
   styleUrl: './enterprise-information.component.css'
 })
 export default class EnterpriseInformationComponent {
-
+  // Inyecciones de servicios
   private storeService = inject(StoreService);
-  private alertsService = inject(AlertService);
   private sriService = inject(SriService);
   private fb = inject(FormBuilder);
-  private id: string = '';
-  ruc: string = '';
-  store : any;
-  titleComponent : string = 'Información de tienda';
 
-  resultado: any = null;
-  cargando: boolean = false;
+  // Referencias del template
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
-  //Formulario
-  EnterpriseForm: FormGroup;
-  isDisabled: boolean = false;
-  canEdit: boolean = true;
-  isFormChanged = false;
+  // Variables del componente
+  store: Store | null = null;
+  titleComponent: string = 'Información de tienda';
+  canEdit: boolean = false;
+  isFormChanged: boolean = false;
+  isUploading: boolean = false;
+  uploadProgress: number = 0;
+  selectedFile: File | null = null;
   initialFormValues: any;
-  selectedFile!: File | null;
-  uploadProgress = 0; // Progreso de la carga (0-100)
-  isUploading = false; // Indicador de subida en curso
+
+  // Formulario
+  enterpriseForm: FormGroup;
 
   constructor() {
-    this.EnterpriseForm = this.fb.group({
-      numeroRuc: [{ value: '', disabled: this.isDisabled }, [Validators.required, Validators.minLength(13)]],
-      razonSocial: [{ value: '', disabled: this.isDisabled }, Validators.required],
-      tipoContribuyente: [{ value: '', disabled: this.isDisabled }, Validators.required],
-      regimen: [{ value: '', disabled: this.isDisabled }],
-      categoria: [{ value: '', disabled: this.isDisabled }],
-      obligadoLlevarContabilidad: [{ value: '', disabled: this.isDisabled }],
-      agenteRetencion: [{ value: '', disabled: this.isDisabled }],
-      contribuyenteEspecial: [{ value: '', disabled: this.isDisabled }],
-      representantesLegales: [{ value: '', disabled: this.isDisabled }],
-      actividadEconomicaPrincipal: [{ value: '', disabled: this.isDisabled }],
-      email: [{ value: '', disabled: this.isDisabled }, [Validators.email]],
-      telefono: [{ value: '', disabled: this.isDisabled }],
-      address: [{ value: '', disabled: this.isDisabled }],
-    });
-
-    //Cargas
-    this.getInformationStore();
-
-    // Guardar valores iniciales
-    this.initialFormValues = this.EnterpriseForm.value;
-
-    // Detectar cambios
-    this.EnterpriseForm.valueChanges.subscribe(() => {
-      this.isFormChanged = !this.compareFormValues();
+    this.enterpriseForm = this.fb.group({
+      numeroRuc: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(13)]],
+      razonSocial: [{ value: '', disabled: true }, Validators.required],
+      tipoContribuyente: [{ value: '', disabled: true }],
+      regimen: [{ value: '', disabled: true }],
+      categoria: [{ value: '', disabled: true }],
+      obligadoLlevarContabilidad: [{ value: '', disabled: true }],
+      agenteRetencion: [{ value: '', disabled: true }],
+      contribuyenteEspecial: [{ value: '', disabled: true }],
+      representantesLegales: [{ value: '', disabled: true }],
+      actividadEconomicaPrincipal: [{ value: '', disabled: true }],
+      email: [{ value: '', disabled: true }, [Validators.email]],
+      telefono: [{ value: '', disabled: true }],
+      address: [{ value: '', disabled: true }]
     });
   }
 
+  ngOnInit(): void {
+    this.getInformationStore();
+    this.setupFormListeners();
+  }
 
-  buscarRuc() {
-    this.cargando = true;
+  // Configurar listeners del formulario
+  setupFormListeners(): void {
+    this.enterpriseForm.valueChanges.subscribe(() => {
+      this.checkFormChanges();
+    });
+  }
 
-    if (!this.ruc || this.ruc.length < 13) {
-      Swal.fire({
-        icon: "error",
-        title: `Error`,
-        text: `Debe ingresar un RUC válido.`,
-        showConfirmButton: false,
-        timer: 8000,
-        confirmButtonText: 'Entendido',
-        timerProgressBar: true,
-      });
-      this.cargando = false;
-      return;
-    }
-
-    this.sriService.consultarRuc(this.ruc).subscribe({
-      next: (res) => {
-        console.log('✅ Respuesta:', res);
-        this.cargarDatosDesdeSri(res.data);
-        this.resultado = res;
-        this.cargando = false;
+  // Obtener información de la tienda
+  getInformationStore(): void {
+    this.storeService.getInformationStore().subscribe({
+      next: (res: any) => {
+        this.store = res;
+        this.patchFormValues(res);
+        this.initialFormValues = this.enterpriseForm.value;
       },
       error: (err) => {
-        console.error('❌ Error en servicio:', err);
-        this.resultado = null;
-        this.cargando = false;
-
         Swal.fire({
-          icon: "error",
-          title: `Error`,
-          text: `${err.error.message}`,
+          icon: 'error',
+          title: 'Error',
+          text: err.error.message || 'Error al obtener la información',
           showConfirmButton: false,
-          timer: 8000,
-          confirmButtonText: 'Entendido',
-          timerProgressBar: true,
+          timer: 4000,
+          toast: true,
+          position: 'top-end',
+          timerProgressBar: true
         });
       }
     });
   }
 
-  cargarDatosDesdeSri(data: any) {
-    if (!data || !Array.isArray(data) || length === 0) return;
+  // Poblar el formulario con valores
+  patchFormValues(data: Store): void {
+    this.enterpriseForm.patchValue({
+      numeroRuc: data.numeroRuc || '',
+      razonSocial: data.razonSocial || '',
+      tipoContribuyente: data.tipoContribuyente || '',
+      regimen: data.regimen || '',
+      categoria: data.categoria || '',
+      obligadoLlevarContabilidad: data.obligadoLlevarContabilidad || '',
+      agenteRetencion: data.agenteRetencion || '',
+      contribuyenteEspecial: data.contribuyenteEspecial || '',
+      representantesLegales: data.representantesLegales || '',
+      actividadEconomicaPrincipal: data.actividadEconomicaPrincipal || '',
+      email: data.email || '',
+      telefono: data.telefono || '',
+      address: data.address || ''
+    });
+  }
+
+  // Habilitar edición
+  enableEditing(): void {
+    this.canEdit = true;
+    this.enterpriseForm.enable();
+    Swal.fire({
+      icon: 'info',
+      title: 'Modo edición',
+      text: 'Puedes editar la información de la tienda',
+      showConfirmButton: false,
+      timer: 4000,
+      toast: true,
+      position: 'top-end',
+      timerProgressBar: true
+    });
+  }
+
+  // Cancelar edición
+  cancelEditing(): void {
+    this.canEdit = false;
+    this.enterpriseForm.disable();
+    this.enterpriseForm.patchValue(this.initialFormValues);
+    this.isFormChanged = false;
+    this.selectedFile = null;
+  }
+
+  // Verificar cambios en el formulario
+  checkFormChanges(): void {
+    this.isFormChanged = JSON.stringify(this.enterpriseForm.value) !== JSON.stringify(this.initialFormValues);
+  }
+
+  // Buscar información por RUC
+  buscarRuc(): void {
+    const ruc = this.enterpriseForm.get('numeroRuc')?.value;
+
+    if (!ruc || ruc.length < 13) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'RUC inválido',
+        text: 'Debe ingresar un RUC válido de 13 dígitos',
+        showConfirmButton: false,
+        timer: 4000,
+        toast: true,
+        position: 'top-end',
+        timerProgressBar: true
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Buscando información',
+      text: 'Consultando información del RUC en el SRI...',
+      allowOutsideClick: false,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.sriService.consultarRuc(ruc).subscribe({
+      next: (res) => {
+        Swal.close();
+        this.cargarDatosDesdeSri(res.data);
+        Swal.fire({
+          icon: 'success',
+          text: 'Datos del RUC cargados correctamente',
+          showConfirmButton: false,
+          timer: 4000,
+          toast: true,
+          position: 'top-end',
+          timerProgressBar: true
+        });
+      },
+      error: (err) => {
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          text: err.error.message || 'Error consultando el RUC',
+          showConfirmButton: false,
+          timer: 4000,
+          toast: true,
+          position: 'top-end',
+          timerProgressBar: true
+        });
+      }
+    });
+  }
+
+  // Cargar datos desde el SRI
+  cargarDatosDesdeSri(data: any): void {
+    if (!data || !Array.isArray(data) || data.length === 0) return;
 
     const contribuyente = data[0];
-
-    // ✅ Obtener nombre(s) de representantes legales de forma segura
     const representantesLegales = Array.isArray(contribuyente.representantesLegales)
       ? contribuyente.representantesLegales
         .map((r: any) => `${r.nombre} (${r.identificacion})`)
         .join(' - ')
       : '';
 
-    // ✅ Actualizar los valores del formulario con seguridad
-    this.EnterpriseForm.patchValue({
-      numeroRuc: contribuyente.numeroRuc || '',
+    this.enterpriseForm.patchValue({
       razonSocial: contribuyente.razonSocial || '',
       actividadEconomicaPrincipal: contribuyente.actividadEconomicaPrincipal || '',
       tipoContribuyente: contribuyente.tipoContribuyente || '',
@@ -133,190 +233,164 @@ export default class EnterpriseInformationComponent {
       obligadoLlevarContabilidad: contribuyente.obligadoLlevarContabilidad || '',
       agenteRetencion: contribuyente.agenteRetencion || '',
       contribuyenteEspecial: contribuyente.contribuyenteEspecial || '',
-      representantesLegales: representantesLegales,
+      representantesLegales: representantesLegales
     });
   }
 
-  compareFormValues(): boolean {
-    return JSON.stringify(this.EnterpriseForm.value) === JSON.stringify(this.initialFormValues);
+  // Actualizar información
+  onSubmitUpdate(): void {
+    if (this.enterpriseForm.invalid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario inválido',
+        text: 'Por favor complete todos los campos requeridos',
+        showConfirmButton: false,
+        timer: 4000,
+        toast: true,
+        position: 'top-end',
+        timerProgressBar: true
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: '¿Actualizar información?',
+      text: 'Se actualizará la información de la tienda',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, actualizar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.updateStoreInformation();
+      }
+    });
   }
 
-  getInformationStore() {
-    
-    this.storeService.getInformationStore().subscribe({
+  // Actualizar información de la tienda
+  updateStoreInformation(): void {
+    const formData = this.enterpriseForm.value;
+
+    this.storeService.updateInformationStore(this.store!.id, formData).subscribe({
       next: (res: any) => {
-        this.store = res;
-        this.id = res.id;
-        this.EnterpriseForm.patchValue({
-          numeroRuc: res.numeroRuc || '',
-          razonSocial: res.razonSocial || '',
-          actividadEconomicaPrincipal: res.actividadEconomicaPrincipal || '',
-          tipoContribuyente: res.tipoContribuyente || '',
-          regimen: res.regimen || '',
-          categoria: res.categoria || '',
-          obligadoLlevarContabilidad: res.obligadoLlevarContabilidad || '',
-          agenteRetencion: res.agenteRetencion || '',
-          contribuyenteEspecial: res.contribuyenteEspecial || '',
-          representantesLegales: res.representantesLegales || '',
-          email: res.email || '',
-          telefono: res.telefono || '',
-          address: res.address || ''
+        Swal.fire({
+          icon: 'success',
+          title: 'Información actualizada',
+          text: res.message || 'Actualización de información exitosa',
+          showConfirmButton: false,
+          timer: 4000,
+          toast: true,
+          position: 'top-end',
+          timerProgressBar: true
         });
+        this.initialFormValues = this.enterpriseForm.value;
+        this.isFormChanged = false;
+        this.canEdit = false;
+        this.enterpriseForm.disable();
+
+        // Actualizar la información local
+        this.store = { ...this.store!, ...formData };
       },
       error: (err) => {
         Swal.fire({
-          icon: "error",
-          title: `Error`,
-          text: `${err.error.message}`
+          icon: 'error',
+          text: err.error.message || 'Error actualizando información',
+          showConfirmButton: false,
+          timer: 4000,
+          toast: true,
+          position: 'top-end',
+          timerProgressBar: true
         });
       }
-    })
+    });
   }
 
-  onSubmitUpdate(): void {
-    if (this.canEdit) {
-      if (this.EnterpriseForm.valid) {
-        const formData = this.EnterpriseForm.value;
-        this.storeService.updateInformationStore(this.id, formData).subscribe({
-          next: (res: any) => {
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: `Actualización exitosa`,
-              text: `${res.message}`,
-              showConfirmButton: false,
-              timer: 2000
-            });
-
-            // Actualizar valores iniciales
-            this.initialFormValues = this.EnterpriseForm.value;
-            this.isFormChanged = false;
-            this.EnterpriseForm.disable(); // Deshabilitar el formulario después de la actualización
-            this.canEdit = false; // Deshabilitar el checkbox de edición
-            // this.toggleForm({ target: { checked: false } }); // Desmarcar el checkbox de edición
-          },
-          error: (err) => {
-            console.error('Error al actualizar la información de la empresa', err);
-            Swal.fire({
-              icon: "error",
-              title: `${err.statusText}`,
-              text: `${err.error.message}`
-            });
-          },
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: `Error`,
-          text: `El formulario es inválido o no se encuentra activo para actualizar`,
-        });
-      }
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: `Error`,
-        text: `El formulario no se encuentra activo para actualizar`,
-      });
-    }
-  }
-
-  onSubmit(): void {
-    if (this.EnterpriseForm.valid) {
-      const formData = this.EnterpriseForm.getRawValue();
-      this.storeService.addStore(formData).subscribe({
-        next: (res: any) => {
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: `Éxito`,
-            text: `${res.message}`,
-            showConfirmButton: false,
-            timer: 2000
-          });
-        },
-        error: (err) => {
-          console.error('Error al registrar la información de la empresa', err);
-          Swal.fire({
-            icon: "error",
-            title: `${err.statusText}`,
-            text: `${err.error.message}`
-          });
-        },
-      });
-    } else {
-      console.log('Formulario inválido', this.EnterpriseForm.errors);
-      Swal.fire({
-        icon: "error",
-        title: `Error`,
-        text: `El formulario es inválido`,
-      });
-    }
-  }
-
-
-  onFileChange(event: any) {
+  // Manejar cambio de archivo
+  onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      // Validar tipo de archivo
+      if (!file.type.startsWith('image/')) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Archivo inválido',
+          text: 'Solo se permiten imágenes',
+          showConfirmButton: false,
+          timer: 4000,
+          toast: true,
+          position: 'top-end',
+          timerProgressBar: true
+        });
+        return;
+      }
+
+      // Validar tamaño (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Archivo muy grande',
+          text: 'El tamaño máximo permitido es 5MB',
+          showConfirmButton: false,
+          timer: 4000,
+          toast: true,
+          position: 'top-end',
+          timerProgressBar: true
+        });
+        return;
+      }
+
       this.selectedFile = file;
-
-      // Vista previa de la imagen seleccionada
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.EnterpriseForm.patchValue({ logoURL: e.target.result });
-      };
-      reader.readAsDataURL(file);
+      this.uploadLogo();
     }
   }
 
-  uploadLogo() {
-    const enterpriseId = this.id;
-    if (this.selectedFile) {
-      this.isUploading = true;
-      this.uploadProgress = 0;
+  // Disparar input de archivo
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
 
-      this.storeService.uploadLogo(enterpriseId, this.selectedFile).subscribe({
-        next: (event: any) => {
-          if (event.type === HttpEventType.UploadProgress) {
-            // Calcular el progreso
-            this.uploadProgress = Math.round((100 * event.loaded) / (event.total || 1));
-          } else if (event.type === HttpEventType.Response) {
-            // La carga finalizó
-            this.isUploading = false;
-            this.EnterpriseForm.patchValue({ logoURL: event.body.logoURL });
-            alert('Logo subido correctamente.');
-          }
-        },
-        error: (err) => {
-          console.error('Error al subir el logo:', err);
+  // Subir logo
+  uploadLogo(): void {
+    if (!this.selectedFile || !this.store) return;
+
+    this.isUploading = true;
+    this.uploadProgress = 0;
+
+    this.storeService.uploadLogo(this.store.id, this.selectedFile).subscribe({
+      next: (event: any) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.uploadProgress = Math.round((100 * event.loaded) / (event.total || 1));
+        } else if (event.type === HttpEventType.Response) {
           this.isUploading = false;
+          this.store!.avatarUrl = event.body.logoURL;
           Swal.fire({
-            icon: "error",
-            title: `${err.statusText}`,
-            text: `${err.error.message}`
+            icon: 'success',
+            title: 'Logo actualizado',
+            text: 'El logo se ha subido correctamente',
+            showConfirmButton: false,
+            timer: 4000,
+            toast: true,
+            position: 'top-end',
+            timerProgressBar: true
           });
-        },
-      });
-    } else {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        text: `Por favor selecciona una imagen.`,
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }
-  }
-
-  toggleForm(event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    this.canEdit = isChecked;
-
-    if (this.canEdit) {
-      this.EnterpriseForm.enable();
-      this.alertsService.showInfo('Formulario habilitado para editar', 'Formulario habilitado');
-    } else {
-      this.EnterpriseForm.disable();
-    }
+        }
+      },
+      error: (err) => {
+        this.isUploading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al subir logo',
+          text: err.error?.message || 'El logo se no ha subido',
+          showConfirmButton: false,
+          timer: 4000,
+          toast: true,
+          position: 'top-end',
+          timerProgressBar: true
+        });
+      }
+    });
   }
 
 }

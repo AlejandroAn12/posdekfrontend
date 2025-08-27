@@ -14,7 +14,7 @@ import { HeaderComponent } from "../../../../../shared/features/header/header.co
 
 @Component({
   selector: 'app-view-suppliers',
-  imports: [CommonModule, ReactiveFormsModule, DataTablesModule, HeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, DataTablesModule],
   templateUrl: './view-suppliers.component.html',
   styleUrl: './view-suppliers.component.css'
 })
@@ -22,6 +22,8 @@ export default class ViewSuppliersComponent implements OnInit {
 
   titleComponent: string = 'Gestión de proveedores';
   subtitleComponent: string = 'Listado de proveedores registrados';
+
+  isLoading: boolean = false;
 
   //Renderizado
   @ViewChild(DataTableDirective, { static: false })
@@ -113,35 +115,40 @@ export default class ViewSuppliersComponent implements OnInit {
         { title: 'Ciudad', data: 'city', className: 'text-gray-500 text-sm' },
         { title: 'Fecha de registro', data: 'registration_date', className: 'text-gray-500 text-sm' },
         { title: 'Fecha de actualización', data: 'lastUpdated_date', className: 'text-gray-500 text-sm' },
-
         {
-          title: 'Habilitado',
+          title: 'Estado',
           data: 'status',
-          render: (data: any, type: any, row: any) => {
+          render: (data: any) => {
             return `
-              <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" ${data ? 'checked' : ''}>
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
           `;
           },
-          className: 'text-center text-sm text-gray-500' // Centrar la columna
+          className: 'text-center text-sm text-gray-500'
         },
         {
           title: 'Opciones',
           data: null,
           render: (data: any, type: any, row: any) => {
             return `
-          <div>
-
-                <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                    <div class="flex space-x-3">
+                      <button 
+                        class="btn-update flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square"></i>
                         Editar
-                </button>
+                      </button>
 
-                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                        <i class="fa-solid fa-trash mr-1"></i>
+                      <button 
+                        class="btn-delete flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash"></i>
                         Eliminar
-                </button>
-
-          </div>`;
+                      </button>
+                    </div>
+                  `;
           },
           className: 'action-column text-gray-500 text-sm'
         }
@@ -149,15 +156,13 @@ export default class ViewSuppliersComponent implements OnInit {
       rowCallback: (row: Node, data: any, index: number) => {
         // Cast row to HTMLElement to access querySelector
         const rowElement = row as HTMLElement;
-
-        //Metodo para actulizar el estado del producto
-        const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
-        if (checkbox) {
-          this.renderer.listen(checkbox, 'change', (event) => {
+        // Método para actualizar el estado del empleado con toggle
+        const toggle = rowElement.querySelector('input[type="checkbox"]') as HTMLInputElement;
+        if (toggle) {
+          this.renderer.listen(toggle, 'change', (event) => {
             this.onStatusChange(event, data);
           });
         }
-
         //Eliminar
         const btnDelete = rowElement.querySelector('.btn-delete') as HTMLInputElement;
         if (btnDelete) {
@@ -190,7 +195,7 @@ export default class ViewSuppliersComponent implements OnInit {
 
 
   editSupplier(supplierId: string) {
-    this.router.navigate(['/index/suppliers/form'], { queryParams: { form: 'update', id: supplierId } });
+    this.router.navigate(['/admin/suppliers/form'], { queryParams: { form: 'update', id: supplierId } });
   }
 
   //Metodo para eliminar un proveedor
@@ -216,12 +221,44 @@ export default class ViewSuppliersComponent implements OnInit {
 
   updateSupplierStatus(supplier: any): void {
     this.suppliersService.updateSupplierStatus(supplier.id, supplier.status).subscribe({
-      next: (response: any) => this.alertsService.showSuccess(response.message, ''),
-      error: (error) => this.alertsService.showError(error.error.message, error.statusText)
+      next: (resp: any) => {
+        if (resp) {
+          Swal.fire({
+            icon: "success",
+            text: 'Proveedor habilitado',
+            toast: true,
+            position: 'top',
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire({
+            icon: "warning",
+            text: 'Proveedor deshabilitado',
+            toast: true,
+            position: 'top',
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          });
+        }
+      },
+      error: (error) => {
+        Swal.fire({
+          icon: "error",
+          text: error.error.message || 'Error',
+          toast: true,
+          position: 'top',
+          timer: 4000,
+          timerProgressBar: true,
+          showConfirmButton: false
+        });
+      }
     });
   }
 
   btnFormSupplier() {
-    this.router.navigate(['index/suppliers/form']);
+    this.router.navigate(['admin/suppliers/form']);
   }
 }

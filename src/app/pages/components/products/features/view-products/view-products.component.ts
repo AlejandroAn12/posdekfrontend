@@ -18,7 +18,7 @@ import { ISupplier } from '../../../suppliers/interface/supplier.interface';
 
 @Component({
   selector: 'app-view-products',
-  imports: [CommonModule, ReactiveFormsModule, DataTablesModule, HeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, DataTablesModule],
   templateUrl: './view-products.component.html',
   styleUrl: './view-products.component.css'
 })
@@ -89,6 +89,15 @@ export default class ViewProductsComponent implements OnInit {
         });
       },
       scrollX: true,
+      scrollCollapse: true,
+      autoWidth: false,
+      // Ajusta columnas después de dibujar para evitar desbordes
+      drawCallback: () => {
+        // Si usas angular-datatables con DataTableDirective:
+        // this.dtElement.dtInstance.then((dt) => dt.columns.adjust());
+        // O si tienes jQuery disponible:
+        setTimeout(() => ($ as any)('.dataTable').DataTable().columns.adjust(), 0);
+      },
       language: {
         emptyTable: this.errorMessage || "No hay información disponible",
         loadingRecords: "Cargando datos...", // Este mensaje desaparece si `data` es vacío
@@ -132,24 +141,40 @@ export default class ViewProductsComponent implements OnInit {
         { title: 'Categoria', data: 'category.name', className: 'text-sm text-gray-500' },
         { title: 'Proveedor', data: 'supplier.company_name', className: 'text-sm text-gray-500' },
         {
-          title: 'Servicio', data: 'itsService',
-          render: (data: any, type: any, row: any) => {
+          title: 'Servicio',
+          data: 'itsService',
+          render: (data: any) => {
             return `
-                <input type="checkbox" class="service-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
-            `;
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="service-toggle sr-only peer" ${data ? 'checked' : ''}>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 
+                        peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer 
+                        dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white 
+                        after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
+                        after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all 
+                        dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
+                `;
           },
-          className: 'text-center text-sm text-gray-500' // Centrar la columna
-
+          className: 'text-sm text-gray-500'
         },
         {
-          title: 'Habilitado para venta',
+          title: 'Estado',
           data: 'status',
-          render: (data: any, type: any, row: any) => {
+          render: (data: any) => {
             return `
-                <input type="checkbox" class="status-toggle rounded cursor-pointer" ${data ? 'checked' : ''} />
-            `;
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="status-toggle sr-only peer" ${data ? 'checked' : ''}>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 
+                        peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer 
+                        dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white 
+                        after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
+                        after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all 
+                        dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
+                `;
           },
-          className: 'text-center text-gray-500 text-sm' // Centrar la columna
+          className: 'text-sm text-gray-500'
         },
         { title: 'Fecha de registro', data: 'createdAt', className: 'text-sm text-gray-500' },
         {
@@ -157,19 +182,22 @@ export default class ViewProductsComponent implements OnInit {
           data: null,
           render: (data: any, type: any, row: any) => {
             return `
-            <div>
-
-                   <button class="btn-update bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                    <div class="flex space-x-3">
+                      <button 
+                        class="btn-update flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-pen-to-square"></i>
                         Editar
-                </button>
+                      </button>
 
-                <button class="btn-delete bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                        <i class="fa-solid fa-trash mr-1"></i>
+                      <button 
+                        class="btn-delete flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-trash"></i>
                         Eliminar
-                </button>
-
-            </div>`;
+                      </button>
+                    </div>
+                  `;
           },
           className: 'action-column text-sm text-gray-500'
         }
@@ -178,19 +206,19 @@ export default class ViewProductsComponent implements OnInit {
         // Cast row to HTMLElement to access querySelector
         const rowElement = row as HTMLElement;
 
-        //Metodo para actulizar el estado del producto
-        const checkbox = rowElement.querySelector('.status-toggle') as HTMLInputElement;
-        if (checkbox) {
-          this.renderer.listen(checkbox, 'change', (event) => {
-            this.onStatusChange(event, data);
+        // Toggle de Servicio
+        const toggleService = rowElement.querySelector('.service-toggle') as HTMLInputElement;
+        if (toggleService) {
+          this.renderer.listen(toggleService, 'change', (event) => {
+            this.onItsServiceChange(event, data);
           });
         }
 
-        //Metodo para actualizar el estado del producto
-        const checkboxService = rowElement.querySelector('.service-toggle') as HTMLInputElement;
-        if (checkboxService) {
-          this.renderer.listen(checkboxService, 'change', (event) => {
-            this.onItsServiceChange(event, data);
+        // Toggle de Estado
+        const toggleStatus = rowElement.querySelector('.status-toggle') as HTMLInputElement;
+        if (toggleStatus) {
+          this.renderer.listen(toggleStatus, 'change', (event) => {
+            this.onStatusChange(event, data);
           });
         }
 
@@ -272,19 +300,24 @@ export default class ViewProductsComponent implements OnInit {
         this.productService.deletedProduct(id).subscribe({
           next: (res: any) => {
             swalWithBootstrapButtons.fire({
-              title: "Producto eliminado",
+              text: "Producto eliminado",
               icon: "success",
-              position: 'top-end'
+              toast: true,
+              timer: 4000,
+              timerProgressBar: true,
+              position: 'top'
             });
           },
           error: (err) => {
             Swal.fire({
               icon: 'error',
               title: 'Error al eliminar',
-              text: `${err.error.message}`,
-              position: 'top-end',
+              text: `${err.error.message}` || 'Error',
+              position: 'top',
               showConfirmButton: false,
-              timer: 5000
+              timer: 5000,
+              timerProgressBar: true,
+              toast: true
             })
           },
         });
@@ -294,8 +327,12 @@ export default class ViewProductsComponent implements OnInit {
         result.dismiss === Swal.DismissReason.cancel
       ) {
         swalWithBootstrapButtons.fire({
-          title: "Cancelado",
-          icon: "error"
+          text: "Acción cancelada",
+          icon: "error",
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          timer: 4000
         });
       }
     });
@@ -313,14 +350,29 @@ export default class ViewProductsComponent implements OnInit {
 
   updateProductStatus(product: any): void {
     this.productService.updateProductStatus(product.id, product.status).subscribe({
-      next: (response: any) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Estado actualizado',
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000
-        });
+      next: (res) => {
+        if (res) {
+          Swal.fire({
+            position: "top",
+            icon: "success",
+            title: 'Producto habilitado para venta',
+            showConfirmButton: false,
+            toast: true,
+            timerProgressBar: true,
+            timer: 4000
+          });
+        }
+        else {
+          Swal.fire({
+            position: "top",
+            icon: "warning",
+            title: 'Producto inhabilitado para venta',
+            showConfirmButton: false,
+            toast: true,
+            timerProgressBar: true,
+            timer: 4000
+          });
+        }
       },
       error: (err) => {
         Swal.fire({
@@ -344,14 +396,29 @@ export default class ViewProductsComponent implements OnInit {
 
   updateProductServices(product: any): void {
     this.productService.updateProductService(product.id, product.its_service).subscribe({
-      next: (response: any) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Estado de servicio actualizado',
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000
-        });
+      next: (res) => {
+        if (res) {
+          Swal.fire({
+            position: "top",
+            icon: "success",
+            title: 'Producto habilitado como servicio',
+            showConfirmButton: false,
+            toast: true,
+            timerProgressBar: true,
+            timer: 4000
+          });
+        }
+        else {
+          Swal.fire({
+            position: "top",
+            icon: "warning",
+            title: 'Porducto inhabilitado como servicio',
+            showConfirmButton: false,
+            toast: true,
+            timerProgressBar: true,
+            timer: 4000
+          });
+        }
       },
       error: (err) => {
 
@@ -377,7 +444,7 @@ export default class ViewProductsComponent implements OnInit {
   }
 
   editProduct(productId: string) {
-    this.router.navigate(['/index/products/form'], { queryParams: { form: 'update', id: productId } });
+    this.router.navigate(['/admin/products/form'], { queryParams: { form: 'update', id: productId } });
   }
 
   addProduct() {
@@ -431,10 +498,6 @@ export default class ViewProductsComponent implements OnInit {
     })
   }
 
-  downloadExcel() {
-    this.alertsService.showInfo('Metodo aun no implementado', 'Información')
-  }
-
   //Renderizado del datatables
   @ViewChild(DataTableDirective, { static: false })
   dtElement!: DataTableDirective;
@@ -458,6 +521,6 @@ export default class ViewProductsComponent implements OnInit {
   }
 
   routeToNewProduct() {
-    this.router.navigateByUrl('index/products/form');
+    this.router.navigateByUrl('admin/products/form');
   }
 }
