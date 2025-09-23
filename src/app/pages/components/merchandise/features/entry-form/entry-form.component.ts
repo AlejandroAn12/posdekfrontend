@@ -28,7 +28,16 @@ export default class IncomeFormComponent {
 
   constructor() {
     this.form = this.fb.group({
-      orderNumber: [''],
+      noFac: [
+        '',
+        {
+          validators: [
+            Validators.required,
+            Validators.pattern(/^\d{3}-\d{3}-\d{9}$/)
+          ],
+          updateOn: 'change'
+        }
+      ],
       supplier: [{ value: '', disabled: this.isDisabled }],
       orderDate: [{ value: '', disabled: this.isDisabled }],
       items: this.fb.array([])

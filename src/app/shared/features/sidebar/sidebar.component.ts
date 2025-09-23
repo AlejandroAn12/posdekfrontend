@@ -32,7 +32,8 @@ export class SidebarComponent implements OnInit {
   isSidebarCollapsed = false;
   activeIndex: number | null = null;
   isMobileView = false;
-  // Opciones del sidebar
+
+  // Menu del sidebar
   sidebarOptions: SidebarOption[] = [
     {
       title: 'Dashboard',
@@ -96,7 +97,7 @@ export class SidebarComponent implements OnInit {
       ]
     },
     {
-      title: 'Mercadería',
+      title: 'Ingreso mercadería',
       iconClass: 'fa-solid fa-dolly',
       route: '/admin/merchandise/entry',
     },
@@ -114,7 +115,7 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     this.checkDarkMode();
     this.checkScreenSize();
-    
+
     // Colapsar sidebar automáticamente en móviles
     if (this.isMobileView) {
       this.isSidebarCollapsed = true;
@@ -147,7 +148,7 @@ export class SidebarComponent implements OnInit {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
     // Notificar al servicio el cambio de estado
     this.sidebarStateService.setCollapsedState(this.isSidebarCollapsed);
-    
+
     // Cerrar submenús al colapsar
     if (this.isSidebarCollapsed) {
       this.activeIndex = null;
