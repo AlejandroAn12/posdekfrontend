@@ -1,18 +1,16 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { HeaderComponent } from '../../../../../shared/features/header/header.component';
 import { InvoicesService } from '../../data-access/invoices.service';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
-import { ModalComponent } from "../../../../../shared/features/components/modal/modal.component";
 
 @Component({
-  selector: 'app-view-invoices',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './view-invoices.component.html',
-  styleUrl: './view-invoices.component.css'
+  selector: 'app-invoices-pos',
+  imports: [ReactiveFormsModule, CommonModule],
+  templateUrl: './invoices-pos.component.html',
+  styleUrl: './invoices-pos.component.css'
 })
-export default class ViewInvoicesComponent {
+export default class InvoicesPosComponent {
   isDisabled: boolean = true;
 
   @Output() close = new EventEmitter<void>();
@@ -21,17 +19,22 @@ export default class ViewInvoicesComponent {
   private fb = inject(FormBuilder);
 
   filtroForm = this.fb.group({
-    invoiceType: [''],
     fromDate: [''],
     toDate: ['']
   });
 
   form = this.fb.group({
-    invoiceType: [{ value: '', disabled: this.isDisabled }],
+    customerDni: [{ value: '', disabled: this.isDisabled }],
+    totalAmount: [{ value: 0, disabled: this.isDisabled }],
+    subtotal: [{ value: 0, disabled: this.isDisabled }],
+    dscto: [{ value: 0, disabled: this.isDisabled }],
+    tax: [{ value: 0, disabled: this.isDisabled }],
+    amountGiven: [{ value: 0, disabled: this.isDisabled }],
+    change: [{ value: 0, disabled: this.isDisabled }],
     createdAt: [{ value: '', disabled: this.isDisabled }],
     noFac: [{ value: '', disabled: this.isDisabled }],
-    supplier: [{ value: '', disabled: this.isDisabled }],
-    details: this.fb.array([])
+    customerName: [{ value: '', disabled: this.isDisabled }],
+    items: this.fb.array([])
   });
 
   isLoading: boolean = false;
@@ -49,13 +52,12 @@ export default class ViewInvoicesComponent {
   isClosing: boolean = false;
 
   constructor() {
-    this.getInvoiceTypes();
+    // this.getInvoiceTypes();
     this.searchInvoices();
   }
 
   searchInvoices() {
     const filtros = {
-      invoiceType: this.filtroForm.value.invoiceType || undefined,
       fromDate: this.filtroForm.value.fromDate || undefined,
       toDate: this.filtroForm.value.toDate || undefined,
       page: this.paginaActual,
@@ -64,7 +66,7 @@ export default class ViewInvoicesComponent {
 
     this.isLoading = true;
 
-    this.invoiceService.getInvoices(filtros).subscribe({
+    this.invoiceService.getInvoicesBilling(filtros).subscribe({
       next: (res) => {
         this.invoices = res.data;
         this.totalRegistros = res.total;
@@ -88,61 +90,45 @@ export default class ViewInvoicesComponent {
     this.searchInvoices();
   }
 
-  getInvoiceTypes() {
-    this.invoiceService.getInvoiceTypes().subscribe({
-      next: (res: any) => {
-        this.invoiceTypes = res;
-      },
-      error: (err) => {
-        Swal.fire({
-          title: 'Error',
-          icon: 'error',
-          text: err.error.message
-        });
-      }
-    });
+  get items(): FormArray {
+    return this.form.get('items') as FormArray;
   }
 
-  get details(): FormArray {
-    return this.form.get('details') as FormArray;
-  }
-
-  createDetailGroup(detail: any): FormGroup {
-    const subtotal = (detail.quantity || 0) * (detail.purchasePrice || 0);
+  createDetailGroup(item: any): FormGroup {
     return this.fb.group({
-      product: [{ value: detail.product?.name || 'N/A', disabled: true }],
-      quantity: [{ value: detail.quantity || 0, disabled: true }],
-      purchasePrice: [{ value: detail.purchasePrice || 0, disabled: true }],
-      subtotal: [{ value: subtotal, disabled: true }],
+      product: [{ value: item.product?.name || 'N/A', disabled: true }],
+      quantity: [{ value: item.quantity || 0, disabled: true }],
+      price: [{ value: item.price || 0, disabled: true }],
+      subtotal: [{ value: item.subtotal, disabled: true }],
     });
   }
 
-  get totalGeneral(): number {
-    return this.details.controls.reduce((sum, group) => {
-      return sum + (group.get('subtotal')?.value || 0);
-    }, 0);
-  }
-
-  toggleModal(invoiceId: string | null = null) {
+  toggleModal(id: number | null = null) {
     this.showModal = !this.showModal;
     this.selectedInvoice = null;
 
-    if (invoiceId !== null) {
-      this.invoiceService.getInvoiceById(invoiceId).subscribe({
+    if (id !== null) {
+      this.invoiceService.getInvoiceBillingPosById(id).subscribe({
         next: (res: any) => {
-          this.titleModal = `DETALLE DE FACTURA - ${res.noFac || ''}`;
+          this.titleModal = `COMPROBANTE - ${res.noFac || ''}`;
           this.selectedInvoice = res;
 
           this.form.patchValue({
-            invoiceType: res.invoiceType?.name || '',
+            customerDni: res.customerDni || '',
             createdAt: res.createdAt ? new Date(res.createdAt).toLocaleDateString('es-ES') : '',
             noFac: res.noFac || '',
-            supplier: res.supplier?.company_name || ''
+            customerName: res.customerName || '',
+            totalAmount: res.totalAmount || 0,
+            subtotal: res.subtotal || 0,
+            tax: res.tax || 0,
+            amountGiven: res.amountGiven || 0,
+            change: res.amountGiven || 0,
+            dscto: res.dscto || 0
           });
 
-          this.details.clear();
-          res.details.forEach((detail: any) => {
-            this.details.push(this.createDetailGroup(detail));
+          this.items.clear();
+          res.items.forEach((item: any) => {
+            this.items.push(this.createDetailGroup(item));
           });
         },
         error: (err) => {
@@ -182,7 +168,7 @@ export default class ViewInvoicesComponent {
     const pages = [];
     const start = Math.max(1, this.paginaActual - 2);
     const end = Math.min(this.totalPaginas, start + 4);
-    
+
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
@@ -191,8 +177,8 @@ export default class ViewInvoicesComponent {
 
   getPageButtonClass(page: number): string {
     const baseClass = 'px-3 py-1 rounded-lg font-medium cursor-pointer transition-all duration-200';
-    return page === this.paginaActual 
-      ? `${baseClass} bg-blue-600 text-white shadow-md` 
+    return page === this.paginaActual
+      ? `${baseClass} bg-blue-600 text-white shadow-md`
       : `${baseClass} bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600`;
   }
 
@@ -201,7 +187,7 @@ export default class ViewInvoicesComponent {
     setTimeout(() => {
       this.showModal = false;
       this.isClosing = false;
-      this.details.clear();
+      this.items.clear();
       this.form.reset();
     }, 300);
   }

@@ -221,8 +221,6 @@ export default class FormProductComponent implements OnInit {
           this.router.navigate(['/admin/products/view']);
         },
         error: (err) => {
-          console.error(err.error.message);
-          // this.alertsService.showError(err.error.message, err.statusText);
           Swal.fire({
             icon: "error",
             text: err.error.message || 'Error al ingresar el producto',

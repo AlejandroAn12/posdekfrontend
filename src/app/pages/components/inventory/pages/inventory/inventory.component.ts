@@ -178,7 +178,6 @@ export default class InventoryComponent {
       ajax: (dataTablesParameters: any, callback: any) => {
         this.inventoryService.getAllInventoryGenerated().subscribe({
           next: (resp: any) => {
-            console.log(resp)
             callback({
               recordsTotal: resp.data?.length || 0,
               recordsFiltered: resp.data?.length || 0,

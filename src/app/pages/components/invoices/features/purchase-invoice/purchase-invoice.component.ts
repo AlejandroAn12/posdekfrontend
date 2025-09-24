@@ -8,12 +8,11 @@ import { SuppliersService } from '../../../suppliers/data-access/suppliers.servi
 
 @Component({
   selector: 'app-purchase-invoice',
-  imports: [HeaderComponent, ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './purchase-invoice.component.html',
   styleUrl: './purchase-invoice.component.css'
 })
 export default class PurchaseInvoiceComponent {
-
   titleComponent: string = 'Gestión de facturas'
   subtitleComponent: string = 'Ingresar factura de compra'
 
@@ -26,19 +25,16 @@ export default class PurchaseInvoiceComponent {
   selectedSupplierId: string = '';
   selectedProducts: any[] = [];
   products: any[] = [];
+  filteredProducts: any[] = [];
   orderItems: any[] = [];
   invoiceTypes: any[] = [];
-
-
+  searchTerm: string = '';
 
   constructor() {
     this.getInvoiceTypes();
     this.loadSuppliers();
     this.form = this.fb.group({
       supplierId: ['', [Validators.required]],
-      quantity: [1, [Validators.required, Validators.min(1)]],
-      purchasePrice: [0, [Validators.required]],
-      productId: ['', [Validators.required]],
       noFac: [
         '',
         {
@@ -49,9 +45,7 @@ export default class PurchaseInvoiceComponent {
           updateOn: 'change'
         }
       ],
-      // details: this.fb.array([]) // Inicializa el array de detalles
     });
-
   }
 
   loadSuppliers() {
@@ -68,11 +62,15 @@ export default class PurchaseInvoiceComponent {
   onSupplierChange(event: any): void {
     const supplierId = event.target.value;
     this.selectedSupplierId = supplierId;
-
-    // Limpia la lista de productos seleccionados y la tabla
+    this.searchTerm = '';
+    this.filteredProducts = [];
     this.selectedProducts = [];
 
-    // Carga los productos del proveedor seleccionado
+    // Actualizar el valor del formulario
+    this.form.patchValue({
+      supplierId: supplierId
+    });
+
     this.supplierService.getProductsBySupplier(supplierId).subscribe({
       next: (response) => {
         this.products = response;
@@ -83,33 +81,96 @@ export default class PurchaseInvoiceComponent {
     });
   }
 
-  addToTable(select: HTMLSelectElement) {
-    const selectedProductId = select.value;
-    const product = this.products.find(p => p.id === selectedProductId);
-    if (product && !this.selectedProducts.find(p => p.id === product.id)) {
+  onSearchChange(): void {
+    if (!this.searchTerm || !this.selectedSupplierId) {
+      this.filteredProducts = [];
+      return;
+    }
+
+    const term = this.searchTerm.toLowerCase().trim();
+    this.filteredProducts = this.products.filter(product =>
+      product.name.toLowerCase().includes(term) ||
+      product.barcode.toLowerCase().includes(term)
+    ).slice(0, 10);
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.filteredProducts = [];
+  }
+
+  addProductToTable(product: any): void {
+    if (!this.selectedProducts.find(p => p.id === product.id)) {
       this.selectedProducts.push({
         ...product,
         quantity: 1,
         purchasePrice: product.purchasePrice || 0
       });
-    }
-    select.value = '';
-  }
+      this.clearSearch();
 
-  onProductSelect(event: any): void {
-    const productId = event.target.value;
-    const selectedProduct = this.products.find(
-      (product) => product.id === productId
-    );
-
-    if (selectedProduct && !this.orderItems.find((item) => item.id === productId)) {
-      this.orderItems.push({
-        id: selectedProduct.id,
-        name: selectedProduct.name,
-        unitPrice: selectedProduct.purchasePrice,
-        quantity: 1,
+      // Limpiar cualquier error previo del formulario
+      this.form.setErrors(null);
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Producto ya agregado',
+        text: 'Este producto ya está en la lista',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top'
       });
     }
+  }
+
+  removeProduct(product: any): void {
+    this.selectedProducts = this.selectedProducts.filter(p => p.id !== product.id);
+  }
+
+  clearAllProducts(): void {
+    if (this.selectedProducts.length > 0) {
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Se eliminarán todos los productos de la lista",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, limpiar todo",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.selectedProducts = [];
+        }
+      });
+    }
+  }
+
+  increaseQuantity(product: any): void {
+    product.quantity++;
+    this.updateTotals();
+  }
+
+  decreaseQuantity(product: any): void {
+    if (product.quantity > 1) {
+      product.quantity--;
+      this.updateTotals();
+    }
+  }
+
+  updateTotals(): void {
+    this.selectedProducts = [...this.selectedProducts];
+  }
+
+  getTotalQuantity(): number {
+    return this.selectedProducts.reduce((total, product) => total + product.quantity, 0);
+  }
+
+  getTotalAmount(): number {
+    return this.selectedProducts.reduce((total, product) =>
+      total + (product.purchasePrice * product.quantity), 0
+    );
   }
 
   getInvoiceTypes() {
@@ -130,12 +191,27 @@ export default class PurchaseInvoiceComponent {
   }
 
   saveInvoice() {
-    // Validación general
+    // Validación básica del formulario
     if (this.form.invalid) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Completa todos los campos requeridos y agrega al menos un producto.',
+        text: 'Completa todos los campos requeridos.',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top'
+      });
+      return;
+    }
+
+    // Validar que haya productos seleccionados
+    if (this.selectedProducts.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Debes agregar al menos un producto a la factura.',
         timer: 3000,
         timerProgressBar: true,
         showConfirmButton: false,
@@ -146,7 +222,10 @@ export default class PurchaseInvoiceComponent {
     }
 
     // Validar que todos los productos tengan cantidad y precio válidos
-    const invalidProducts = this.selectedProducts.filter(p => !p.quantity || !p.purchasePrice);
+    const invalidProducts = this.selectedProducts.filter(p =>
+      !p.quantity || p.quantity < 1 || !p.purchasePrice || p.purchasePrice <= 0
+    );
+
     if (invalidProducts.length > 0) {
       Swal.fire({
         icon: 'error',
@@ -161,19 +240,30 @@ export default class PurchaseInvoiceComponent {
 
     const formValues = this.form.getRawValue();
 
+    // Crear el payload correctamente con los IDs de producto
     const invoicePayload = {
       noFac: formValues.noFac,
       supplierId: formValues.supplierId,
       details: this.selectedProducts.map((product) => ({
-        productId: product.id,
+        productId: product.id, // ← Aquí está el ID correcto del producto
         quantity: product.quantity,
         purchasePrice: product.purchasePrice,
       })),
     };
 
+
     Swal.fire({
       title: "¿Estás listo para continuar?",
-      text: "Estás a punto de guardar una factura. ¿Deseas continuar con esta acción?",
+      html: `
+        <div class="text-left">
+          <p>Estás a punto de guardar una factura con:</p>
+          <ul class="mt-2 space-y-1">
+            <li>• ${this.selectedProducts.length} productos</li>
+            <li>• ${this.getTotalQuantity()} unidades totales</li>
+            <li>• Total: $${this.getTotalAmount().toFixed(2)}</li>
+          </ul>
+        </div>
+      `,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -186,17 +276,25 @@ export default class PurchaseInvoiceComponent {
           next: () => {
             Swal.fire({
               icon: 'success',
-              text: 'Factura guardada correctamente',
-              timer: 3000,
+              title: '¡Factura guardada!',
+              html: `
+                <div class="text-center">
+                  <p>Factura guardada correctamente</p>
+                  <div class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p class="text-sm">Total: <strong>$${this.getTotalAmount().toFixed(2)}</strong></p>
+                  </div>
+                </div>
+              `,
+              timer: 4000,
               timerProgressBar: true,
               showConfirmButton: false,
-              toast: true,
-              position: 'top'
+              toast: false,
+              position: 'center'
             });
-            this.form.reset();
-            this.selectedProducts = [];
+            this.resetForm();
           },
           error: (err) => {
+            console.error('Error al guardar factura:', err);
             Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -211,11 +309,16 @@ export default class PurchaseInvoiceComponent {
         });
       }
     });
-
-
   }
 
-
+  resetForm(): void {
+    this.form.reset();
+    this.selectedProducts = [];
+    this.selectedSupplierId = '';
+    this.searchTerm = '';
+    this.filteredProducts = [];
+    this.products = [];
+  }
 
   get f() {
     return this.form.controls;

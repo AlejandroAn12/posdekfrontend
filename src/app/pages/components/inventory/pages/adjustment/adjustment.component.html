@@ -1,27 +1,31 @@
 <!-- <app-header [title]="titleComponent" [subtitle]="subtitleComponent"></app-header> -->
 
 <div class="bg-white dark:bg-gray-900 min-h-screen py-6 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md mx-auto">
-    <!-- Encabezado de sección -->
-    <div class="mb-8 text-center">
-      <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Ajuste de Inventario</h1>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Complete la información requerida para realizar el ajuste de stock</p>
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 md:mb-8">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+        Ajuste de Inventario
+      </h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Complete la información requerida para realizar el ajuste
+        de stock</p>
     </div>
-
+  </div>
+  <div class="max-w-md mx-auto">
     <!-- Información adicional -->
-        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mt-6 mb-2">
-          <div class="flex items-start">
-            <div class="flex-shrink-0">
-              <i class="fa-solid fa-circle-info text-gray-400 mt-1"></i>
-            </div>
-            <div class="ml-3">
-              <h4 class="text-sm text-gray-700 font-semibold dark:text-gray-300">Información importante</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Los ajustes de stock registran cambios en el stock y requieren autorización según los permisos del sistema.
-              </p>
-            </div>
-          </div>
+    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mt-6 mb-2">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <i class="fa-solid fa-circle-info text-gray-400 mt-1"></i>
         </div>
+        <div class="ml-3">
+          <h4 class="text-sm text-gray-700 font-semibold dark:text-gray-300">Información importante</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            Los ajustes de stock registran cambios en el stock y requieren autorización según los permisos del sistema.
+          </p>
+        </div>
+      </div>
+    </div>
 
     <!-- Tarjeta del formulario -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
@@ -32,15 +36,11 @@
             Motivo de ajuste *
           </label>
           <div class="relative">
-            <select
-              formControlName="movementTypeId"
-              id="movementTypeId"
-              [ngClass]="{
+            <select formControlName="movementTypeId" id="movementTypeId" [ngClass]="{
                 'border-red-500': f['movementTypeId'].invalid && f['movementTypeId'].touched,
                 'border-green-500': f['movementTypeId'].valid && f['movementTypeId'].touched
               }"
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg appearance-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500"
-            >
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg appearance-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500">
               <option value="" disabled selected>Seleccione un motivo para el ajuste</option>
               <option *ngIf="movementTypes.length < 1" value="" disabled>
                 No hay motivos de ajustes disponibles
@@ -49,11 +49,13 @@
                 {{ type.name }}
               </option>
             </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
               <i class="fa-solid fa-chevron-down text-sm"></i>
             </div>
           </div>
-          <div *ngIf="f['movementTypeId'].invalid && f['movementTypeId'].touched" class="text-red-500 text-sm flex items-center mt-1">
+          <div *ngIf="f['movementTypeId'].invalid && f['movementTypeId'].touched"
+            class="text-red-500 text-sm flex items-center mt-1">
             <i class="fa-solid fa-circle-exclamation mr-1"></i>
             Debe seleccionar un motivo para el ajuste
           </div>
@@ -65,24 +67,14 @@
             Código de barras *
           </label>
           <div class="relative">
-            <input
-              type="text"
-              formControlName="barcode"
-              id="barcode"
-              [ngClass]="{
+            <input type="text" formControlName="barcode" id="barcode" [ngClass]="{
                 'border-red-500': f['barcode'].invalid && f['barcode'].touched,
                 'border-green-500': f['barcode'].valid && f['barcode'].touched
-              }"
-              placeholder="7861042548041"
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500"
-            />
+              }" placeholder="7861042548041"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
             <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-              <button 
-                type="button" 
-                (click)="scanBarcode()"
-                class="text-gray-400 hover:text-blue-500 transition-colors"
-                title="Escanear código de barras"
-              >
+              <button type="button" (click)="scanBarcode()" class="text-gray-400 hover:text-blue-500 transition-colors"
+                title="Escanear código de barras">
                 <i class="fa-solid fa-camera text-lg"></i>
               </button>
             </div>
@@ -99,28 +91,22 @@
             Cantidad *
           </label>
           <div class="relative">
-            <input
-              type="number"
-              formControlName="quantity"
-              id="quantity"
-              min="0"
-              step="1"
-              [ngClass]="{
+            <input type="number" formControlName="quantity" id="quantity" min="0" step="1" [ngClass]="{
                 'border-red-500': f['quantity'].invalid && f['quantity'].touched,
                 'border-green-500': f['quantity'].valid && f['quantity'].touched
-              }"
-              placeholder="0"
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500"
-            />
+              }" placeholder="0"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
           </div>
-          <div *ngIf="f['quantity'].invalid && f['quantity'].touched" class="text-red-500 text-sm flex items-center mt-1">
+          <div *ngIf="f['quantity'].invalid && f['quantity'].touched"
+            class="text-red-500 text-sm flex items-center mt-1">
             <i class="fa-solid fa-circle-exclamation mr-1"></i>
             Este campo es obligatorio
           </div>
         </div>
 
         <!-- Información del producto (se muestra cuando se encuentra un producto) -->
-        <div *ngIf="productInfo" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        <div *ngIf="productInfo"
+          class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <div class="flex items-center justify-between">
             <div>
               <h4 class="text-sm font-medium text-blue-800 dark:text-blue-300">Producto encontrado</h4>
@@ -135,16 +121,11 @@
 
         <!-- Botón de envío -->
         <div class="pt-4">
-          <button
-            type="submit"
-            (click)="OnSubmit()"
-            [disabled]="form.invalid || isSubmitting"
-            [ngClass]="{
+          <button type="submit" (click)="OnSubmit()" [disabled]="form.invalid || isSubmitting" [ngClass]="{
               'opacity-70 cursor-not-allowed': form.invalid || isSubmitting,
               'hover:bg-blue-700 cursor-pointer': form.valid && !isSubmitting
             }"
-            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg focus:ring-4 focus:ring-blue-300 transition-colors duration-200"
-          >
+            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg focus:ring-4 focus:ring-blue-300 transition-colors duration-200">
             <i class="fa-solid" [ngClass]="{'fa-floppy-disk': !isSubmitting, 'fa-spinner fa-spin': isSubmitting}"></i>
             {{ isSubmitting ? 'Procesando...' : 'Ajustar stock' }}
           </button>

@@ -12,7 +12,7 @@ import { InventoryService } from '../../../merchandise/data-access/inventory.ser
 
 @Component({
   selector: 'app-history-inventory',
-  imports: [CommonModule, FormsModule, DataTablesModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, DataTablesModule],
   templateUrl: './history-inventory.component.html',
   styleUrl: './history-inventory.component.css'
 })
@@ -27,8 +27,8 @@ export default class HistoryInventoryComponent implements OnInit {
   private inventoryReportService = inject(InventoryReportService);
   private renderer = inject(Renderer2);
 
-  titleComponent : string = 'Gestión de inventarios';
-  subtitleComponent : string = 'Historial de inventarios';
+  titleComponent: string = 'Gestión de inventarios';
+  subtitleComponent: string = 'Historial de inventarios';
 
   dtOptions: Config = {};
 
@@ -85,18 +85,22 @@ export default class HistoryInventoryComponent implements OnInit {
           data: null,
           render: (data: any, type: any, row: any) => {
             return `
-            <div>
-                  <button class="btn-print bg-red-500 hover:bg-red-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                          <i class="fa-solid fa-print mr-1"></i>
-                          Imprimir
-                  </button>
+            <div class="flex space-x-3">
+                      <button 
+                        class="btn-print flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-print"></i>
+                        Imprimir
+                      </button>
 
-                  <button class="btn-download bg-blue-500 hover:bg-blue-600 text-white pl-2 pr-2 font-semibold text-sm rounded-md pt-1 pb-1" data-order-id="${row.id}">
-                          <i class="fa-solid fa-download mr-1"></i>
-                          Descargar
-                  </button>
-
-            </div>`;
+                      <button 
+                        class="btn-download flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium" 
+                        data-order-id="${row.id}">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        Descargar
+                      </button>
+                    </div>
+           `;
           },
           className: 'action-column text-gray-500 text-sm'
         }
@@ -143,83 +147,86 @@ export default class HistoryInventoryComponent implements OnInit {
   }
 
   downloadPdf(id: string) {
-      const date = Date.now();
-      this.inventoryReportService.downloadInventoryFinishedReportPDF(id).subscribe({
-        next: (blob: Blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `${date}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        },
-        error: (err) => {
-          Swal.fire({
-            title: 'Error',
-            text: err.error.message || 'Error al descargar el PDF',
-            icon: 'error'
-          });
-        }
-      })
-    }
-  
-    printPDF(id: string) {
-      this.inventoryReportService.printInventoryFinishedPDF(id).subscribe({
-        next: (blob: Blob) => {
-          const blobUrl = URL.createObjectURL(blob);
-          const newWindow = window.open(blobUrl, '_blank');
-  
-          if (newWindow) {
-            newWindow.onload = () => {
-              newWindow.print(); // Abre la ventana de impresión automáticamente
-            };
-          } else {
-            Swal.fire({
-              title: 'Error',
-              text: 'No se pudo abrir la nueva ventana para imprimir.',
-              icon: 'error'
-            });
-          }
-        },
-        error: (err) => {
-          Swal.fire({
-            title: 'Error',
-            text: err.error.message || 'Error al generar el PDF',
-            icon: 'error'
-          });
-        }
-      })
-    }
+    const date = Date.now();
+    this.inventoryReportService.downloadInventoryFinishedReportPDF(id).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${date}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Error',
+          text: err.error.message || 'Error al descargar el PDF',
+          icon: 'error'
+        });
+      }
+    })
+  }
 
-    printAllPDF() {
-      this.inventoryReportService.getAllInventoriesReportPdf().subscribe({
-        next: (blob: Blob) => {
-          const blobUrl = URL.createObjectURL(blob);
-          const newWindow = window.open(blobUrl, '_blank');
-  
-          if (newWindow) {
-            newWindow.onload = () => {
-              newWindow.print(); // Abre la ventana de impresión automáticamente
-            };
-          } else {
-            Swal.fire({
-              title: 'Error',
-              text: 'No se pudo abrir la nueva ventana para imprimir.',
-              icon: 'error'
-            });
-          }
-        },
-        error: (err) => {
+  printPDF(id: string) {
+    this.inventoryReportService.printInventoryFinishedPDF(id).subscribe({
+      next: (blob: Blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        const newWindow = window.open(blobUrl, '_blank');
+
+        if (newWindow) {
+          newWindow.onload = () => {
+            newWindow.print(); // Abre la ventana de impresión automáticamente
+          };
+        } else {
           Swal.fire({
             title: 'Error',
-            text: err.error.message || 'Error al generar el PDF',
+            text: 'No se pudo abrir la nueva ventana para imprimir.',
+            icon: 'error',
+            toast: true,
+            position: 'top-end',
+            timer: 4000
+          });
+        }
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Error',
+          text: err.error.message || 'Error al generar el PDF',
+          icon: 'error'
+        });
+      }
+    })
+  }
+
+  printAllPDF() {
+    this.inventoryReportService.getAllInventoriesReportPdf().subscribe({
+      next: (blob: Blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        const newWindow = window.open(blobUrl, '_blank');
+
+        if (newWindow) {
+          newWindow.onload = () => {
+            newWindow.print(); // Abre la ventana de impresión automáticamente
+          };
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo abrir la nueva ventana para imprimir.',
             icon: 'error'
           });
         }
-      })
-    }
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Error',
+          text: err.error.message || 'Error al generar el PDF',
+          icon: 'error'
+        });
+      }
+    })
+  }
 
 
   downloadExcel() {

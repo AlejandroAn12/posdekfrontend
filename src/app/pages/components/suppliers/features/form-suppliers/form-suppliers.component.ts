@@ -77,7 +77,6 @@ export default class FormSuppliersComponent {
   loadSupplierData(id: string) {
     this.supplierService.getSupplierId(id).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.form.patchValue({
           typeofdocumentId: response.supplier.typeofdocumentId?.id ?? response.supplier.typeofdocumentId, // Asegúrate de asignar solo el ID
           ruc: response.supplier.ruc,

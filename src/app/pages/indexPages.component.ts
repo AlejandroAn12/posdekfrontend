@@ -114,8 +114,5 @@ export default class IndexPagesComponent implements OnInit {
   // Mostrar feedback del cambio de tema
   private showThemeChangeFeedback(): void {
     const theme = this.isDarkMode ? 'oscuro' : 'claro';
-    console.log(`Modo ${theme} activado`);
-    
-    // Podrías agregar aquí una notificación toast si lo deseas
   }
 }

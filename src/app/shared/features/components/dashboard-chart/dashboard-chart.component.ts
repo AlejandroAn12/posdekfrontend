@@ -62,7 +62,6 @@ export class DashboardChartComponent implements OnInit {
 
     this.dashboardService.getSalesRange(startStr, endStr).subscribe({
       next: (sales: any[]) => {
-        console.log('ventas', sales);
 
         // Ordenar por fecha
         sales.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());

@@ -23,7 +23,7 @@ interface AdjustmentPayload {
 
 @Component({
   selector: 'app-adjustment',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './adjustment.component.html',
   styleUrl: './adjustment.component.css'
 })

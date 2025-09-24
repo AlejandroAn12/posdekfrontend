@@ -93,9 +93,6 @@ export default class ViewProductsComponent implements OnInit {
       autoWidth: false,
       // Ajusta columnas después de dibujar para evitar desbordes
       drawCallback: () => {
-        // Si usas angular-datatables con DataTableDirective:
-        // this.dtElement.dtInstance.then((dt) => dt.columns.adjust());
-        // O si tienes jQuery disponible:
         setTimeout(() => ($ as any)('.dataTable').DataTable().columns.adjust(), 0);
       },
       language: {
@@ -176,7 +173,7 @@ export default class ViewProductsComponent implements OnInit {
           },
           className: 'text-sm text-gray-500'
         },
-        { title: 'Fecha de registro', data: 'createdAt', className: 'text-sm text-gray-500' },
+        { title: 'Fecha de ingreso', data: 'createdAt', className: 'text-sm text-gray-500' },
         {
           title: 'Acciones',
           data: null,
@@ -497,6 +494,34 @@ export default class ViewProductsComponent implements OnInit {
       }
     })
   }
+
+  printAllPDF() {
+        this.reportProductsPdf.downloadAllProductReportPdf().subscribe({
+          next: (blob: Blob) => {
+            const blobUrl = URL.createObjectURL(blob);
+            const newWindow = window.open(blobUrl, '_blank');
+    
+            if (newWindow) {
+              newWindow.onload = () => {
+                newWindow.print(); // Abre la ventana de impresión automáticamente
+              };
+            } else {
+              Swal.fire({
+                title: 'Error',
+                text: 'No se pudo abrir la nueva ventana para imprimir.',
+                icon: 'error'
+              });
+            }
+          },
+          error: (err) => {
+            Swal.fire({
+              title: 'Error',
+              text: err.error.message || 'Error al generar el PDF',
+              icon: 'error'
+            });
+          }
+        })
+      }
 
   //Renderizado del datatables
   @ViewChild(DataTableDirective, { static: false })

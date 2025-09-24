@@ -49,10 +49,6 @@ export default [
         loadChildren: () => import('./components/orders/orders.routes')
       },
       {
-        path: 'merchandise',
-        loadChildren: () => import('./components/merchandise/merchandise.routes')
-      },
-      {
         path: 'inventory',
         loadChildren: () => import('./components/inventory/inventory.routes')
       },
@@ -69,6 +65,10 @@ export default [
         redirectTo: 'dashboard', // Redirigir a 'user' por defecto
         pathMatch: 'full',
       },
+      // {
+      //   path: 'merchandise',
+      //   loadChildren: () => import('./components/merchandise/merchandise.routes')
+      // },
     ],
   },
 ] as Routes;

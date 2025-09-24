@@ -9,5 +9,9 @@ export default [
     {
         path: 'purchase-invoice',
         loadComponent: () => import('./features/purchase-invoice/purchase-invoice.component')
+    },
+    {
+        path: 'sales',
+        loadComponent: () => import('./features/invoices-pos/invoices-pos.component')
     }
 ] as Routes;

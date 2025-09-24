@@ -1,30 +1,33 @@
-<app-header
-  [title]="titleComponent"
-  [subtitle]="subtitleComponent"
-></app-header>
+<div class="bg-white dark:bg-gray-900 min-h-screen p-4 md:p-6">
+  <!-- Header con acciones -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 md:mb-8">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Gestión de Inventarios</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Historial de inventarios realizados en el sistema
+      </p>
+    </div>
 
-<!-- Body -->
-<div class="flex flex-col p-5 bg-white dark:bg-gray-800">
-  <div class="flex justify-end mb-10">
-    <!-- <button
-      (click)="downloadExcel()"
-      class="bg-green-500 text-white text-sm font-semibold rounded-sm p-2 w-auto hover:bg-green-600 mr-2"
-    >
-      <i class="fa-solid fa-file-excel"></i> Descargar Excel
-    </button> -->
-    <button
-    (click)="printAllPDF()"
-      class="bg-red-600 text-white text-sm font-semibold rounded-md p-2 w-auto hover:bg-red-700"
-    >
-      <i class="fa-solid fa-download"></i> Descargar reporte PDF
-    </button>
+    <div class="flex flex-col sm:flex-row gap-3">
+
+      <!-- Botón de descargar reporte -->
+      <button (click)="printAllPDF()"
+        class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 transition-colors duration-200 shadow-md">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        Descargar reporte
+      </button>
+    </div>
   </div>
 
-   <table
-      datatable
-      [dtOptions]="dtOptions"
-      [dtTrigger]="dtTrigger"
-      class="row-border hover whitespace-nowrap min-w-full dark:text-white dark:bg-gray-800"
-    ></table>
+  <!-- Separador visual -->
+  <div class="border-b border-gray-200 dark:border-gray-700 mb-6"></div>
+
+  <div class="flex flex-col items-center bg-white dark:bg-gray-900">
+    <!-- Tabla de datos -->
+    <div class="bg-white justify-center dark:bg-gray-800 p-4">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+        class="dataTable stripe hover row-border w-full text-sm text-gray-600" #dataTable>
+      </table>
+    </div>
+  </div>
 </div>
 <!-- Final del body -->

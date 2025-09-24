@@ -96,11 +96,11 @@ export class SidebarComponent implements OnInit {
         { title: 'Comprobantes de venta', iconClass: 'fa-solid fa-receipt', route: '/admin/invoices/sales' },
       ]
     },
-    {
-      title: 'Ingreso mercadería',
-      iconClass: 'fa-solid fa-dolly',
-      route: '/admin/merchandise/entry',
-    },
+    // {
+    //   title: 'Ingreso mercadería',
+    //   iconClass: 'fa-solid fa-dolly',
+    //   route: '/admin/merchandise/entry',
+    // },
     {
       title: 'Configuraciones',
       iconClass: 'fa-solid fa-gears',
