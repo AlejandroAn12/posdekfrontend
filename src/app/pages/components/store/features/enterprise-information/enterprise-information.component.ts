@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
-import { SriService } from '../../../../../core/services/services.sri.service';
+import { FakpiService } from '../../../../../core/services/fakpi.service';
 
 // Interfaces
 interface Store {
@@ -33,7 +33,7 @@ interface Store {
 export default class EnterpriseInformationComponent {
   // Inyecciones de servicios
   private storeService = inject(StoreService);
-  private sriService = inject(SriService);
+  private fakpiService = inject(FakpiService);
   private fb = inject(FormBuilder);
 
   // Referencias del template
@@ -184,7 +184,7 @@ export default class EnterpriseInformationComponent {
       }
     });
 
-    this.sriService.consultarRuc(ruc).subscribe({
+    this.fakpiService.serviceRuc(ruc).subscribe({
       next: (res) => {
         Swal.close();
         this.cargarDatosDesdeSri(res.data);
