@@ -2,10 +2,11 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor, serverInterceptor } from './core/interceptors/auth.interceptor';
+import { ErrorInterceptor } from './core/interceptors/errors.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideToastr(),
     provideAnimations(),
-    provideHttpClient(withInterceptors([authInterceptor, serverInterceptor]))],
+      provideHttpClient(withInterceptors([authInterceptor, serverInterceptor])),
+      { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    ],
 };
