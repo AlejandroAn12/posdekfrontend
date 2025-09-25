@@ -49,8 +49,8 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
                 });
               })
             ).subscribe({
-              next: () => {},
-              error: () => {}
+              next: () => { },
+              error: () => { }
             });
           });
         }
@@ -65,7 +65,6 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
         },
       });
     } catch (err) {
-      console.error('Error al decodificar token', err);
       authState.logOut();
       router.navigate(['/auth/login']);
       return throwError(() => new Error('Token inválido'));
@@ -75,15 +74,14 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
   // Manejo de errores de respuesta
   return next(request).pipe(
     catchError((err: HttpErrorResponse) => {
-      console.error('Error en la solicitud:', err);
-      if(err.status === 500){
+      if (err.status === 500) {
         Swal.fire({
           icon: 'error',
           title: 'Error del servidor',
           text: 'Por el momento no se puede cargar la información, por favor inténtalo de nuevo más tarde.',
         });
       }
-      
+
       // Si la respuesta es 401 o 403 y no se está manejando una sesión expirada
       if ((err.status === 401 || err.status === 403) && !isHandlingSessionExpired) {
         isHandlingSessionExpired = true;
