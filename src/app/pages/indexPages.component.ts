@@ -15,11 +15,11 @@ import { Subscription } from 'rxjs';
     trigger('slideInOut', [
       transition(':enter', [
         style({ transform: 'translateX(-100%)', opacity: 0 }),
-        animate('300ms ease-in-out', 
+        animate('300ms ease-in-out',
           style({ transform: 'translateX(0)', opacity: 1 }))
       ]),
       transition(':leave', [
-        animate('300ms ease-in-out', 
+        animate('300ms ease-in-out',
           style({ transform: 'translateX(-100%)', opacity: 0 }))
       ])
     ])
@@ -28,14 +28,14 @@ import { Subscription } from 'rxjs';
   styleUrls: []
 })
 export default class IndexPagesComponent implements OnInit {
-   // Servicios
+  // Servicios
   private themeService = inject(ThemeService);
   private sidebarStateService = inject(SidebarStateService);
 
   // Estados del componente
   isSidebarVisible = true;
   isSidebarCollapsed = false;
-  isDarkMode = false;
+  isDarkMode: boolean = false;
   isMobileView = false;
   today: Date = new Date();
 
@@ -45,30 +45,44 @@ export default class IndexPagesComponent implements OnInit {
   // Intervalo para actualizar la hora
   private timeInterval: any;
 
+  constructor() {
+    this.themeService.isDarkMode$.subscribe((isDark) => {
+      this.isDarkMode = isDark;
+    });
+  }
+
   ngOnInit(): void {
-    this.checkDarkMode();
+    this.themeService.isDarkMode$.subscribe((isDark) => {
+      this.isDarkMode = isDark;
+    });
+
     this.checkScreenSize();
     this.startTimeUpdate();
-    
-    // Suscribirse a los cambios del estado del sidebar
+
     this.sidebarSubscription = this.sidebarStateService.isCollapsed$.subscribe(
-      isCollapsed => {
-        this.isSidebarCollapsed = isCollapsed;
-      }
+      isCollapsed => this.isSidebarCollapsed = isCollapsed
     );
-    
-    // En móviles, empezar con el sidebar oculto
-    if (this.isMobileView) {
-      this.isSidebarVisible = false;
-    }
+
+    if (this.isMobileView) this.isSidebarVisible = false;
   }
+
+  // Actualizar la hora cada minuto
+  private startTimeUpdate(): void {
+    const update = () => {
+      this.today = new Date();
+      const msToNextMinute = 60000 - (this.today.getSeconds() * 1000 + this.today.getMilliseconds());
+      this.timeInterval = setTimeout(update, msToNextMinute);
+    };
+    update();
+  }
+
 
   ngOnDestroy(): void {
     // Limpiar intervalo al destruir el componente
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
     }
-    
+
     // Cancelar suscripción
     if (this.sidebarSubscription) {
       this.sidebarSubscription.unsubscribe();
@@ -81,8 +95,8 @@ export default class IndexPagesComponent implements OnInit {
   }
 
   // Verificar el modo oscuro actual
-  private checkDarkMode(): void {
-    this.isDarkMode = document.documentElement.classList.contains('dark');
+  toggleTheme(): void {
+    this.themeService.toggleDarkMode();
   }
 
   // Verificar el tamaño de la pantalla
@@ -95,24 +109,4 @@ export default class IndexPagesComponent implements OnInit {
     return this.isMobileView;
   }
 
-  // Actualizar la hora cada minuto
-  private startTimeUpdate(): void {
-    this.timeInterval = setInterval(() => {
-      this.today = new Date();
-    }, 60000); // Actualizar cada minuto
-  }
-
-  // Alternar tema claro/oscuro
-  toggleTheme(): void {
-    this.themeService.toggleDarkMode();
-    this.isDarkMode = !this.isDarkMode;
-    
-    // Mostrar feedback visual del cambio
-    this.showThemeChangeFeedback();
-  }
-
-  // Mostrar feedback del cambio de tema
-  private showThemeChangeFeedback(): void {
-    const theme = this.isDarkMode ? 'oscuro' : 'claro';
-  }
 }

@@ -7,6 +7,11 @@ export default [
             import('./features/view-products/view-products.component'),
     },
     {
+        path:'list',
+        loadComponent: () => 
+            import('./features/products-list/products-list.component')
+    },
+    {
         path: 'form',
         loadComponent: () => import('./features/form-product/form-product.component'),
     },

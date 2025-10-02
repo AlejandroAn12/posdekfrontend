@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ProductsService } from '../../data-access/products.service';
+import { ProductsService } from '../../services/products.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormGroup, FormControl, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
@@ -13,7 +13,7 @@ import { MovementTypeService } from '../../../../../core/services/movement-type.
 
 @Component({
   selector: 'app-movements-products',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './movements-products.component.html',
   styleUrl: './movements-products.component.css'
 })
@@ -21,7 +21,7 @@ import { MovementTypeService } from '../../../../../core/services/movement-type.
 export default class MovementsProductsComponent {
 
   titleComponent = 'Gestión de productos';
-  subtitleComponent = 'Movimientos de productos';
+  subtitleComponent = 'Historial de moviemientos de productos.';
 
   productService = inject(ProductsService);
   movementTypeService = inject(MovementTypeService);
@@ -42,12 +42,12 @@ export default class MovementsProductsComponent {
   limitePorPagina = 10;
   totalPaginas = 1;
 
-  constructor(){
+  constructor() {
     this.getAllMovementTypes();
-    this.buscarMovimientos();
+    this.searchMovements();
   }
 
-  buscarMovimientos() {
+  searchMovements() {
     const filtros = {
       product: this.filtroForm.value.product || undefined,
       movementType: this.filtroForm.value.movementType || undefined,
@@ -76,36 +76,72 @@ export default class MovementsProductsComponent {
     })
   }
 
+  getLastMovementIndex(): number {
+    if (!this.movimientos || this.movimientos.length === 0) {
+      return 0;
+    }
+    const lastIndex = this.paginaActual * this.limitePorPagina;
+    return lastIndex > this.totalRegistros ? this.totalRegistros : lastIndex;
+  }
+
+
+  // Métodos de paginación mejorados
   paginaAnterior() {
     if (this.paginaActual > 1) {
       this.paginaActual--;
-      this.buscarMovimientos();
+      this.searchMovements();
     }
   }
 
   paginaSiguiente() {
     if (this.paginaActual < this.totalPaginas) {
       this.paginaActual++;
-      this.buscarMovimientos();
+      this.searchMovements();
     }
   }
 
-  getAllMovementTypes() {
-      this.movementTypeService.getAllMovementType().subscribe({
-        next: (response) => {
-          this.movementTypes = response.movementTypes;
-        },
-        error: (error) => {
-          console.error('Error al obtener tipos de movimiento:', error);
-          Swal.fire({
-            title: 'Error',
-            text: 'No se pudieron cargar los tipos de movimiento. Inténtalo de nuevo más tarde.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-          });
-        }
-      })
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPaginas) {
+      this.paginaActual = page;
+      this.searchMovements();
     }
+  }
+
+  getPageNumbers(): number[] {
+    const pages = [];
+    const start = Math.max(1, this.paginaActual - 2);
+    const end = Math.min(this.totalPaginas, start + 4);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  getPageButtonClass(page: number): string {
+    const baseClass = 'px-3 py-1 rounded-lg font-medium cursor-pointer transition-all duration-200';
+    return page === this.paginaActual
+      ? `${baseClass} bg-blue-600 text-white shadow-md`
+      : `${baseClass} bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600`;
+  }
+
+
+  getAllMovementTypes() {
+    this.movementTypeService.getAllMovementType().subscribe({
+      next: (response) => {
+        this.movementTypes = response.movementTypes;
+      },
+      error: (error) => {
+        console.error('Error al obtener tipos de movimiento:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar los tipos de movimiento. Inténtalo de nuevo más tarde.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    })
+  }
 
 
   exportToPDF() {

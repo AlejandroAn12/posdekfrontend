@@ -1,0 +1,31 @@
+/* Items principales */
+.menu-item {
+  @apply flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200;
+}
+.menu-icon {
+  @apply text-gray-500 dark:text-gray-300 text-lg w-6 text-center transition-colors;
+}
+.menu-text {
+  @apply text-sm font-medium text-gray-700 dark:text-gray-200 transition-opacity;
+}
+
+/* Submenús */
+.submenu-item {
+  @apply flex items-center gap-3 p-2 pl-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200;
+}
+.submenu-icon {
+  @apply text-xs text-gray-500 dark:text-gray-300 w-4 text-center transition-colors;
+}
+.submenu-text {
+  @apply text-sm font-medium text-gray-700 dark:text-gray-200;
+}
+
+/* Estado activo */
+.active-link {
+  @apply bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400;
+}
+
+/* Tooltip */
+.tooltip {
+  @apply absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap;
+}

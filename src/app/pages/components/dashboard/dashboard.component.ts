@@ -7,7 +7,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { CountUpDirective } from '../../../shared/directives/count-up.directive';
 import { CommonModule } from '@angular/common';
 import { OrdersService } from '../orders/data-access/orders.service';
-import { ProductsService } from '../products/data-access/products.service';
+import { ProductsService } from '../products/services/products.service';
 import { DashboardService } from './services/dashboard.service';
 import { DashboardChartComponent } from "../../../shared/features/components/dashboard-chart/dashboard-chart.component";
 

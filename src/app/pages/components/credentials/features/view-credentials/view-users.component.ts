@@ -260,6 +260,7 @@ export default class ViewUsersComponent implements OnInit {
         this.refreshTable();
       },
       error: (err) => {
+        console.error(err)
         Swal.fire({
           position: "top",
           icon: "error",

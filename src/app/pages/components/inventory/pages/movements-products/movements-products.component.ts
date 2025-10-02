@@ -4,7 +4,7 @@ import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { HeaderComponent } from "../../../../../shared/features/header/header.component";
-import { ProductsService } from '../../../products/data-access/products.service';
+import { ProductsService } from '../../../products/services/products.service';
 
 @Component({
   selector: 'app-movements-products',

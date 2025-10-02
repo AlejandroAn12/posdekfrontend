@@ -11,7 +11,7 @@ export default [
         loadComponent: () => import('./pages/adjustment/adjustment.component'),
     },
     {
-        path: 'inventory',
+        path: 'generate',
         loadComponent: () => import('./pages/inventory/inventory.component'),
     },
     {

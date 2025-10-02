@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FooterComponent } from "../../../shared/features/footer/footer.component";
 import { StorageService } from '../../../core/services/storage.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ import { StorageService } from '../../../core/services/storage.service';
 export default class LoginComponent implements OnInit {
   // Inyecciones de servicios
   private authService = inject(AuthService);
-  private storageService = inject(StorageService);
+  private themeService = inject(ThemeService);
+
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
@@ -29,7 +31,9 @@ export default class LoginComponent implements OnInit {
 
   constructor() {
     // Detectar modo oscuro del sistema
-    this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.themeService.isDarkMode$.subscribe((isDark) => {
+      this.isDarkMode = isDark;
+    });
 
     // Inicializar formulario
     this.loginForm = this.fb.group({
@@ -66,19 +70,15 @@ export default class LoginComponent implements OnInit {
     };
 
     this.authService.login(loginData).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-
-        // Mostrar mensaje de éxito
+      next: () => {
         Swal.fire({
           icon: 'success',
-          title: '¡Bienvenido!',
-          text: 'Inicio de sesión exitoso',
-          timer: 2000,
-          showConfirmButton: false,
-          position: 'top-end'
+          position: 'top-end',
+          timer: 1000,
+          showConfirmButton: false
         });
-
+        
+        this.isLoading = false;
         // Redirigir al dashboard
         this.router.navigate(['/admin/dashboard']);
       },

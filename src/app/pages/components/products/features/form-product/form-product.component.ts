@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ProductsService } from '../../data-access/products.service';
+import { ProductsService } from '../../services/products.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../../../../core/services/alerts.service';
@@ -11,10 +11,11 @@ import { CategoriesService } from '../../../categories/data-access/categories.se
 import { ICategory } from '../../../categories/interface/icategories.interface';
 import { SuppliersService } from '../../../suppliers/data-access/suppliers.service';
 import { ISupplier } from '../../../suppliers/interface/supplier.interface';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-form-product',
-  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form-product.component.html',
   styleUrl: './form-product.component.css'
 })
@@ -23,7 +24,6 @@ export default class FormProductComponent implements OnInit {
   private fB = inject(FormBuilder);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
-  private alertsService = inject(AlertService);
   private productService = inject(ProductsService);
   private categoriesService = inject(CategoriesService);
   private supplierService = inject(SuppliersService);
@@ -34,8 +34,8 @@ export default class FormProductComponent implements OnInit {
   isUpdate: boolean = false;
   productId: string | null = null;
 
-  titleComponent: string = 'Gestion de productos';
-  subtitleComponent: string = 'Listado de productos registrados';
+  titleComponent: string = 'Productos';
+  subtitleComponent: string = 'Complete la información requerida para';
 
 
   form: FormGroup;
@@ -56,7 +56,7 @@ export default class FormProductComponent implements OnInit {
       description: ['', Validators.required],
       unitOfMeasurementId: ['', Validators.required],
       itsService: [false, Validators.required], // booleano
-      date: [new Date().toISOString(), Validators.required],
+      createdAt: [new Date().toISOString(), Validators.required],
     });
   }
 
@@ -115,9 +115,10 @@ export default class FormProductComponent implements OnInit {
   loadProductData(id: string) {
     this.productService.getProductId(id).subscribe({
       next: (product: any) => {
-
+console.log(product)
         this.form.patchValue({
           ...product,
+          addStock: product.stock,
           supplierId: product.supplier.id ? product.supplier.id.toString() : '',
           categoryId: product.category.id ? product.category.id.toString() : '',
           unitOfMeasurementId: product.unitOfMeasurement.id ? product.unitOfMeasurement.id.toString() : ''
@@ -175,7 +176,7 @@ export default class FormProductComponent implements OnInit {
       salePrice: Number(formValue.salePrice),
       addStock: Number(formValue.addStock),
       itsService: Boolean(formValue.itsService),
-      date: String(formValue.date),
+      createdAt: String(formValue.createdAt),
     };
 
     if (this.isUpdate && this.productId) {
@@ -191,7 +192,7 @@ export default class FormProductComponent implements OnInit {
             position: 'top',
             showConfirmButton: false
           });
-          this.router.navigate(['/admin/products/view']);
+          this.router.navigate(['/admin/products/list']);
         },
         error: (err) => {
           Swal.fire({
@@ -218,7 +219,7 @@ export default class FormProductComponent implements OnInit {
             position: 'top',
             showConfirmButton: false
           });
-          this.router.navigate(['/admin/products/view']);
+          this.router.navigate(['/admin/products/list']);
         },
         error: (err) => {
           Swal.fire({
@@ -235,8 +236,8 @@ export default class FormProductComponent implements OnInit {
     }
   }
 
-  btnBack() {
-    this.router.navigate(['/admin/products/view']);
+  return() {
+    this.router.navigate(['/admin/products/list']);
   }
 
   get f() {

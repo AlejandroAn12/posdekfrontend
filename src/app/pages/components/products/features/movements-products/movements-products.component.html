@@ -1,11 +1,18 @@
-<app-header [title]="titleComponent" [subtitle]="subtitleComponent"></app-header>
-
 <div class="bg-white dark:bg-gray-900 min-h-screen p-4 md:p-6">
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 md:mb-8">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+        {{titleComponent}}
+      </h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{subtitleComponent}}</p>
+    </div>
+  </div>
   <!-- Filtros de Búsqueda -->
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
     <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Filtrar Movimientos</h2>
 
-    <form [formGroup]="filtroForm" (ngSubmit)="buscarMovimientos()"
+    <form [formGroup]="filtroForm" (ngSubmit)="searchMovements()"
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
       <!-- Búsqueda por Producto -->
       <div class="space-y-2">
@@ -64,61 +71,43 @@
     </form>
   </div>
 
-  <!-- Resultados -->
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-    <!-- Header de Resultados -->
-    <div
-      class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-2 sm:mb-0">
-        Movimientos de Inventario
+  <!-- Tarjeta de Resultados -->
+  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow border border-gray-100 dark:border-gray-700 p-6">
+    <!-- Header de resultados -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+        <i class="fa-solid fa-list-check mr-2 text-blue-500"></i>
+        Movimientos registrados
       </h2>
       <span
-        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-        <i class="fa-solid fa-list-check mr-1"></i>
+        class="mt-2 md:mt-0 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm px-3 py-1 rounded-full font-semibold">
         {{ totalRegistros }} transacciones encontradas
       </span>
     </div>
 
-    <!-- Tabla de Movimientos -->
-    <div class="overflow-x-auto">
-      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead class="bg-gray-50 dark:bg-gray-700">
+    <!-- Tabla -->
+    <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+      <table class="w-full">
+        <thead class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800">
           <tr>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-              Código de Barras
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-              Producto
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-              Tipo
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-              Cantidad
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-              Fecha
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-              Usuario
-            </th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Código de barras</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Producto</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Tipo movimiento</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Cantidad</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Fecha</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Usuario</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-          <tr *ngFor="let movimiento of movimientos" class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-800 dark:text-gray-200">
-              {{ movimiento.product?.barcode || "N/A" }}
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+          <tr *ngFor="let movimiento of movimientos"
+            class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 transition-all duration-200">
+            <td class="px-6 py-4">
+              <div class="font-medium text-gray-900 dark:text-white">{{ movimiento.product?.barcode || "N/A" }}</div>
             </td>
-            <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-              {{ movimiento.product?.name || "N/A" }}
+            <td class="px-6 py-4 dark:text-white">
+              {{ movimiento.product?.name || 'N/A' }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-6 py-4">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="{
                       'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400': movimiento.Movement_type?.name === 'Entrada',
                       'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400': movimiento.Movement_type?.name === 'Salida',
@@ -137,8 +126,13 @@
                 }">
               {{ movimiento.quantity }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-              {{ movimiento.createdAt | date : "dd/MM/yyyy HH:mm" }}
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                {{ movimiento.createdAt | date : "dd/MM/yyyy" }}
+              </div>
+              <div class="text-xs text-gray-500 dark:text-gray-500">
+                {{ movimiento.createdAt | date : "HH:mm:ss" }}
+              </div>
             </td>
             <td class="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
               {{ movimiento.user?.employee?.name || "N/A" }}
@@ -146,11 +140,20 @@
             </td>
           </tr>
 
-          <!-- Estado vacío -->
-          <tr *ngIf="movimientos.length === 0 && !isLoading">
+          <!-- Estados de carga y vacío -->
+          <tr *ngIf="isLoading">
             <td colspan="6" class="px-6 py-8 text-center">
-              <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
-                <i class="fa-solid fa-inbox text-4xl mb-3"></i>
+              <div class="flex justify-center items-center space-x-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                <span class="text-gray-600 dark:text-gray-400">Cargando comprobantes...</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="!isLoading && movimientos.length === 0">
+            <td colspan="6" class="px-6 py-8 text-center">
+              <div class="text-gray-500 dark:text-gray-400">
+                <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50"></i>
                 <p class="text-lg font-medium">No se encontraron movimientos</p>
                 <p class="text-sm">Intenta ajustar los filtros de búsqueda</p>
               </div>
@@ -160,38 +163,31 @@
       </table>
     </div>
 
-    <!-- Estado de carga -->
-    <div *ngIf="isLoading" class="p-8 text-center">
-      <div class="flex items-center justify-center">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-        <span class="ml-3 text-gray-500 dark:text-gray-400">Cargando movimientos...</span>
-      </div>
-    </div>
-
     <!-- Paginación -->
-    <div *ngIf="movimientos.length > 0" class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div class="text-sm text-gray-700 dark:text-gray-400 mb-4 sm:mb-0">
-          <!-- Mostrando <span class="font-medium">{{ (paginaActual - 1) * itemsPorPagina + 1 }}</span> - 
-          <span class="font-medium">{{ paginaActual * itemsPorPagina > totalRegistros ? totalRegistros : paginaActual * itemsPorPagina }}</span> de  -->
-          <span class="font-medium">{{ totalRegistros }}</span> resultados
-        </div>
+    <div class="mt-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+      <div class="text-sm text-gray-600 dark:text-gray-400">
+        Mostrando {{ (paginaActual - 1) * limitePorPagina + 1 }} -
+        {{ getLastMovementIndex() }} de {{ totalRegistros }} comprobantes
+      </div>
 
-        <div class="flex items-center space-x-2">
-          <button (click)="paginaAnterior()" [disabled]="paginaActual === 1"
-            class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
+      <div class="flex items-center space-x-2">
+        <button (click)="paginaAnterior()" [disabled]="paginaActual === 1"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center">
+          <i class="fa-solid fa-chevron-left mr-2"></i>
+          Anterior
+        </button>
 
-          <span class="text-sm text-gray-700 dark:text-gray-400">
-            Página {{ paginaActual }} de {{ totalPaginas }}
+        <div class="flex space-x-1">
+          <span *ngFor="let page of getPageNumbers()" (click)="goToPage(page)" [class]="getPageButtonClass(page)">
+            {{ page }}
           </span>
-
-          <button (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas"
-            class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
         </div>
+
+        <button (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center">
+          Siguiente
+          <i class="fa-solid fa-chevron-right ml-2"></i>
+        </button>
       </div>
     </div>
   </div>

@@ -5,8 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStateService } from '../../../../../core/services/auth-state.service';
-import { HeaderComponent } from "../../../../../shared/features/header/header.component";
-import { InventoryService } from '../../../merchandise/data-access/inventory.service';
+import { InventoryService } from '../../data-access/inventory.service';
 
 interface InventoryItem {
   id: string;
@@ -20,7 +19,7 @@ interface InventoryItem {
 
 @Component({
   selector: 'app-inventory-entry',
-  imports: [CommonModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './inventory-entry.component.html',
   styleUrl: './inventory-entry.component.css'
 })
@@ -41,8 +40,8 @@ export default class InventoryEntryComponent {
   role: string = '';
 
   // Títulos del componente
-  titleComponent: string = 'Gestión de inventarios';
-  subtitleComponent: string = 'Ingreso de inventario';
+  titleComponent: string = 'Conteo de inventario';
+  subtitleComponent: string = 'Ingrese las cantidades reales que tiene en físico de los productos inventariados.';
 
   // Totales y cálculos
   totalSystemStock: number = 0;
@@ -81,7 +80,6 @@ export default class InventoryEntryComponent {
     this.isLoading = true;
     this.inventoryService.getInventoryItems(this.inventoryId).subscribe({
       next: (items: any) => {
-        console.log(items)
         this.inventoryItems = items.map((item: any) => ({
           id: item.id,
           barcode: item.barcode || 'N/A',
@@ -152,6 +150,7 @@ export default class InventoryEntryComponent {
     });
   }
 
+
   saveInventory() {
     // Validar que todos los campos físicos estén completos
     const incompleteItems = this.inventoryItems.filter(item =>
@@ -174,28 +173,79 @@ export default class InventoryEntryComponent {
       id: item.id,
       physicalQuantity: item.physicalQuantity
     }));
-
-    this.inventoryService.finalizeInventory(this.inventoryId, payload).subscribe({
-      next: () => {
-        this.isSaving = false;
-        Swal.fire({
-          icon: 'success',
-          title: 'Inventario finalizado',
-          text: 'Las cantidades físicas fueron registradas correctamente.',
-          timer: 3000,
-          timerProgressBar: true,
-          showConfirmButton: false
-        }).then(() => {
-          this.router.navigateByUrl('admin/inventory/inventory');
-        });
+    if (this.hasDifferences()) {
+      Swal.fire({
+        icon: 'warning',
+        text: 'Se detectaron diferencias en el inventario',
+        toast: true,
+        confirmButtonText: 'Entendido'
+      })
+    }
+    const swalWithTailwind = Swal.mixin({
+      customClass: {
+        confirmButton: "px-4 py-2 ml-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-400",
+        cancelButton: "px-4 py-2 rounded-lg font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-2 focus:ring-gray-400"
       },
-      error: (err) => {
+      buttonsStyling: false
+    });
+
+    swalWithTailwind.fire({
+      title: "¿Guardar inventario?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Guardar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+      backdrop: `
+          rgba(0,0,0,0.4)
+          left top
+          no-repeat
+        `
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.inventoryService.finalizeInventory(this.inventoryId, payload).subscribe({
+          next: () => {
+            swalWithTailwind.fire({
+              icon: "success",
+              title: "Inventario finalizado",
+              text: "Cantidades físicas actualizadas",
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3500,
+              timerProgressBar: true
+            });
+
+            this.router.navigate(['admin/inventory/generate'])
+          },
+          error: (err) => {
+            Swal.fire({
+              icon: "error",
+              title: "Error al guardar el inventario",
+              text: err?.error?.error || "Error inesperado",
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 5000,
+              timerProgressBar: true
+            });
+
+            if(err.error.error === "Este inventario ya se encuentra finalizado"){
+              this.router.navigateByUrl('/admin/inventory/generate')
+            }
+          },
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
         this.isSaving = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: err.error?.message || 'No se pudo finalizar el inventario.',
-          confirmButtonText: 'Entendido'
+        swalWithTailwind.fire({
+          icon: "info",
+          title: "Cancelado",
+          text: "El inventario ha sido cancelado",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000
         });
       }
     });
@@ -203,7 +253,7 @@ export default class InventoryEntryComponent {
 
   // Método para navegar hacia atrás
   goBack(): void {
-    this.router.navigateByUrl('admin/inventory/inventory');
+    this.router.navigateByUrl('admin/inventory/generate');
   }
 
   // Método para verificar si hay diferencias

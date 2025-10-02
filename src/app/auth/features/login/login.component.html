@@ -1,12 +1,12 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-8">
+<div class="min-h-screen bg-white dark:bg-gray-800 flex items-center justify-center px-4 py-8">
   <div class="w-full max-w-md">
     <!-- Logo y Título -->
     <div class="text-center mb-8">
       <div class="flex justify-center mb-6">
         <img
           [src]="isDarkMode 
-            ? 'assets/img/banner/banner-posdek-cloud-dark-mode.png' 
-            : 'assets/img/banner/banner-posdek-cloud.png'"
+            ? 'assets/img/banner/banner_posdek_light.png' 
+            : 'assets/img/banner/banner_posdek_dark.png'"
           alt="POSdek Cloud"
           class="w-64 h-auto transition-all duration-300 hover:scale-105"
         />
@@ -14,7 +14,7 @@
       <!-- <h1 class="text-2xl font-bold text-white dark:text-white mb-2">
         Bienvenido a POSdek Cloud
       </h1> -->
-      <p class="text-sm text-gray-600 dark:text-gray-400">
+      <p class="text-sm text-gray-600 dark:text-white">
         Inicia sesión con tus credenciales para acceder al sistema
       </p>
     </div>
@@ -82,10 +82,10 @@
 
         <!-- Recordar contraseña (opcional) -->
         <div class="flex items-center justify-between">
-          <label class="flex items-center">
+          <!-- <label class="flex items-center">
             <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
             <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Recordar sesión</span>
-          </label>
+          </label> -->
           <a href="#" class="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400">
             ¿Olvidaste tu contraseña?
           </a>
@@ -147,7 +147,7 @@
 
     <!-- Información adicional -->
     <div class="text-center mt-6">
-      <p class="text-sm text-gray-600 dark:text-gray-400">
+      <p class="text-sm text-gray-600 dark:text-white">
         ¿No tienes una cuenta? 
         <a href="https://api.whatsapp.com/send?phone=593994988148&text=Hola+Soporte+Posdek+necesito+un+usuario+de+acceso" class="text-blue-600 hover:text-blue-500 dark:text-blue-400 font-semibold">
           Solicitar acceso <i class="fa-brands fa-whatsapp text-green-500 text-sm"></i>

@@ -25,6 +25,32 @@ export class ProductsService {
     return this.http.get(`${environment.API_URL}/products/all`);
   }
 
+  productsFilter(params: {
+    product?: string;
+    category?: string;
+    supplier?: string;
+    page?: number;
+    limit?: number;
+  }) {
+    const queryParams: any = {};
+
+    if (params.product) queryParams.product = params.product;
+    if (params.category) queryParams.category = params.category;
+    if (params.supplier) queryParams.supplier = params.supplier;
+    if (params.page) queryParams.page = params.page;
+    if (params.limit) queryParams.limit = params.limit;
+
+    return this.http.get<{
+      data: any[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    }>(`${environment.API_URL}/products/filter`, {
+      params: queryParams,
+    });
+  }
+
   productsOutStock(){
     return this.http.get(`${environment.API_URL}/products/outStock`);
   }
@@ -54,7 +80,7 @@ export class ProductsService {
   }
 
   deletedProduct(id: string) {
-    return this.http.delete(`${environment.API_URL}/products/delete/${id}`)
+    return this.http.delete(`${environment.API_URL}/products/softDelete/${id}`)
   }
 
   adjustProductStock(barcode: string, body: any) {

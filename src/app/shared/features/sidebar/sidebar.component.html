@@ -1,95 +1,70 @@
 <!-- Sidebar -->
 <nav [class.w-20]="isSidebarCollapsed" [class.w-64]="!isSidebarCollapsed"
-     class="fixed top-0 left-0 z-50 h-full bg-white dark:bg-gray-800 transition-all duration-300 ease-in-out flex flex-col border-gray-200 dark:border-gray-700">
-  
-  <!-- Header del Sidebar -->
+  class="fixed top-0 left-0 z-50 h-full bg-white dark:bg-gray-800 transition-all duration-300 ease-in-out flex flex-col border-r border-gray-200 dark:border-gray-700">
+
+  <!-- Header -->
   <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
     <!-- Logo -->
     <div class="flex items-center gap-3">
-      <img *ngIf="!isSidebarCollapsed" 
-           [src]="isDarkMode ? 'assets/img/banner/banner-posdek-cloud-dark-mode.png' : 'assets/img/banner/banner-posdek-cloud.png'" 
-           alt="POSdek Cloud" 
-           class="w-32 h-auto transition-opacity duration-300" />
-      <img *ngIf="isSidebarCollapsed" 
-           src="assets/img/logo/logo-icon.png" 
-           alt="POSdek" 
-           class="w-8 h-8" />
+      <img *ngIf="!isSidebarCollapsed"
+        [src]="isDarkMode ? 'assets/img/banner/banner_posdek_light.png' : 'assets/img/banner/banner_posdek_dark.png'"
+        alt="POSdek Cloud" class="w-32 h-auto transition-opacity duration-300" />
+      <img *ngIf="isSidebarCollapsed" src="assets/img/logo/icono.png" alt="POSdek" class="w-8 h-8" />
     </div>
 
-    <!-- Botón de colapsar -->
-    <button (click)="toggleSidebar()" 
-            class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            [title]="isSidebarCollapsed ? 'Expandir menú' : 'Contraer menú'">
-      <i class="fa-solid text-gray-500 dark:text-gray-300" 
-         [ngClass]="isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+    <!-- Botón colapsar -->
+    <button (click)="toggleSidebar()"
+      class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      [title]="isSidebarCollapsed ? 'Expandir menú' : 'Contraer menú'">
+      <i class="fa-solid text-gray-500 dark:text-gray-300"
+        [ngClass]="isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
     </button>
   </div>
 
-  <!-- Menú de Navegación -->
+  <!-- Menú -->
   <div class="flex-1 overflow-y-auto py-4 px-2">
     <ul class="space-y-1">
       <li *ngFor="let option of sidebarOptions; let i = index" class="relative">
-        
-        <!-- Elemento simple (sin hijos) -->
-        <a *ngIf="!option.children" 
-           [routerLink]="option.route"
-           routerLinkActive="bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
-           [routerLinkActiveOptions]="{ exact: true }"
-           class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group">
-          <i [ngClass]="option.iconClass" 
-             class="text-gray-500 dark:text-gray-300 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors text-lg w-6 text-center"></i>
-          <span *ngIf="!isSidebarCollapsed" 
-                class="text-sm font-medium text-gray-700 dark:text-gray-200 transition-opacity">
-            {{ option.title }}
-          </span>
-          
-          <!-- Tooltip para modo colapsado -->
-          <span *ngIf="isSidebarCollapsed" 
-                class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
-            {{ option.title }}
-          </span>
+
+        <!-- Opción sin hijos -->
+        <a *ngIf="!option.children" [routerLink]="option.route" routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }" class="menu-item group">
+          <i [ngClass]="option.iconClass"
+            class="menu-icon group-hover:text-blue-500 dark:group-hover:text-blue-400"></i>
+          <span *ngIf="!isSidebarCollapsed" class="menu-text">{{ option.title }}</span>
+
+          <!-- Tooltip -->
+          <ng-container *ngIf="isSidebarCollapsed">
+            <span class="tooltip">{{ option.title }}</span>
+          </ng-container>
         </a>
 
-        <!-- Elemento con submenú -->
+        <!-- Opción con hijos -->
         <div *ngIf="option.children" class="relative">
-          <!-- Botón del menú principal -->
-          <button (click)="toggleSubmenu(i)"
-                  [class.bg-blue-50]="activeIndex === i"
-                  [class.text-blue-600]="activeIndex === i"
-                  [class.dark:bg-blue-900/20]="activeIndex === i"
-                  [class.dark:text-blue-400]="activeIndex === i"
-                  class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group">
+          <button (click)="toggleSubmenu(i)" [class.active-link]="activeIndex === i"
+            class="menu-item justify-between group w-full">
             <div class="flex items-center gap-3">
-              <i [ngClass]="option.iconClass" 
-                 class="text-gray-500 dark:text-gray-300 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors text-lg w-6 text-center"></i>
-              <span *ngIf="!isSidebarCollapsed" 
-                    class="text-sm font-medium text-gray-700 dark:text-gray-200 transition-opacity">
-                {{ option.title }}
-              </span>
+              <i [ngClass]="option.iconClass"
+                class="menu-icon group-hover:text-blue-500 dark:group-hover:text-blue-400"></i>
+              <span *ngIf="!isSidebarCollapsed" class="menu-text">{{ option.title }}</span>
             </div>
-            <i *ngIf="!isSidebarCollapsed" 
-               class="fa-solid text-gray-400 dark:text-gray-500 transition-transform duration-200"
-               [ngClass]="{'rotate-180': activeIndex === i, 'fa-chevron-down': true}"></i>
-            
-            <!-- Tooltip para modo colapsado -->
-            <span *ngIf="isSidebarCollapsed" 
-                  class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
-              {{ option.title }}
-            </span>
+            <i *ngIf="!isSidebarCollapsed"
+              class="fa-solid text-gray-400 dark:text-gray-500 transition-transform duration-200"
+              [ngClass]="{ 'rotate-180': activeIndex === i, 'fa-chevron-down': true }"></i>
+
+            <!-- Tooltip -->
+            <ng-container *ngIf="isSidebarCollapsed">
+              <span class="tooltip">{{ option.title }}</span>
+            </ng-container>
           </button>
 
           <!-- Submenú -->
-          <div *ngIf="activeIndex === i && !isSidebarCollapsed" 
-               class="ml-8 mt-1 space-y-1 animate-fade-in">
-            <a *ngFor="let child of option.children" 
-               [routerLink]="child.route"
-               routerLinkActive="bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
-               class="flex items-center gap-3 p-2 pl-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group">
-              <i [ngClass]="child.iconClass" 
-                 class="text-xs text-gray-500 dark:text-gray-300 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors w-4 text-center"></i>
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-200">
-                {{ child.title }}
-              </span>
+          <div *ngIf="activeIndex === i && !isSidebarCollapsed" class="ml-8 mt-1 space-y-1 animate-fade-in">
+            <a *ngFor="let child of option.children" [routerLink]="child.route" routerLinkActive="active-link"
+              class="submenu-item group">
+              <i [ngClass]="child.iconClass"
+                class="submenu-icon group-hover:text-blue-500 dark:group-hover:text-blue-400"></i>
+              <span class="submenu-text">{{ child.title }}</span>
             </a>
           </div>
         </div>
@@ -97,29 +72,24 @@
     </ul>
   </div>
 
-  <!-- Footer del Sidebar -->
+  <!-- Footer -->
   <div class="border-t border-gray-200 dark:border-gray-700 p-4 space-y-3">
-    <!-- Botón de Cerrar Sesión -->
-    <button (click)="logout()"
-            class="w-full flex items-center gap-3 p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group">
+    <!-- Logout -->
+    <button (click)="logout()" class="menu-item text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 group w-full">
       <i class="fa-solid fa-right-from-bracket text-lg w-6 text-center"></i>
       <span *ngIf="!isSidebarCollapsed" class="text-sm font-medium">Cerrar Sesión</span>
-      
-      <!-- Tooltip para modo colapsado -->
-      <span *ngIf="isSidebarCollapsed" 
-            class="absolute left-14 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
-        Cerrar Sesión
-      </span>
+      <ng-container *ngIf="isSidebarCollapsed">
+        <span class="tooltip">Cerrar Sesión</span>
+      </ng-container>
     </button>
 
-    <!-- Información de Versión -->
+    <!-- Versión -->
     <div *ngIf="!isSidebarCollapsed" class="text-center pt-2 border-t border-gray-200 dark:border-gray-600 mt-2">
       <span class="text-xs text-gray-500 dark:text-gray-400">v2.1.0</span>
     </div>
   </div>
 </nav>
 
-<!-- Overlay para móvil -->
-<div *ngIf="!isSidebarCollapsed && isMobile()" 
-     (click)="toggleSidebar()"
-     class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>
+<!-- Overlay móvil -->
+<div *ngIf="!isSidebarCollapsed && isMobileView" (click)="toggleSidebar()"
+  class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>

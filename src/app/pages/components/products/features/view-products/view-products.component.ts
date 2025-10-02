@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
-import { ProductsService } from '../../data-access/products.service';
+import { ProductsService } from '../../services/products.service';
 import { CommonModule } from '@angular/common';
 import { IProduct } from '../../interface/product.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,7 +8,7 @@ import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
-import { ProductReportService } from '../../data-access/reports.service';
+import { ProductReportService } from '../../services/reports.service';
 import { Router } from '@angular/router';
 import { HeaderComponent } from "../../../../../shared/features/header/header.component";
 import { CategoriesService } from '../../../categories/data-access/categories.service';

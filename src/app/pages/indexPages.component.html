@@ -1,18 +1,25 @@
 <!-- index-pages.component.html -->
 <div class="flex min-h-screen bg-gray-50 dark:bg-gray-900">
   <!-- Sidebar con animación -->
-  <div class="fixed lg:relative z-40 h-full bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700">
+  <div *ngIf="isSidebarVisible" @slideInOut
+    class="fixed lg:relative z-40 h-full bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700">
     <app-sidebar></app-sidebar>
   </div>
 
+
   <!-- Contenido principal -->
-  <div class="flex-1 transition-all duration-300 min-h-screen"
-       [class.lg:ml-64]="!isSidebarCollapsed"
-       [class.lg:ml-20]="isSidebarCollapsed">
-    
+  <div class="flex-1 transition-all duration-300 min-h-screen" [class.lg:ml-64]="!isSidebarCollapsed"
+    [class.lg:ml-20]="isSidebarCollapsed">
+
     <!-- Header -->
     <header class="sticky top-0 z-20 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
       <div class="flex items-center justify-between px-4 py-3">
+        <!-- Botón menú móvil -->
+        <button *ngIf="isMobile()" (click)="isSidebarVisible = !isSidebarVisible"
+          class="lg:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+          <i class="fa-solid fa-bars text-gray-600 dark:text-gray-300"></i>
+        </button>
+
         <!-- Fecha y hora actual -->
         <div class="flex items-center gap-4">
           <div class="hidden sm:flex items-center gap-2 text-gray-600 dark:text-gray-300">
@@ -26,19 +33,21 @@
         </div>
 
         <!-- Botón de tema -->
-        <button (click)="toggleTheme()" 
-                class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
-                [title]="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
-          <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-            <i class="fa-solid text-lg transition-all duration-300"
-               [ngClass]="{
-                 'fa-sun text-yellow-500 group-hover:text-yellow-600': !isDarkMode,
-                 'fa-moon text-indigo-400 group-hover:text-indigo-300': isDarkMode
-               }"></i>
-            <span class="hidden md:inline font-medium">
-              {{ isDarkMode ? "Modo oscuro" : "Modo claro" }}
-            </span>
+        <!-- Selector de tema mejorado -->
+        <button (click)="toggleTheme()"
+          class="relative flex items-center justify-center p-2.5 rounded-xl bg-white/70 dark:bg-gray-800/70 shadow-xs border border-gray-200/50 dark:border-gray-700/60 hover:shadow-sm transition-all duration-300 group/theme backdrop-blur-sm"
+          [attr.aria-label]="'Cambiar a modo ' + (isDarkMode ? 'claro' : 'oscuro')">
+          <div class="relative w-5 h-5 overflow-hidden">
+            <i class="fa-solid fa-sun text-amber-500 absolute transition-all duration-500 ease-out transform"
+              [class.opacity-100]="!isDarkMode" [class.opacity-0]="isDarkMode" [class.rotate-0]="!isDarkMode"
+              [class.rotate-90]="isDarkMode"></i>
+            <i class="fa-solid fa-moon text-indigo-300 absolute transition-all duration-500 ease-out transform"
+              [class.opacity-0]="!isDarkMode" [class.opacity-100]="isDarkMode" [class.rotate-90]="!isDarkMode"
+              [class.rotate-0]="isDarkMode"></i>
           </div>
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block ml-2 transition-colors">
+            {{ isDarkMode ? "Modo claro" : "Modo oscuro" }}
+          </span>
         </button>
       </div>
     </header>
@@ -52,7 +61,7 @@
     <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
       <div class="px-4 py-3 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-400">
-          © 2024 POSdek Cloud. Todos los derechos reservados. 
+          © 2024 POSdek Cloud. Todos los derechos reservados.
           <span class="hidden sm:inline">v2.1.0</span>
         </p>
       </div>

@@ -53,6 +53,10 @@ export default [
         loadChildren: () => import('./components/inventory/inventory.routes')
       },
       {
+        path:'reports',
+        loadChildren: () => import('./components/reports/reports.routes')
+      },
+      {
         path: 'notifications',
         loadComponent: () => import('./components/notifications/notifications.component')
       },

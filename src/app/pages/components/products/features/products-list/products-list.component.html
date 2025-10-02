@@ -1,0 +1,246 @@
+<div class="bg-white dark:bg-gray-900 min-h-screen p-4 md:p-6">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 md:mb-8">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">{{titleComponent}}</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{subtitleComponent}}</p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button (click)="newProduct()"
+        class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-colors duration-200 shadow-md">
+        <i class="fa-solid fa-box"></i>
+        Nuevo producto
+      </button>
+      <button (click)="printPdf()"
+        class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 transition-colors duration-200 shadow-md">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        Descargar reporte
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================== FILTROS DE BÚSQUEDA ===================== -->
+  <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Filtrar</h2>
+
+    <form [formGroup]="filtroForm" (ngSubmit)="searchProducts()"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+
+      <!-- Producto -->
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Producto</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+          </div>
+          <input type="search" formControlName="product" placeholder="Nombre del producto"
+            class="block w-full pl-10 pr-3 border border-gray-300 rounded-lg py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500" />
+        </div>
+      </div>
+
+      <!-- Proveedor -->
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Proveedor</label>
+        <select formControlName="supplier"
+          class="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500">
+          <option value="">Todos los proveedores</option>
+          <option *ngFor="let type of suppliers" [value]="type.id">{{ type.company_name }}</option>
+        </select>
+      </div>
+
+      <!-- Categoría -->
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoría</label>
+        <select formControlName="category"
+          class="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500">
+          <option value="">Todas las categorías</option>
+          <option *ngFor="let type of categories" [value]="type.id">{{ type.name }}</option>
+        </select>
+      </div>
+
+      <!-- Botón de búsqueda -->
+      <div class="flex items-end">
+        <button type="submit"
+          class="w-full bg-blue-600 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-colors duration-200 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          Buscar
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- ===================== TARJETA DE RESULTADOS ===================== -->
+  <section class="bg-white dark:bg-gray-900 rounded-2xl shadow border border-gray-100 dark:border-gray-700 p-6">
+
+    <!-- Header resultados -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+        <i class="fa-solid fa-list-check mr-2 text-blue-500"></i>
+        Productos registrados
+      </h2>
+      <span
+        class="mt-2 md:mt-0 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm px-3 py-1 rounded-full font-semibold">
+        {{ totalRegistros }} productos encontrados
+      </span>
+    </div>
+
+    <!-- Tabla -->
+    <div class="max-w-full mx-auto overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
+      <div class="min-w-max"> <!-- Cambiado a min-w-max para mejor adaptación -->
+        <table class="w-full table-auto">
+          <thead class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 sticky top-0">
+            <tr>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Código de
+                barras</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Código
+                interno</th>
+              <th
+                class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap min-w-[200px]">
+                Producto</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Precio
+                compra</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Precio
+                venta</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Medida
+              </th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Stock
+              </th>
+              <th
+                class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap min-w-[150px]">
+                Categoría</th>
+              <th
+                class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap min-w-[150px]">
+                Proveedor</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Servicio
+              </th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Estado
+              </th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">Fecha
+                ingreso</th>
+              <th
+                class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap min-w-[180px]">
+                Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            <tr *ngFor="let item of products"
+              class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 transition-all duration-200">
+
+              <!-- Código de barras -->
+              <td class="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{{ item?.barcode ||
+                "N/A" }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item?.code || 'P00000' }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item?.name || 'N/A' }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item?.purchasePrice |
+                currency:'USD':'symbol':'1.2-2' }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item?.salePrice |
+                currency:'USD':'symbol':'1.2-2' }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item.unitOfMeasurement?.name || 'N/A' }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item.stock || 'N/A' }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item.category?.name || 'N/A' }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item.supplier?.company_name || 'N/A' }}</td>
+
+              <!-- Toggle Servicio -->
+              <td class="px-4 py-3 whitespace-nowrap">
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [checked]="item.itsService"
+                    (change)="onItsServiceChange($event, item)" />
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 
+              peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer 
+              dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white 
+              after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
+              after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all 
+              dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+              </td>
+
+              <!-- Toggle Estado -->
+              <td class="px-4 py-3 whitespace-nowrap">
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [checked]="item.status"
+                    (change)="onStatusChange($event, item)" />
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 
+              peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer 
+              dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white 
+              after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
+              after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all 
+              dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+              </td>
+
+              <!-- Fecha ingreso -->
+              <td class="px-4 py-3 whitespace-nowrap">
+                <div class="text-sm text-gray-600 dark:text-gray-400">{{ item.createdAt | date : "dd/MM/yyyy" }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-500">{{ item.createdAt | date : "HH:mm:ss" }}</div>
+              </td>
+
+              <!-- Acciones -->
+              <td class="px-4 py-3 whitespace-nowrap">
+                <div class="flex space-x-2">
+                  <button (click)="editProduct(item.id)"
+                    class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium whitespace-nowrap">
+                    <i class="fa-solid fa-pen-to-square"></i> Editar
+                  </button>
+                  <button (click)="delete(item.id)"
+                    class="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg shadow-md transition duration-200 ease-in-out text-sm font-medium whitespace-nowrap">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Estados de carga y vacío -->
+            <tr *ngIf="isLoading">
+              <td colspan="13" class="px-6 py-8 text-center">
+                <div class="flex justify-center items-center space-x-3">
+                  <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                  <span class="text-gray-600 dark:text-gray-400">Cargando productos...</span>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="!isLoading && products.length === 0">
+              <td colspan="13" class="px-6 py-8 text-center">
+                <div class="text-gray-500 dark:text-gray-400">
+                  <i class="fa-solid fa-inbox text-4xl mb-3 opacity-50"></i>
+                  <p class="text-lg font-medium">No se encontraron productos</p>
+                  <p class="text-sm">Intenta ajustar los filtros de búsqueda</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===================== PAGINACIÓN ===================== -->
+    <div class="mt-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+      <div class="text-sm text-gray-600 dark:text-gray-400">
+        Mostrando {{ (paginaActual - 1) * limitePorPagina + 1 }} -
+        {{ getLastMovementIndex() }} de {{ totalRegistros }} productos
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button (click)="paginaAnterior()" [disabled]="paginaActual === 1"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center">
+          <i class="fa-solid fa-chevron-left mr-2"></i> Anterior
+        </button>
+
+        <div class="flex space-x-1">
+          <span *ngFor="let page of getPageNumbers()" (click)="goToPage(page)" [class]="getPageButtonClass(page)">
+            {{ page }}
+          </span>
+        </div>
+
+        <button (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center">
+          Siguiente <i class="fa-solid fa-chevron-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+
+  </section>
+</div>

@@ -4,7 +4,7 @@ import { MovementTypeService } from '../../../../../core/services/movement-type.
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../../../../../shared/features/header/header.component";
-import { ProductsService } from '../../../products/data-access/products.service';
+import { ProductsService } from '../../../products/services/products.service';
 import { Router } from '@angular/router';
 
 
