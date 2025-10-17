@@ -40,6 +40,8 @@ export default class HistoryInventoryComponent implements OnInit {
       next: (res: any) => {
         this.isLoading = false;
 
+        console.log('data', res)
+
         // Verifica la estructura de la respuesta
         this.inventoryData = res.data?.data || res.data || [];
         this.totalRegistros = res.data?.total || res.total || 0;

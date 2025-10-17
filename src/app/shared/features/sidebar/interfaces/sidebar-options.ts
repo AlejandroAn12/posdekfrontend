@@ -72,7 +72,27 @@ export const SIDEBAR_OPTIONS: SidebarOption[] = [
         title: 'Reportes',
         iconClass: 'fa-regular fa-folder',
         children: [
-            { title: 'Reporte de ventas', iconClass: 'fa-solid fa-list', route: '/admin/reports/sales' },
+            { title: 'Ventas generales', iconClass: 'fa-solid fa-list', route: '/admin/reports/sales' },
+            { title: 'Ventas por colaborador', iconClass: 'fa-solid fa-list', route: '/admin/reports/sales-by-employee' },
+            // { title: 'Comprobantes de venta', iconClass: 'fa-solid fa-receipt', route: '/admin/invoices/sales' },
+        ]
+    },
+     {
+        title: 'KPI',
+        iconClass: 'fa-regular fa-folder',
+        children: [
+            // { title: 'Vendedores', iconClass: 'fa-solid fa-list', route: '/admin/reports/sales' },
+            { title: 'Vendedores', iconClass: 'fa-solid fa-users', route: '/admin/reports/sales-by-employee' },
+            // { title: 'Comprobantes de venta', iconClass: 'fa-solid fa-receipt', route: '/admin/invoices/sales' },
+        ]
+    },
+    {
+        title: 'Caja',
+        iconClass: 'fa-solid fa-cash-register',
+        children: [
+            { title: 'Control y asignación', iconClass: 'fa-solid fa-list', route: '/admin/cajas/form' },
+            // { title: 'Asignar vendedor a caja', iconClass: 'fa-solid fa-list', route: '/admin/cajas/sales' },
+            // { title: 'Reporte de movimientos', iconClass: 'fa-solid fa-receipt', route: '/admin/invoices/sales' },
             // { title: 'Comprobantes de venta', iconClass: 'fa-solid fa-receipt', route: '/admin/invoices/sales' },
         ]
     },

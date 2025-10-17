@@ -52,7 +52,6 @@ export default class SalesReportsComponent {
 
     this.reportService.getHistoryDailySales(filtros).subscribe({
       next: (res) => {
-        console.log('VENTAS', res)
         this.data = res.data;
         this.totalRegistros = res.total;
         this.totalPaginas = res.totalPages;

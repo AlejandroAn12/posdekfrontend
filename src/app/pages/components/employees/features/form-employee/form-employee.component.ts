@@ -141,7 +141,7 @@ export default class FormEmployeeComponent implements OnInit {
             timerProgressBar: true,
             timer: 1500
           })
-          this.router.navigate(['/admin/employees']);
+          this.router.navigate(['/admin/credentials/form']);
         },
         error: (err) => {
           Swal.fire({

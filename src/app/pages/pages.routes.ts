@@ -57,12 +57,16 @@ export default [
         loadChildren: () => import('./components/reports/reports.routes')
       },
       {
-        path: 'notifications',
-        loadComponent: () => import('./components/notifications/notifications.component')
+        path: 'cajas',
+        loadChildren: () => import('./components/cajas/cajas.routes')
       },
       {
         path:'change-password',
         loadComponent: () => import('../auth/features/change-password/change-password.component')
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./components/notifications/notifications.component')
       },
       {
         path: '',

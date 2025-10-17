@@ -53,11 +53,11 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
                 <i class="fa-solid fa-list-check mr-2 text-blue-500"></i>
-                Ventas Registradas
+                Historial de ventas
             </h2>
             <span
                 class="mt-2 md:mt-0 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm px-3 py-1 rounded-full font-semibold">
-                {{ totalRegistros }} ventas encontradas
+                {{ totalRegistros }} reportes de ventas encontradas
             </span>
         </div>
 
@@ -68,12 +68,12 @@
                     <tr>
                         <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Día
                         </th>
-                        <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Total generado</th>
+                        <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Total generado
+                        </th>
                         <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Fecha corte</th>
-                        <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Ultima
-                            actualización</th>
+                        <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Ultima actualización</th>
+                        <!-- <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300"></th> -->
 
-                        <th class="px-6 py-4 text-left font-semibold text-gray-700 dark:text-gray-300">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -104,13 +104,13 @@
                                 {{ items.updatedAt | date : "HH:mm:ss" }}
                             </div>
                         </td>
-                        <td class="px-6 py-4">
+                        <!-- <td class="px-6 py-4">
                             <button
-                                class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center">
+                                class=" bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center">
                                 <i class="fa-solid fa-eye mr-2"></i>
-                                Ver
+                                Visualizar transacciones
                             </button>
-                        </td>
+                        </td> -->
                     </tr>
 
                     <!-- Estados de carga y vacío -->
@@ -118,7 +118,7 @@
                         <td colspan="6" class="px-6 py-8 text-center">
                             <div class="flex justify-center items-center space-x-3">
                                 <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                                <span class="text-gray-600 dark:text-gray-400">Cargando facturas...</span>
+                                <span class="text-gray-600 dark:text-gray-400">Cargando reportes...</span>
                             </div>
                         </td>
                     </tr>
