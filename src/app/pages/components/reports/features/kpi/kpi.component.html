@@ -1,0 +1,34 @@
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-6 text-gray-700">📊 Panel de Ventas</h1>
+
+    <div *ngIf="loading" class="text-center text-gray-500">Cargando datos...</div>
+
+    <div *ngIf="!loading && summary" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white shadow-md rounded-2xl p-5 text-center">
+            <h2 class="text-gray-500 text-sm">Ventas Totales</h2>
+            <p class="text-2xl font-semibold text-blue-600">
+                {{ summary.totalVentas | currency:'USD' }}
+            </p>
+        </div>
+
+        <div class="bg-white shadow-md rounded-2xl p-5 text-center">
+            <h2 class="text-gray-500 text-sm">Número de Ventas</h2>
+            <p class="text-2xl font-semibold text-green-600">{{ summary.cantidadVentas }}</p>
+        </div>
+
+        <div class="bg-white shadow-md rounded-2xl p-5 text-center">
+            <h2 class="text-gray-500 text-sm">Ticket Promedio</h2>
+            <p class="text-2xl font-semibold text-purple-600">
+                {{ summary.ticketPromedio | currency:'USD' }}
+            </p>
+        </div>
+
+        <div class="bg-white shadow-md rounded-2xl p-5 text-center">
+            <h2 class="text-gray-500 text-sm">Top Vendedor</h2>
+            <p class="text-lg font-semibold text-gray-800">{{ summary.topVendedor.nombre }}</p>
+            <p class="text-sm text-gray-500">
+                {{ summary.topVendedor.total | currency:'USD' }}
+            </p>
+        </div>
+    </div>
+</div>

@@ -10,10 +10,11 @@ import { OrdersService } from '../orders/data-access/orders.service';
 import { ProductsService } from '../products/services/products.service';
 import { DashboardService } from './services/dashboard.service';
 import { DashboardChartComponent } from "../../../shared/features/components/dashboard-chart/dashboard-chart.component";
+import { DashChartComponent } from "../../../shared/features/components/dash-chart/dash-chart.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DataTablesModule, CountUpDirective, CommonModule, DashboardChartComponent],
+  imports: [CountUpDirective, CommonModule, DashChartComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -70,7 +71,7 @@ export default class DashboardComponent implements OnInit, AfterViewInit, OnDest
     this.getEarnings();
     this.earningsSales();
     this.getUserLogged();
-    this.loadTable();
+    // this.loadTable();
     this.loadTotalProducts();
     this.productsOutStock();
     this.loadTotalOrders();
@@ -145,35 +146,35 @@ export default class DashboardComponent implements OnInit, AfterViewInit, OnDest
   // ==============================
   //  Métodos DataTable
   // ==============================
-  private loadTable(): void {
-    this.dtOptions = {
-      paging: false,
-      searching: false,
-      info: false,
-      lengthChange: false,
-      scrollX: true,
-      ajax: (_dataTablesParameters: any, callback) => {
-        this.orderService.getUltimateOrders().subscribe((resp: any) => {
-          callback({ data: resp.orders });
-        });
-      },
-      columns: [
-        { title: 'Número de Orden', data: 'numberOrder' },
-        { title: 'Proveedor', data: 'supplier.company_name' },
-        {
-          title: 'Monto total',
-          data: 'totalAmount',
-          render: (data: any) =>
-            new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(data),
-        },
-        { title: 'Fecha de Generación', data: 'orderDate' },
-        { title: 'Estado del pedido', data: 'typeofstatus.name' },
-      ],
-    };
-  }
+  // private loadTable(): void {
+  //   this.dtOptions = {
+  //     paging: false,
+  //     searching: false,
+  //     info: false,
+  //     lengthChange: false,
+  //     scrollX: true,
+  //     ajax: (_dataTablesParameters: any, callback) => {
+  //       this.orderService.getUltimateOrders().subscribe((resp: any) => {
+  //         callback({ data: resp.orders });
+  //       });
+  //     },
+  //     columns: [
+  //       { title: 'Número de Orden', data: 'numberOrder' },
+  //       { title: 'Proveedor', data: 'supplier.company_name' },
+  //       {
+  //         title: 'Monto total',
+  //         data: 'totalAmount',
+  //         render: (data: any) =>
+  //           new Intl.NumberFormat('en-US', {
+  //             style: 'currency',
+  //             currency: 'USD',
+  //           }).format(data),
+  //       },
+  //       { title: 'Fecha de Generación', data: 'orderDate' },
+  //       { title: 'Estado del pedido', data: 'typeofstatus.name' },
+  //     ],
+  //   };
+  // }
 
   refreshTable(): void {
     if (this.dtElement) {
@@ -199,16 +200,22 @@ export default class DashboardComponent implements OnInit, AfterViewInit, OnDest
   currentSlide = 0;
   carouselImages = [
     {
-      src: 'assets/img/carousel-1.jpg',
+      src: 'assets/banners/banner1.png',
       alt: 'Productos destacados',
       title: 'Ofertas Especiales',
       description: 'Descuentos en productos seleccionados'
     },
     {
-      src: 'assets/img/carousel-2.jpg',
+      src: 'assets/banners/banner3.png',
+      alt: 'Productos destacados',
+      title: 'Ofertas Especiales',
+      description: 'Descuentos en productos seleccionados'
+    },
+    {
+      src: 'assets/banners/banner2.png',
       alt: 'Nuevos productos',
       title: 'Nuevos Ingresos',
-      description: 'Descubre nuestros últimos productos'
+      description: 'Zapatos deportivos'
     },
     {
       src: 'assets/banners/prueba.png',

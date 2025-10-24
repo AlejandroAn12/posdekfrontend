@@ -1,0 +1,4 @@
+/* Ajuste opcional del fondo azul (gradiente) */
+.bg-blue-600 {
+  background: linear-gradient(135deg, #007bff, #0099ff);
+}

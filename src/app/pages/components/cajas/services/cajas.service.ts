@@ -14,6 +14,6 @@ export class CajasService {
     }
 
     obtenerAsignaciones(){
-        return this.http.get<any[]>(`${environment.API_URL}/cajas/asignaciones`)
+        return this.http.get<any[]>(`${environment.API_URL}/cajas/aperturadas`)
     }
 }

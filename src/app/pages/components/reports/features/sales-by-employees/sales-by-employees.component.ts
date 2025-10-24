@@ -49,7 +49,7 @@ export default class SalesByEmployeesComponent {
   isClosing: boolean = false;
 
   constructor() {
-    this.getInvoiceTypes();
+    this.employees();
     this.searchEmployees();
   }
 
@@ -89,10 +89,9 @@ export default class SalesByEmployeesComponent {
     this.searchEmployees();
   }
 
-  getInvoiceTypes() {
+  employees() {
     this.credentialService.getCredendentials().subscribe({
       next: (res: any) => {
-        console.log(res)
         this.credentials = res.credentials;
       },
       error: (err) => {

@@ -11,4 +11,9 @@ export default [
         loadComponent: () =>
             import('./features/sales-by-employees/sales-by-employees.component'),
     },
+    {
+        path: 'kpi',
+        loadComponent: () => 
+            import('./features/kpi/kpi.component')
+    }
 ] as Routes;

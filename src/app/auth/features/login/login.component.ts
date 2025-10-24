@@ -71,13 +71,6 @@ export default class LoginComponent implements OnInit {
 
     this.authService.login(loginData).subscribe({
       next: () => {
-        Swal.fire({
-          icon: 'success',
-          position: 'top-end',
-          timer: 1000,
-          showConfirmButton: false
-        });
-        
         this.isLoading = false;
         // Redirigir al dashboard
         this.router.navigate(['/admin/dashboard']);

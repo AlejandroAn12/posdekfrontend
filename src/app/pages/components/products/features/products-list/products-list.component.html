@@ -139,7 +139,7 @@
               <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item?.salePrice |
                 currency:'USD':'symbol':'1.2-2' }}</td>
               <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item.unitOfMeasurement?.name || 'N/A' }}</td>
-              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item.stock || 'N/A' }}</td>
+              <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item?.stock || 0 }}</td>
               <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item.category?.name || 'N/A' }}</td>
               <td class="px-4 py-3 dark:text-white whitespace-nowrap">{{ item.supplier?.company_name || 'N/A' }}</td>
 

@@ -82,7 +82,7 @@ export const SIDEBAR_OPTIONS: SidebarOption[] = [
         iconClass: 'fa-regular fa-folder',
         children: [
             // { title: 'Vendedores', iconClass: 'fa-solid fa-list', route: '/admin/reports/sales' },
-            { title: 'Vendedores', iconClass: 'fa-solid fa-users', route: '/admin/reports/sales-by-employee' },
+            { title: 'Vendedores', iconClass: 'fa-solid fa-users', route: '/admin/reports/kpi' },
             // { title: 'Comprobantes de venta', iconClass: 'fa-solid fa-receipt', route: '/admin/invoices/sales' },
         ]
     },

@@ -14,28 +14,32 @@ export default class FormCajaComponent {
   private service = inject(CajasService);
   constructor() {
     this.cajas$;
-    this.asignaciones$;
+    this.aperturas$;
   }
-  data: any[] = [];
-  dataAsignaciones: any[] = [];
+  data_cajas: any[] = [];
+  data_aperturas: any[] = [];
   totalRegistros: number = 0;
   totalRegistrosAsig: number = 0;
+  isLoading : boolean = false;
 
 
   cajas$ = this.service.getAllCajas().subscribe({
     next: (res: any) => {
-      this.data = res.results;
-      this.totalRegistros = res.count;
+      this.data_cajas = res;
+      this.totalRegistros = res.length;
     },
     error: (err) => {
       console.error('Error fetching cajas', err);
     }
   })
 
-  asignaciones$ = this.service.obtenerAsignaciones().subscribe({
+  aperturas$ = this.service.obtenerAsignaciones().subscribe({
     next: (res: any) => {
-      this.dataAsignaciones = res.results;
-      this.totalRegistrosAsig = res.count;
+      console.log(res)
+      this.isLoading = true;
+      this.data_aperturas = res;
+      this.totalRegistrosAsig = res.length;
+      this.isLoading = false;
     },
     error: (err) => {
       console.error('Error fetching asignaciones', err);

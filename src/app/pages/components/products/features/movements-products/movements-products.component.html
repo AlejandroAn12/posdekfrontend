@@ -111,10 +111,12 @@
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="{
                       'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400': movimiento.Movement_type?.name === 'Entrada',
                       'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400': movimiento.Movement_type?.name === 'Salida',
+                      'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400': movimiento.Movement_type?.name === 'Caducidad',
                       'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400': movimiento.Movement_type?.name !== 'Entrada' && movimiento.Movement_type?.name !== 'Salida'
                     }">
                 <i class="fa-solid mr-1" [class.fa-boxes-packing]="movimiento.Movement_type?.name === 'Entrada'"
                   [class.fa-box-open]="movimiento.Movement_type?.name === 'Salida'"
+                  [class.fa-box-close]="movimiento.Movement_type?.name === 'Caducidad'"
                   [class.fa-arrows-rotate]="movimiento.Movement_type?.name !== 'Entrada' && movimiento.Movement_type?.name !== 'Salida'"></i>
                 {{ movimiento.Movement_type?.name }}
               </span>
